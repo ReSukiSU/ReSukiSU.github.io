@@ -5,7 +5,10 @@ layout: home
 hero:
   name: "ReSukiSU"
   text: "A more stable fork of SukiSU"
-  tagline: My great project tagline
+  tagline: "More stable,more clean"
+  image:
+    src: /logo.svg
+    alt: refs
   actions:
     - theme: brand
       text: Markdown Examples
