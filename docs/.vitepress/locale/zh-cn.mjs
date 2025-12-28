@@ -15,8 +15,7 @@ export default defineConfig ({
             collapsed: true,
             items: [
             { text: '安装', link: '/zh_CN/guide/install' },
-            { text: '构建内核',items: [
-                { text: '构建', link: '/zh_CN/guide/build'},
+            { text: '构建内核', link: '/zh_CN/guide/build',collapsed: true,items: [
                 { text: '参考钩子', link: '/zh_CN/guide/manual-hooks' }
             ]},
             ]
