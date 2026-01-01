@@ -1,4 +1,8 @@
-# 手动钩子补丁参考 {#hooks}
+# Manual hooks reference {#hooks}
+
+::: danger Notice：
+ReSukiSU will check everythings of these hooks when building,if missing one of them,it will fail.
+:::
 
 ## 最小化钩子 {#scope-minimized-hooks}
 
@@ -11,10 +15,10 @@
 ## KernelSU 官方 manual hook {#manual-hooks}
 
 ::: tip Note
-这一部分取自 [KernelSU官方文档](https://kernelsu.org),并根据现状添加了需要的钩子
+This part picked from [KernelSU's document](https://kernelsu.org),and added hooks that was needed in the situations.
 :::
 
-这里有几个补丁可以参考：
+Below are some patches for reference：
 
 ::: code-group
 
@@ -167,17 +171,13 @@ index 344ceaf5e..2b2a35f71 100644
 
 主要是要改五个地方：
 
-1. do_faccessat，通常位于 `fs/open.c`
-2. do_execveat_common，通常位于 `fs/exec.c`
-3. vfs_read，通常位于 `fs/read_write.c`
-4. vfs_statx，通常位于 `fs/stat.c`
-5. reboot，通常位于 `kernel/reboot.c`
+1. `do_faccessat`, usually in `fs/open.c`
+2. `do_execveat_common`, usually in `fs/exec.c`
+3. `vfs_read`, usually in `fs/read_write.c`
+4. `vfs_statx`, usually in `fs/stat.c`
+5. `reboot`, usually in `kernel/reboot.c`
 
-::: danger 注意：
-ReSukiSU会在构建时会对所有手动钩子进行检查，若缺少任意一个，构建将直接失败！
-:::
-
-如果你的内核没有 `vfs_statx` 或者 内核版本 >= 6.1 , 使用 `vfs_fstatat` 来代替它：
+If your kernel doesn't have the `vfs_statx` function or kernel version is >= 6.1, use `vfs_fstatat` instead:
 ```diff
 diff --git a/fs/stat.c b/fs/stat.c
 index 068fdbcc9e26..5348b7bb9db2 100644
@@ -206,7 +206,7 @@ index 068fdbcc9e26..5348b7bb9db2 100644
  		goto out;
 ```
 
-对于早于 4.17 的内核，如果没有 `do_faccessat`，可以直接找到 `faccessat` 系统调用的定义然后修改：
+For kernels eariler than 4.17, if you cannot find `do_faccessat`, just go to the definition of the `faccessat` syscall and place the call there:
 
 ```diff
 diff --git a/fs/open.c b/fs/open.c
@@ -236,17 +236,17 @@ index 2ff887661237..e758d7db7663 100644
  		return -EINVAL;
 ```
 
-### 安全模式 {#safemode}
-
-要使用 ReSukiSU 内置的安全模式，你还需要修改 `drivers/input/input.c` 中的 `input_handle_event` 方法：
-
-:::tip
-强烈建议开启此功能，对救砖会非常有帮助！
-:::
+### Safe Mode {#safemode}
+It's strongly recommended to enable this feature, it's very useful for preventing bootloops!
+To enable ReSukiSU s built-in Safe Mode, you should modify the `input_handle_event` function in `drivers/input/input.c`:
 
 ```diff
-diff --git a/drivers/input/input.c b/drivers/input/input.c
+
 index 45306f9ef247..815091ebfca4 100755
+
+:::tip
+It's strongly recommended to enable this feature, it's very useful for preventing bootloops!
+:::
 --- a/drivers/input/input.c
 +++ b/drivers/input/input.c
 @@ -367,10 +367,13 @@ static int input_get_disposition(struct input_dev *dev,
@@ -274,9 +274,9 @@ index 45306f9ef247..815091ebfca4 100755
 ### setresuid {#setresuid}
 
 ::: tip
-自内核版本6.8开始，我们需要您加上这个补丁，否则系统将无法启动
+Since Kernel 6.8,We required you add this patch.if not,system cannot booted.
 
-当然 这一部分也会被检查 如果 内核版本 >= 6.8 且未使用此hook 构建会失败
+Of course,this part will be checked,if your kernel >= 6.8 and not patched this hook,building will fail!
 :::
 
 ```diff
@@ -311,10 +311,10 @@ index 4a87dc5fa..aac25df8c 100644
 ### path_umount {#how-to-backport-path-umount}
 
 ::: info Notes
-这是一个可选选项，你可以不移植这一部分
+This is an optional patch，you don't need to apply this one.
 :::
 
-你可以通过从 K5.9 向旧版本移植 `path_umount`，在 GKI 之前的内核上获得卸载模块的功能。你可以通过以下补丁作为参考:
+You can make the "Umount modules" feature work on pre-GKI kernels by manually backporting `path_umount` from 5.9. You can use this patch as reference:
 
 ```diff
 --- a/fs/namespace.c
@@ -361,9 +361,9 @@ index 4a87dc5fa..aac25df8c 100644
   * This is important for filesystems which use unnamed block devices.
 ```
 
-## 一些可参考的补丁
+## Reference Patches
 
 |地址|说明|
 |--|--|
-|[`rksuorg/kernel_patches`](https://github.com/rksuorg/kernel_patches)|基于 [官方 manual](manual-hooks.md#manual-hooks) 的补丁|
-|[`WildKernels/kernel_patches`](https://github.com/WildKernels/kernel_patches/tree/main/next)|基于 [最小化钩子](manual-hooks.md#scope-minimized-hooks) 的补丁|
+|[`rksuorg/kernel_patches`](https://github.com/rksuorg/kernel_patches)|based on [official manual](manual-hooks.md#manual-hooks) |
+|[`WildKernels/kernel_patches`](https://github.com/WildKernels/kernel_patches/tree/main/next)|based on [scope-minimized-hooks](manual-hooks.md#scope-minimized-hooks) 的补丁|
