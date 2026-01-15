@@ -250,7 +250,7 @@ For kernel belows 6.8, This hook can be automatically applied via LSM as long as
  }
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+extern bool ksu_vfs_read_hook __read_mostly;
++extern bool ksu_sys_read_hook __read_mostly;
 +extern __attribute__((cold)) int ksu_handle_sys_read(unsigned int fd,
 +				char __user **buf_ptr, size_t *count_ptr);
 +#endif
@@ -258,7 +258,7 @@ For kernel belows 6.8, This hook can be automatically applied via LSM as long as
  SYSCALL_DEFINE3(read, unsigned int, fd, char __user *, buf, size_t, count)
  {
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	if (unlikely(ksu_vfs_read_hook)) 
++	if (unlikely(ksu_sys_read_hook)) 
 +		ksu_handle_sys_read(fd, &buf, &count);
 +#endif
  	return ksys_read(fd, buf, count);
@@ -272,7 +272,7 @@ For kernel belows 6.8, This hook can be automatically applied via LSM as long as
  }
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+extern bool ksu_vfs_read_hook __read_mostly;
++extern bool ksu_sys_read_hook __read_mostly;
 +extern __attribute__((cold)) int ksu_handle_sys_read(unsigned int fd,
 +				char __user **buf_ptr, size_t *count_ptr);
 +#endif
@@ -283,7 +283,7 @@ For kernel belows 6.8, This hook can be automatically applied via LSM as long as
  	ssize_t ret = -EBADF;
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	if (unlikely(ksu_vfs_read_hook)) 
++	if (unlikely(ksu_sys_read_hook)) 
 +		ksu_handle_sys_read(fd, &buf, &count);
 +#endif
  	if (f.file) {
@@ -413,7 +413,7 @@ index 650fc7e0f3a6..55be193913b6 100644
  EXPORT_SYMBOL(kernel_read);
 
 +#ifdef  CONFIG_KSU_MANUAL_HOOK
-+extern bool ksu_vfs_read_hook __read_mostly;
++extern bool ksu_sys_read_hook __read_mostly;
 +extern __attribute__((cold)) int ksu_handle_sys_read(unsigned int fd,
 +				char __user **buf_ptr, size_t *count_ptr);
 +#endif
@@ -421,7 +421,7 @@ index 650fc7e0f3a6..55be193913b6 100644
  {
  	ssize_t ret;
 +#ifdef CONFIG_KSU_MANUAL_HOOK 
-+	if (unlikely(ksu_vfs_read_hook)) 
++	if (unlikely(ksu_sys_read_hook)) 
 +		ksu_handle_sys_read(fd, &buf, &count);
 +#endif
 +
