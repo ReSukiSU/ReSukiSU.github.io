@@ -25,10 +25,8 @@ import 'viewerjs/dist/viewer.min.css'
 
 / font & style css /
 import { css } from './MisansVF.ttf'
-import 'remixicon/fonts/remixicon.css'
 import './style.css'
 import './fonts.css'
-import './customblock.css'
 
 /** @type {import('vitepress').Theme} */
 export default {

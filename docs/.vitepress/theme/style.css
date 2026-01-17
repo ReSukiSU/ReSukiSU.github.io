@@ -129,6 +129,50 @@
   --vp-custom-block-tip-code-bg: var(--vp-c-brand-soft);
 }
 
+/* 1. info 容器 - 用 ri-information-2-fill 图标 */
+.custom-block.info .custom-block-title::before {
+  content: "\F447";
+  font-family: "remixicon" !important; 
+  font-size: 1.07rem;
+  margin-right: 0.5rem;
+  color: inherit;
+}
+
+/* 2. tip 容器 - 用 ri-lightbulb-fill 图标 */
+.custom-block.tip .custom-block-title::before {
+  content: "\EEA6";
+  font-family: "remixicon" !important;
+  font-size: 1.07rem;
+  margin-right: 0.5rem;
+  color: inherit;
+}
+
+/* 3. warning 容器 - 用 ri-error-warning-fill 图标 */
+.custom-block.warning .custom-block-title::before {
+  content: "\ECA0";
+  font-family: "remixicon" !important;
+  font-size: 1.07rem;
+  margin-right: 0.5rem;
+  color: inherit;
+}
+
+/* 4. danger 容器 - 用 ri-alarm-warning-fill 图标 */
+.custom-block.danger .custom-block-title::before {
+  content: "\EA1C";
+  font-family: "remixicon" !important;
+  font-size: 1.07rem;
+  margin-right: 0.5rem;
+  color: inherit;
+}
+
+/* 可选：统一解决图标和文字的垂直居中问题 */
+.custom-block .custom-block-title {
+  display: inline-flex;
+  align-items: center;
+}
+
+
+
 /**
  * Component: Algolia
  * -------------------------------------------------------------------------- */

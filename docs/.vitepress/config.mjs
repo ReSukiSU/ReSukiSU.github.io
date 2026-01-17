@@ -16,7 +16,8 @@ export default defineConfig({
   head: [
     ['link',{rel:"icon",href:'/favicon.svg'}],
     ['link',{rel:"preconnect",href:'https://s4.zstatic.net/'}],
-    ['link',{rel:"stylesheet",href:'https://s4.zstatic.net/npm/jetbrains-mono-webfont@latest/jetbrains-mono.css'}]
+    ['link',{rel:"stylesheet",href:'https://s4.zstatic.net/npm/jetbrains-mono-webfont@latest/jetbrains-mono.css'}],
+    ['link',{rel:"stylesheet",href:'https://unpkg.com/remixicon@latest/fonts/remixicon.css'}]
   ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
