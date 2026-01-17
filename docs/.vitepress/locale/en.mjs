@@ -6,7 +6,11 @@ export default defineConfig ({
         description: "Make SukiSU Great Again!",
         nav: [
         { text: '<i class="ri-home-2-fill"></i> Home', link: '/' },
-        { text: '<i class="ri-book-2-fill"></i> Guide', link: '/guide/install' }
+        { text: '<i class="ri-book-2-fill"></i> Guide', link: '/guide/install' },
+        { text: '<i class="ri-links-line"></i> Links',items: [
+            { text: 'KernelSU Documentation', link: 'https://kernelsu.org/' },
+            { text: 'KernelSU Modules Repository', link: 'https://modules.kernelsu.org/'}
+        ]}
         ],
         sidebar: [
         {

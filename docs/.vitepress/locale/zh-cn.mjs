@@ -6,7 +6,11 @@ export default defineConfig ({
         description: "让SukiSU再次伟大！",
         nav: [
         { text: '<i class="ri-home-2-fill"></i> 主页', link: '/zh_CN/' },
-        { text: '<i class="ri-book-2-fill"></i> 指导', link: '/zh_CN/guide/install' }
+        { text: '<i class="ri-book-2-fill"></i> 指导', link: '/zh_CN/guide/install' },
+        { text: '<i class="ri-links-line"></i> 常用链接',items: [
+            { text: 'KernelSU 文档', link: 'https://kernelsu.org/' },
+            { text: 'KernelSU 模块仓库', link: 'https://modules.kernelsu.org/'}
+        ]}
         ],
 
         sidebar: [
