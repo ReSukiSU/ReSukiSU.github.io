@@ -18,7 +18,7 @@
     "@nolebase/vitepress-plugin-inline-link-preview": "^2.18.2",
     "markdown-it-autospace": "^1.1.4",
     "pagefind": "^1.4.0",
-    "remixicon": "^4.7.0",
+    "remixicon": "^4.8.0",
     "vite-plugin-font": "^5.1.2",
     "vitepress": "^1.6.4",
     "vitepress-plugin-codeblocks-fold": "^1.2.35",

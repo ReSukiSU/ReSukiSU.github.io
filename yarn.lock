@@ -2222,10 +2222,10 @@ regexp-tree@^0.1.27:
   resolved "https://registry.yarnpkg.com/regexp-tree/-/regexp-tree-0.1.27.tgz#2198f0ef54518ffa743fe74d983b56ffd631b6cd"
   integrity sha512-iETxpjK6YoRWJG5o6hXLwvjYAoW+FEZn9os0PD/b6AP6xQwsa/Y7lCVgIixBbUPMfhu+i2LtdeAqVTgGlQarfA==
 
-remixicon@^4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/remixicon/-/remixicon-4.7.0.tgz#8e982662fabd6432745c166f64e9328733c2cf10"
-  integrity sha512-g2pHOofQWARWpxdbrQu5+K3C8ZbqguQFzE54HIMWFCpFa63pumaAltIgZmFMRQpKKBScRWQASQfWxS9asNCcHQ==
+remixicon@^4.8.0:
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/remixicon/-/remixicon-4.8.0.tgz#52d16cc63f8557140ed39d5cb9c6403bccdddb68"
+  integrity sha512-8qTM/bWkmsAWitvcL9XrVPVdqHRrdmnNp4zCFBdmIHBygxfHWwoK6NzitbiMyRzjcXKBMlS/ab5M65/ZlxJTVA==
 
 restructure@^3.0.0:
   version "3.0.2"
