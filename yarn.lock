@@ -337,13 +337,6 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.21.5.tgz#acad351d582d157bb145535db2a6ff53dd514b5c"
   integrity sha512-tQd/1efJuzPC6rCFwEvLtci/xNFcTZknmXs98FYDfGE4wP9ClFV98nyKrzJKVPMhdDnjzLhdUyMX4PsQAPjwIw==
 
-"@iconify-json/carbon@^1.2.11":
-  version "1.2.15"
-  resolved "https://registry.yarnpkg.com/@iconify-json/carbon/-/carbon-1.2.15.tgz#52d7e6e7c57af3f700ddf2fe0acb85f9c8ae66c9"
-  integrity sha512-9tW0nZY5QtKkMhuYzW09BM1345SyXNuA+gx2ub0j/fnfHOD5XVimMJ/D76H3tTez25NJbPYCLIQoFhvJc1HVBQ==
-  dependencies:
-    "@iconify/types" "*"
-
 "@iconify-json/icon-park-outline@^1.2.2":
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@iconify-json/icon-park-outline/-/icon-park-outline-1.2.4.tgz#f5f50e6a315198d242f340173131504fc90bf6e0"
@@ -483,16 +476,6 @@
   resolved "https://registry.yarnpkg.com/@nolebase/vitepress-plugin-enhanced-mark/-/vitepress-plugin-enhanced-mark-2.18.2.tgz#d8d9fa7bcf88f4255f4f78c695de3177c177c59f"
   integrity sha512-MwdzJuUoGBZLuhKttXs5UX7APqYU37mBywle3hRAlythXIOrnCT1fQyU6zQ8SJCXkojuCUS3N3whQTA2Cmf16Q==
   dependencies:
-    less "^4.4.0"
-
-"@nolebase/vitepress-plugin-enhanced-readabilities@^2.18.2":
-  version "2.18.2"
-  resolved "https://registry.yarnpkg.com/@nolebase/vitepress-plugin-enhanced-readabilities/-/vitepress-plugin-enhanced-readabilities-2.18.2.tgz#85c5d5c58c64181ee6de7023d68e54155aa701b0"
-  integrity sha512-fDhdZBSJL2qs/1xac0PtJfU5UI7b36ffVPYgzM8Ig2NjqMJ7cBvrTTPGq03lUeMjK7GD7fItAKudaP+ZrtMg8w==
-  dependencies:
-    "@iconify-json/carbon" "^1.2.11"
-    "@iconify-json/icon-park-outline" "^1.2.2"
-    "@nolebase/ui" "^2.18.2"
     less "^4.4.0"
 
 "@nolebase/vitepress-plugin-git-changelog@^2.18.2":
@@ -2608,11 +2591,6 @@ vfile@^6.0.0:
     "@types/unist" "^3.0.0"
     vfile-message "^4.0.0"
 
-viewerjs@^1.11.6:
-  version "1.11.7"
-  resolved "https://registry.yarnpkg.com/viewerjs/-/viewerjs-1.11.7.tgz#99c39b86c3f1b6debf446747a1f0e25f8be4db74"
-  integrity sha512-0JuVqOmL5v1jmEAlG5EBDR3XquxY8DWFQbFMprOXgaBB0F7Q/X9xWdEaQc59D8xzwkdUgXEMSSknTpriq95igg==
-
 vite-plugin-font@^5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/vite-plugin-font/-/vite-plugin-font-5.1.2.tgz#0197ac2874f02d971cd85cb2cf304c536228c1d4"
@@ -2641,13 +2619,6 @@ vitepress-plugin-codeblocks-fold@^1.2.35:
   version "1.2.35"
   resolved "https://registry.yarnpkg.com/vitepress-plugin-codeblocks-fold/-/vitepress-plugin-codeblocks-fold-1.2.35.tgz#1a6ebb879be65daff1d9248237aa656520d7abca"
   integrity sha512-542i4x4s6WyNOAbS6/Gxcx+6V8jIMgCpFPdN1Tm1EMB5JL0o1LcaZ6VVZvYqLjx9sFyP797/AxVtLo6BRjqaTg==
-
-vitepress-plugin-image-viewer@^1.1.6:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/vitepress-plugin-image-viewer/-/vitepress-plugin-image-viewer-1.1.6.tgz#b8318d918e9ea7d093f6fb80c4fe7b1e2d746241"
-  integrity sha512-ZfYy1s/bXju6vGVsE/5gPXT449+KaXZ6ZIPAvcmPM07VmC7Bv57bCvFar2II7C2EjexxfPQsxUh70vSBbe14kQ==
-  dependencies:
-    viewerjs "^1.11.6"
 
 vitepress-plugin-pagefind@^0.4.18:
   version "0.4.18"
