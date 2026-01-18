@@ -52,10 +52,7 @@ export default defineConfig({
     outline: {
       level: [2, 4]
     },
-    externalLinkIcon: true,
-    search: {
-      provider: 'local'
-    }
+    externalLinkIcon: true
   },
   
   markdown: {
