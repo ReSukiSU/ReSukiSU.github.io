@@ -22,7 +22,7 @@
     "vitepress": "2.0.0-alpha.15",
     "vitepress-plugin-codeblocks-fold": "^1.2.35",
     "vitepress-plugin-pagefind": "^0.4.18",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   },
   "scripts": {
     "docs:dev": "vitepress dev docs",
