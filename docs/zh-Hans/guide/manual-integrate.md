@@ -287,7 +287,7 @@ index 4a87dc5fa..aac25df8c 100644
  }
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+extern bool ksu_sys_read_hook __read_mostly;
++extern bool ksu_init_rc_hook __read_mostly;
 +extern __attribute__((cold)) int ksu_handle_sys_read(unsigned int fd,
 +				char __user **buf_ptr, size_t *count_ptr);
 +#endif
@@ -295,7 +295,7 @@ index 4a87dc5fa..aac25df8c 100644
  SYSCALL_DEFINE3(read, unsigned int, fd, char __user *, buf, size_t, count)
  {
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	if (unlikely(ksu_sys_read_hook)) 
++	if (unlikely(ksu_init_rc_hook)) 
 +		ksu_handle_sys_read(fd, &buf, &count);
 +#endif
  	return ksys_read(fd, buf, count);
