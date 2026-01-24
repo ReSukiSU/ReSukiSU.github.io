@@ -140,31 +140,6 @@
   opacity: 0.8;
 }
 
-/* Hero image glow animation */
-.VPHero .image-bg {
-  animation: pulse-glow 4s ease-in-out infinite;
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-}
-
-/* Hero image container */
-.VPHero .image-container {
-  transition: transform 0.3s ease;
-}
-
-.VPHero .image-container:hover {
-  transform: scale(1.02);
-}
-
 /* Action buttons enhancement */
 .VPHero .actions .VPButton {
   border-radius: 12px !important;
@@ -180,6 +155,15 @@
 .VPHero .actions .VPButton.brand:hover {
   box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
   transform: translateY(-2px);
+}
+
+.VPHero .actions .VPButton.brand::before {
+  content: "\EA6C";
+  font-family: "remixicon" !important;
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+  color: inherit;
+  vertical-align: middle;
 }
 
 .VPHero .actions .VPButton.alt {
