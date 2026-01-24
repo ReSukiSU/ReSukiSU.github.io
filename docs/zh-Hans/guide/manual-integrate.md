@@ -62,7 +62,7 @@ ReSukiSU 将会检查此处每一条 hook，如果缺少，将会**导致编译�
 +
 +extern void ksu_handle_newfstat_ret(unsigned int *fd, struct stat __user **statbuf_ptr);
 +#if defined(__ARCH_WANT_STAT64) || defined(__ARCH_WANT_COMPAT_STAT64)
-+extern void ksu_handle_fstat64_ret(unsigned int *fd, struct stat64 __user **statbuf_ptr); // optional
++extern void ksu_handle_fstat64_ret(unsigned long *fd, struct stat64 __user **statbuf_ptr); // optional
 +#endif
 +#endif
 +

@@ -62,7 +62,7 @@ The hook in this part is adapted from [`backslashxx/KernelSU #5`](https://github
 +
 +extern void ksu_handle_newfstat_ret(unsigned int *fd, struct stat __user **statbuf_ptr);
 +#if defined(__ARCH_WANT_STAT64) || defined(__ARCH_WANT_COMPAT_STAT64)
-+extern void ksu_handle_fstat64_ret(unsigned int *fd, struct stat64 __user **statbuf_ptr); // optional
++extern void ksu_handle_fstat64_ret(unsigned long *fd, struct stat64 __user **statbuf_ptr); // optional
 +#endif
 +#endif
 +
