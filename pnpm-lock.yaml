@@ -30,8 +30,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       remixicon:
-        specifier: ^4.9.0
-        version: 4.9.0
+        specifier: ^4.9.1
+        version: 4.9.1
       vite-plugin-font:
         specifier: ^5.1.2
         version: 5.1.2
@@ -1624,8 +1624,8 @@ packages:
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
 
-  remixicon@4.9.0:
-    resolution: {integrity: sha512-aeU8xMTuy1dciqJSRVYvYqhe2vg0Qc0gpsG1ypLgWFhdYRJNFeR6qLpQRkhkT6fgCkyz8j/OJ6YfDPw/U4gG1g==}
+  remixicon@4.9.1:
+    resolution: {integrity: sha512-36gLSoujkabnCFZFDyP17VNh9piuBA/rsXUb4auSJWLGsHVXtmxLj/EM5FjaEAGnk8oIAj1Azob/DZ2N+90lAQ==}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -3639,7 +3639,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  remixicon@4.9.0: {}
+  remixicon@4.9.1: {}
 
   require-directory@2.1.1: {}
 
