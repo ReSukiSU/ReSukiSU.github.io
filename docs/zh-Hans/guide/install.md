@@ -4,9 +4,19 @@
 我们默认你已经拥有一定的刷机基础能力，和基本的救砖知识，所以这一部分的文档并不会写得很详细
 :::
 
+## 下载ReSukiSU管理器 {#Get-manager}
+
+::: tip 仍在开发中...
+在 [`new-manager`](https://github.com/ReSukiSU/ReSukiSU/tree/new-manager) 分支合并之前，ReSukiSU暂时不会发布至Github Release，但你可以通过[nightly.link](https://nightly.link/ReSukiSU/ReSukiSU/workflows/build-manager/new-manager/Manager-release.zip) 或者 [Github Action](https://github.com/ReSukiSU/ReSukiSU/actions/workflows/build-manager.yml)来获取目前仍在开发中的管理器。
+
+(Nightly.link无需登录Github账号即可下载文件)
+:::
+
+## 安装 {#Installzation}
+
 ReSukiSU 提供了以下两种方式来安装 ReSukiSU
 
-## LKM 安装 {#LKM}
+### LKM 安装 {#LKM}
 
 在安装好 ReSukiSU 管理器后，如果内核版本 >= 5.10 ，点击`未安装`后会跳转到安装界面并显示LKM修补/安装。
 
@@ -21,7 +31,7 @@ ReSukiSU 提供了以下两种方式来安装 ReSukiSU
 
 之后需要通过一些方法，把修补后的镜像文件**刷入**进对应分区，便大功告成了
 
-## GKI2/GKI1/非GKI内核（Anykernel3）安装 {#builtin}
+### GKI2/GKI1/非GKI内核（Anykernel3）安装 {#builtin}
 
 ReSukiSU管理器虽然内置了Anykernel3的安装方式，但是在管理器未获得**ROOT权限**时，这个安装方法不会被显示出来。您可能需要以下操作才可使用
 
@@ -29,7 +39,7 @@ ReSukiSU管理器虽然内置了Anykernel3的安装方式，但是在管理器�
 
 2.使用`magiskboot`手动修改boot镜像
 
-### 手动修改boot镜像 {#manual-patch-boot}
+#### 手动修改boot镜像 {#manual-patch-boot}
 
 ::: info Note
 这一部分取自 [KernelSU官方文档](https://kernelsu.org)
@@ -40,13 +50,13 @@ ReSukiSU管理器虽然内置了Anykernel3的安装方式，但是在管理器�
 
 Magisk 官方提供的 `magiskboot` 只能运行在 Android/Linux 设备上，如果你想在 macOS/Windows 上使用 `magiskboot` 可以使用第二个方法。
 
-#### 准备 {#patch-preparation}
+##### 准备 {#patch-preparation}
 
 1. 获取你手机的原厂 boot.img；你可以通过你手机的线刷包解压后之间获取，如果你是卡刷包，那你也许需要 [payload-dumper-go](https://github.com/ssut/payload-dumper-go)
 2. 下载你所获取到的 AnyKernel3 刷机包
 3. 解压缩 AnyKernel3 刷机包，获取其中的 `Image` 文件，此文件为 KernelSU 的内核文件。
 
-#### 在 Android 设备上使用 magiskboot {#using-magiskboot-on-Android-devices}
+##### 在 Android 设备上使用 magiskboot {#using-magiskboot-on-Android-devices}
 
 1. 在 Magisk 的 [Release 页面](https://github.com/topjohnwu/Magisk/releases) 下载最新的 Magisk 安装包。
 2. 将 `Magisk-*(version).apk` 重命名为 `Magisk-*.zip` 然后解压缩。
@@ -57,7 +67,7 @@ Magisk 官方提供的 `magiskboot` 只能运行在 Android/Linux 设备上，�
 7. 使用 `Image` 替换 `kernel`: `mv -f Image kernel`
 8. 执行 `./magiskboot repack boot.img` 打包 img，此时你会得到一个 `new-boot.img` 的文件，使用这个文件 fastboot 刷入设备即可。
 
-#### 在 macOS/Windows/Linux 上使用 magiskboot {#using-magiskboot-on-PC}
+##### 在 macOS/Windows/Linux 上使用 magiskboot {#using-magiskboot-on-PC}
 
 1. 在 [magiskboot_build](https://github.com/ookiineko/magiskboot_build/releases/tag/last-ci) 下载适合你操作系统的 `magiskboot` 二进制文件。
 2. 在你的 PC 上准备好设备原厂的 boot.img 和 KernelSU 的 Image。
