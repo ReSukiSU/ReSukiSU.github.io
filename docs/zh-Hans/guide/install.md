@@ -7,7 +7,7 @@
 ## 下载ReSukiSU管理器 {#Get-manager}
 
 ::: tip 仍在开发中...
-在 [`new-manager`](https://github.com/ReSukiSU/ReSukiSU/tree/new-manager) 分支合并之前，ReSukiSU暂时不会发布至Github Release，但你可以通过[nightly.link](https://nightly.link/ReSukiSU/ReSukiSU/workflows/build-manager/new-manager/Manager-release.zip) 或者 [Github Action](https://github.com/ReSukiSU/ReSukiSU/actions/workflows/build-manager.yml)来获取目前仍在开发中的管理器。
+因为 ReSukiSU 的管理器还有很多未完成的东西，所以ReSukiSU暂时不会发布至Github Release，但你可以通过[nightly.link](https://nightly.link/ReSukiSU/ReSukiSU/workflows/build-manager/main/Manager-release.zip) 或者 [Github Action](https://github.com/ReSukiSU/ReSukiSU/actions/workflows/build-manager.yml)来获取目前仍在开发中的管理器。
 
 (Nightly.link无需登录Github账号即可下载文件)
 :::
