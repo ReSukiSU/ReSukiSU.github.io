@@ -10,7 +10,7 @@ ReSukiSU will check every hook here, and if any are missing, it will **cause com
 The hook in this part is adapted from [`backslashxx/KernelSU #5`](https://github.com/backslashxx/KernelSU/issues/5)
 :::
 
-### generic hooks {#generic-hooks}
+### generic hooks <Badge type="danger" text="Required"/> {#generic-hooks} 
 ::: code-group
 
 ```diff[exec.c]
@@ -148,7 +148,7 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 ```
 :::
 
-### faccessat hook {#faccessat-hook}
+### faccessat hook <Badge type="danger" text="Required"/> {#faccessat-hook}
 For this hook, different kernel versions are inconsistent, so it is explained separately here
 
 ::: code-group
@@ -201,7 +201,7 @@ For this hook, different kernel versions are inconsistent, so it is explained se
  	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
  		return -EINVAL;
 ```
-### input hooks {#input-hooks}
+### input hooks <Badge type="tip" text="Conditionally Required"/> {#input-hooks}
 :::warning This manual hook is generally not required
 For kernels where the input handler is not corrupted, this hook can be automatically applied via the input handler as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_INPUT_HOOK` is enabled.
 :::
@@ -235,7 +235,7 @@ For kernels where the input handler is not corrupted, this hook can be automatic
  		spin_lock_irqsave(&dev->event_lock, flags);
 ```
 :::
-### setuid hooks {#setuid-hooks}
+### setuid hooks <Badge type="warning" text="6.8+ Required"/> {#setuid-hooks}
 :::warning Most versions do not require this manual hook.
 For kernel belows 6.8, This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` is enabled.
 :::
@@ -271,7 +271,7 @@ index 4a87dc5fa..aac25df8c 100644
 ```
 :::
 
-### sys_read hook {#sys-read-hook}
+### sys_read hook <Badge type="warning" text="6.8+ Required"/> {#sys-read-hook}
 :::warning Most versions do not require this manual hook.
 For kernel belows 6.8, This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` is enabled.
 :::
@@ -327,7 +327,7 @@ For kernel belows 6.8, This hook can be automatically applied via LSM as long as
 ```
 :::
 
-### selinux hook {#selinux-hook}
+### selinux hook <Badge type="warning" text="4.9- Required"/> {#selinux-hook}
 :::warning Most versions do not require this manual hook.
 For kernel higher 4.9, This hook is no need, this is hook is only for 4.9- modules not working
 :::
@@ -365,7 +365,7 @@ static int check_nnp_nosuid(const struct linux_binprm *bprm,
 ```
 :::
 
-## path_umount {#how-to-backport-path-umount}
+## path_umount <Badge type="info" text="Optional"/> {#how-to-backport-path-umount}
 
 ::: info Notes
 This is an optional patch，you don't need to apply this one.
