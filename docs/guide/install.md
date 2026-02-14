@@ -7,7 +7,7 @@ We assume you already have basic firmware flashing skills and bricking recovery 
 ## Get Manager {#Get-manager}
 
 ::: tip Still Work in Progress...
-Because ReSukiSU's manager have too much things to do,so ReSukiSU will not be released on GitHub Release. However, you can obtain the manager currently under development via [nightly.link](https://nightly.link/ReSukiSU/ReSukiSU/workflows/build-manager/main/Manager-release.zip) or [GitHub Action](https://github.com/ReSukiSU/ReSukiSU/actions/workflows/build-manager.yml).
+Because ReSukiSU's manager have too much things to do,so ReSukiSU will not be released on GitHub Release. However, you can obtain the manager currently under development via [`nightly.link`](https://nightly.link/ReSukiSU/ReSukiSU/workflows/build-manager/main/Manager-release.zip) or [`GitHub Action`](https://github.com/ReSukiSU/ReSukiSU/actions/workflows/build-manager.yml).
 
 (Nightly.link allows downloading files without logging into a GitHub account.)
 :::
