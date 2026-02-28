@@ -273,9 +273,9 @@ For kernels where the input handler is not corrupted, this hook can be automatic
  		spin_lock_irqsave(&dev->event_lock, flags);
 ```
 :::
-### setuid hooks <Badge type="warning" text="6.8+ Required"/> {#setuid-hooks}
+### setuid hooks <Badge type="warning" text="6.8+ Required"/> <Badge type="warning" text="4.2- Required"/> {#setuid-hooks}
 :::warning Most versions do not require this manual hook.
-For kernel belows 6.8, This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` is enabled.
+For kernel 4.2~6.8 (not included 6.8), This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` is enabled.
 :::
 
 ::: code-group
@@ -336,9 +336,9 @@ index a3bef5bd..0b116d7c 100644
 ```
 :::
 
-### sys_read hook <Badge type="warning" text="6.8+ Required"/> {#sys-read-hook}
+### sys_read hook <Badge type="warning" text="6.8+ Required"/> <Badge type="warning" text="4.2- Required"/> {#sys-read-hook}
 :::warning Most versions do not require this manual hook.
-For kernel belows 6.8, This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` is enabled.
+For kernel 4.2~6.8 (not included 6.8), This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` is enabled.
 :::
 
 ::: code-group

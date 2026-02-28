@@ -274,9 +274,9 @@ index a3bef5bd..08d196f5 100644
 ```
 :::
 
-### setuid hooks <Badge type="warning" text="6.8+ 必加"/> {#setuid-hooks}
+### setuid hooks <Badge type="warning" text="6.8+ 必加"/> <Badge type="warning" text="4.2- 必加"/> {#setuid-hooks}
 :::warning 大部分版本不需要此手动 hook
-对于 6.8- 内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` 处于启用状态，此 hook 即可通过 LSM 自动应用
+对于 4.2~6.8(不包括6.8) 的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` 处于启用状态，此 hook 即可通过 LSM 自动应用
 :::
 
 ::: code-group
@@ -337,9 +337,9 @@ index a3bef5bd..0b116d7c 100644
 ```
 :::
 
-### sys_read hook <Badge type="warning" text="6.8+ 必加"/> {#sys-read-hook}
+### sys_read hook <Badge type="warning" text="6.8+ 必加"/> <Badge type="warning" text="4.2- 必加"/> {#sys-read-hook}
 :::warning 大部分版本不需要此手动 hook
-对于 6.8- 内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` 处于启用状态，此 hook 即可通过 LSM 自动应用
+对于 4.2~6.8(不包括6.8) 的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` 处于启用状态，此 hook 即可通过 LSM 自动应用
 :::
 
 ::: code-group
