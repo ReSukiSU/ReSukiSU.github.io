@@ -120,32 +120,6 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 	return error;
 }
 ```
-```diff[reboot.c]
---- a/kernel/reboot.c
-+++ b/kernel/reboot.c
-@@ -277,6 +277,11 @@ static DEFINE_MUTEX(reboot_mutex);
-  *
-  * reboot doesn't sync: do that yourself before calling this.
-  */
-+
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+extern int ksu_handle_sys_reboot(int magic1, int magic2, unsigned int cmd, void __user **arg);
-+#endif
-+
- SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
- 		void __user *, arg)
- {
-@@ -284,6 +289,9 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
- 	char buffer[256];
- 	int ret = 0;
- 
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_sys_reboot(magic1, magic2, cmd, &arg);
-+#endif
- 	/* We only trust the superuser with rebooting the system. */
- 	if (!ns_capable(pid_ns->user_ns, CAP_SYS_BOOT))
- 		return -EPERM;
-```
 :::
 
 ### faccessat hook <Badge type="danger" text="必加"/> {#faccessat-hook}
@@ -201,10 +175,73 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
  	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
  		return -EINVAL;
 ```
+:::
+
+### sys_reboot hook <Badge type="danger" text="必加"/> {#sys-reboot-hook}
+对于此 hook，不同版本内核不一致，此处单独说明
+
+::: code-group
+
+```diff[3.11+]
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -277,6 +277,11 @@ static DEFINE_MUTEX(reboot_mutex);
+  *
+  * reboot doesn't sync: do that yourself before calling this.
+  */
++
++#ifdef CONFIG_KSU_MANUAL_HOOK
++extern int ksu_handle_sys_reboot(int magic1, int magic2, unsigned int cmd, void __user **arg);
++#endif
++
+ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
+ 		void __user *, arg)
+ {
+@@ -284,6 +289,9 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
+ 	char buffer[256];
+ 	int ret = 0;
+ 
++#ifdef CONFIG_KSU_MANUAL_HOOK
++	ksu_handle_sys_reboot(magic1, magic2, cmd, &arg);
++#endif
+ 	/* We only trust the superuser with rebooting the system. */
+ 	if (!ns_capable(pid_ns->user_ns, CAP_SYS_BOOT))
+ 		return -EPERM;
+```
+
+```diff[3.11-]
+diff --git a/kernel/sys.c b/kernel/sys.c
+index a3bef5bd..08d196f5 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -455,6 +455,10 @@ EXPORT_SYMBOL_GPL(kernel_power_off);
+
+ static DEFINE_MUTEX(reboot_mutex);
+
++#ifdef CONFIG_KSU_MANUAL_HOOK
++extern int ksu_handle_sys_reboot(int magic1, int magic2, unsigned int cmd, void __user **arg);
++#endif
++
+ /*
+  * Reboot system call: for obvious reasons only root may call it,
+  * and even root needs to set up some magic numbers in the registers
+@@ -470,6 +474,10 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
+        char buffer[256];
+        int ret = 0;
+
++#ifdef CONFIG_KSU_MANUAL_HOOK
++       ksu_handle_sys_reboot(magic1, magic2, cmd, &arg);
++#endif
++
+        /* We only trust the superuser with rebooting the system. */
+        if (!ns_capable(pid_ns->user_ns, CAP_SYS_BOOT))
+                return -EPERM;
+```
+:::
 
 ### input hooks <Badge type="tip" text="按需必加"/> {#input-hooks}
 :::warning 一般无需此手动 hook
-对于input handler 未损坏的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INPUT_HOOK` 处于启用状态，此 hook 即可通过 input_hanlder 自动应用
+对于 input handler 未损坏的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INPUT_HOOK` 处于启用状态，此 hook 即可通过 input_hanlder 自动应用
 :::
 
 ::: code-group
@@ -243,7 +280,7 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 :::
 
 ::: code-group
-```diff[sys.c]
+```diff[4.17+]
 diff --git a/kernel/sys.c b/kernel/sys.c
 index 4a87dc5fa..aac25df8c 100644
 --- a/kernel/sys.c
@@ -262,6 +299,33 @@ index 4a87dc5fa..aac25df8c 100644
 @@ -692,6 +696,10 @@ long __sys_setresuid(uid_t ruid, uid_t euid, uid_t suid)
         kuid_t kruid, keuid, ksuid;
         bool ruid_new, euid_new, suid_new;
+
++#ifdef CONFIG_KSU_MANUAL_HOOK
++       (void)ksu_handle_setresuid(ruid, euid, suid);
++#endif
++
+        kruid = make_kuid(ns, ruid);
+        keuid = make_kuid(ns, euid);
+        ksuid = make_kuid(ns, suid);
+```
+```diff[4.17-]
+diff --git a/kernel/sys.c b/kernel/sys.c
+index a3bef5bd..0b116d7c 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -835,6 +843,9 @@ error:
+        return retval;
+ }
+
++#ifdef CONFIG_KSU_MANUAL_HOOK
++extern int ksu_handle_setresuid(uid_t ruid, uid_t euid, uid_t suid);
++#endif
+
+ /*
+  * This function implements a generic ability to update ruid, euid,
+@@ -848,6 +859,10 @@ SYSCALL_DEFINE3(setresuid, uid_t, ruid, uid_t, euid, uid_t, suid)
+        int retval;
+        kuid_t kruid, keuid, ksuid;
 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +       (void)ksu_handle_setresuid(ruid, euid, suid);
@@ -309,7 +373,7 @@ index 4a87dc5fa..aac25df8c 100644
  }
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+extern bool ksu_sys_read_hook __read_mostly;
++extern bool ksu_init_rc_hook __read_mostly;
 +extern __attribute__((cold)) int ksu_handle_sys_read(unsigned int fd,
 +				char __user **buf_ptr, size_t *count_ptr);
 +#endif
@@ -320,7 +384,7 @@ index 4a87dc5fa..aac25df8c 100644
  	ssize_t ret = -EBADF;
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	if (unlikely(ksu_sys_read_hook)) 
++	if (unlikely(ksu_init_rc_hook)) 
 +		ksu_handle_sys_read(fd, &buf, &count);
 +#endif
  	if (f.file) {
