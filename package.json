@@ -14,7 +14,6 @@
     "markdown-it-autospace": "^1.1.4",
     "pagefind": "^1.4.0",
     "remixicon": "^4.9.1",
-    "vite-plugin-font": "^5.1.2",
     "vitepress": "~2.0.0-alpha.16",
     "vitepress-plugin-codeblocks-fold": "^1.2.35",
     "vitepress-plugin-pagefind": "^0.4.18",
