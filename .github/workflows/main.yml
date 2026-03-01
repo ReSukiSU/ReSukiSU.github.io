@@ -8,6 +8,7 @@ on:
     paths:
       - docs/**
       - package.json
+      - bun.lock
       - .github/workflows/main.yml
 
 jobs:
@@ -25,7 +26,7 @@ jobs:
         with:
           bun-version: latest
       - name: Install Dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
       - name: Build
         run: bun run --bun docs:build
       - name: Upload Pages Artifact

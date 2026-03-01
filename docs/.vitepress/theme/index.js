@@ -8,7 +8,7 @@ import { NolebaseInlineLinkPreviewPlugin } from "@nolebase/vitepress-plugin-inli
 import codeblocksFold from "vitepress-plugin-codeblocks-fold";
 import CopyOrDownloadAsMarkdownButtons from "vitepress-plugin-llms/vitepress-components/CopyOrDownloadAsMarkdownButtons.vue";
 
-/ plugin css /;
+/* plugin css */
 import "@nolebase/vitepress-plugin-highlight-targeted-heading/client/style.css";
 import "@nolebase/vitepress-plugin-git-changelog/client/style.css";
 import "@nolebase/vitepress-plugin-enhanced-mark/client/style.css";
@@ -16,7 +16,7 @@ import "@nolebase/vitepress-plugin-inline-link-preview/client/style.css";
 import "vitepress-plugin-codeblocks-fold/style/index.css";
 import "markdown-it-autospace/spacing.css";
 
-/ font & style css /;
+/* font & style css */
 
 import "remixicon/fonts/remixicon.css";
 import "./style.css";
