@@ -22,7 +22,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: oven-sh/setup-bun@v2
-        bun-version: latest
+        with:
+          bun-version: latest
       - name: Install Dependencies
         run: bun install
       - name: Build
