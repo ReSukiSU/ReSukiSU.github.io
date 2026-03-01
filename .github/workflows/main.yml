@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - dev
+      - main
     paths:
       - docs/**
       - package.json
@@ -18,7 +18,7 @@ jobs:
       pages: write
       id-token: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - uses: oven-sh/setup-bun@v2
@@ -27,14 +27,14 @@ jobs:
       - name: Install Dependencies
         run: bun install
       - name: Build
-        run: bun run docs:build
+        run: bun run --bun docs:build
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v4
         with:
           path: ./docs/.vitepress/dist
 
   deploy:
-    if: github.ref == 'refs/heads/dev'
+    if: github.ref == 'refs/heads/main'
     needs: build
     permissions:
       pages: write
