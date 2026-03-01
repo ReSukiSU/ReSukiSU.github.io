@@ -43,7 +43,7 @@ export default defineConfig({
         rel: "stylesheet",
         href: "https://luyanci.github.io/MisansVF/result.css",
       },
-    ]
+    ],
 
     [
       "meta",
