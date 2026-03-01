@@ -36,26 +36,12 @@ export default defineConfig({
         href: "https://s4.zstatic.net/npm/jetbrains-mono-webfont@latest/jetbrains-mono.css",
       },
     ],
-    ["link", { rel: "preconnect", href: "https://cdn.jsdelivr.net" }],
+    ["link", { rel: "preconnect", href: "https://luyanci.github.io" }],
     [
       "link",
       {
         rel: "stylesheet",
-        href: "https://cdn.jsdelivr.net/npm/misans@4.0.0/lib/Normal/MiSans-Regular.min.css",
-      },
-    ],
-    [
-      "link",
-      {
-        rel: "stylesheet",
-        href: "https://cdn.jsdelivr.net/npm/misans@4.0.0/lib/Normal/MiSans-Medium.min.css",
-      },
-    ],
-    [
-      "link",
-      {
-        rel: "stylesheet",
-        href: "https://cdn.jsdelivr.net/npm/misans@4.0.0/lib/Normal/MiSans-Semibold.min.css",
+        href: "https://luyanci.github.io/MisansVF/result.css",
       },
     ],
 
