@@ -1,11 +1,11 @@
 {
   "name": "resukisu-docs",
   "license": "MIT",
-  "version": "1.0.0",
-  "description": "ReSukiSU documents",
+  "version": "1.1.0",
+  "description": "ReSukiSU documentation",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316",
+  "packageManager": "pnpm@10.30.3",
   "dependencies": {
     "@nolebase/markdown-it-bi-directional-links": "^2.18.2",
     "@nolebase/vitepress-plugin-enhanced-mark": "^2.18.2",

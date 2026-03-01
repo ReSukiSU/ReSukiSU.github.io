@@ -4,39 +4,43 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main # default branch
+      - main
     paths:
-      - docs/**/**
+      - docs/**
       - package.json
       - .github/workflows/main.yml
+
 jobs:
-  pages:
+  build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
+      pages: write
+      id-token: write
     steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
         with:
           version: 10
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - name: Use Node.js LTS
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: "24"
           cache: pnpm
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Build
         run: pnpm run docs:build
-      - name: Deploy
+      - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v4
         with:
           path: ./docs/.vitepress/dist
+
   deploy:
     if: github.ref == 'refs/heads/main'
-    needs: pages
+    needs: build
     permissions:
       pages: write
       id-token: write
