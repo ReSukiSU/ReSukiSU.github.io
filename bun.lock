@@ -11,6 +11,7 @@
         "@nolebase/vitepress-plugin-highlight-targeted-heading": "^2.18.2",
         "@nolebase/vitepress-plugin-inline-link-preview": "^2.18.2",
         "markdown-it-autospace": "^1.1.4",
+        "misans-vf-4web": "^1.1.1",
         "pagefind": "^1.4.0",
         "remixicon": "^4.9.1",
         "vitepress": "~2.0.0-alpha.16",
@@ -510,6 +511,8 @@
     "minimatch": ["minimatch@10.2.4", "", { "dependencies": { "brace-expansion": "^5.0.2" } }, "sha512-oRjTw/97aTBN0RHbYCdtF1MQfvusSIBQM0IZEgzl6426+8jSC0nF1a/GmnVLpfB9yyr6g6FTqWqiZVbxrtaCIg=="],
 
     "minisearch": ["minisearch@7.2.0", "", {}, "sha512-dqT2XBYUOZOiC5t2HRnwADjhNS2cecp9u+TJRiJ1Qp/f5qjkeT5APcGPjHw+bz89Ms8Jp+cG4AlE+QZ/QnDglg=="],
+
+    "misans-vf-4web": ["misans-vf-4web@1.1.1", "", {}, "sha512-yzcN9Ft1HYM0hKGCLvyPYolDXjtfF4RtENZ3+EMOpTYKJeRWjuQHbwALEr8cjW87srRxYaV2qjr5Zon7WI10Vw=="],
 
     "mitt": ["mitt@3.0.1", "", {}, "sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw=="],
 

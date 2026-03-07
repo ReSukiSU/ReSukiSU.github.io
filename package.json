@@ -12,6 +12,7 @@
     "@nolebase/vitepress-plugin-highlight-targeted-heading": "^2.18.2",
     "@nolebase/vitepress-plugin-inline-link-preview": "^2.18.2",
     "markdown-it-autospace": "^1.1.4",
+    "misans-vf-4web": "^1.1.1",
     "pagefind": "^1.4.0",
     "remixicon": "^4.9.1",
     "vitepress": "~2.0.0-alpha.16",

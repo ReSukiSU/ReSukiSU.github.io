@@ -36,14 +36,6 @@ export default defineConfig({
         href: "https://s4.zstatic.net/npm/jetbrains-mono-webfont@latest/jetbrains-mono.css",
       },
     ],
-    ["link", { rel: "preconnect", href: "https://luyanci.github.io" }],
-    [
-      "link",
-      {
-        rel: "stylesheet",
-        href: "https://luyanci.github.io/MisansVF/result.css",
-      },
-    ],
 
     [
       "meta",
