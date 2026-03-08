@@ -122,6 +122,12 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 ```
 :::
 
+For this part,You should find the these functions in kernel source:
+
+1. In `fs/exec.c`, find `do_execve`. Note that for 32-bit su and 32-on-64, you also need to hook `compat_do_execve` in the same file.
+
+2. In `fs/stat.c`, you should find `newfstatat` and `fstatat64` (if 32-bit su is supported) and hook them. You also need to hook `newfstat` and `fstat64` (if 32-bit su is supported) for the return value.
+
 ### faccessat hook <Badge type="danger" text="Required"/> {#faccessat-hook}
 For this hook, different kernel versions are inconsistent, so it is explained separately here
 
@@ -176,6 +182,8 @@ For this hook, different kernel versions are inconsistent, so it is explained se
  		return -EINVAL;
 ```
 :::
+
+In this part, you should find `faccessat` in `fs/open.c` and hook it.
 
 ### sys_reboot hook <Badge type="danger" text="Required"/> {#sys-reboot-hook}
 For this hook, different kernel versions are inconsistent, so it is explained separately here
@@ -239,6 +247,8 @@ index a3bef5bd..08d196f5 100644
 ```
 :::
 
+In this part, you should find `reboot` SYSCALL in `kernel/reboot.c` and hook it. Note that for 3.11- kernels, you need to hook `reboot` in `kernel/sys.c` instead.
+
 ### input hooks <Badge type="tip" text="Conditionally Required"/> {#input-hooks}
 :::warning This manual hook is generally not required
 For kernels where the input handler is not corrupted, this hook can be automatically applied via the input handler as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_INPUT_HOOK` is enabled.
@@ -273,6 +283,9 @@ For kernels where the input handler is not corrupted, this hook can be automatic
  		spin_lock_irqsave(&dev->event_lock, flags);
 ```
 :::
+
+In this part, you should find `input_event` in `drivers/input/input.c` and hook it.
+
 ### setuid hooks <Badge type="warning" text="6.8+ Required"/> <Badge type="warning" text="4.2- Required"/> {#setuid-hooks}
 :::warning Most versions do not require this manual hook.
 For kernel 4.2~6.8 (not included 6.8), This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` is enabled.
@@ -336,6 +349,8 @@ index a3bef5bd..0b116d7c 100644
 ```
 :::
 
+In this part, you should find `__sys_setresuid` in `kernel/sys.c` and hook them. Note that for 4.17- kernels, you need to hook `setresuid` instead.
+
 ### sys_read hook <Badge type="warning" text="6.8+ Required"/> <Badge type="warning" text="4.2- Required"/> {#sys-read-hook}
 :::warning Most versions do not require this manual hook.
 For kernel 4.2~6.8 (not included 6.8), This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` is enabled.
@@ -391,6 +406,8 @@ For kernel 4.2~6.8 (not included 6.8), This hook can be automatically applied vi
  		ret = vfs_read(f.file, buf, count, &pos);
 ```
 :::
+
+In this part, you should find `read` in `fs/read_write.c` and hook it. Note that for 4.19- kernels, you only need to hook `read`, and you can ignore `ksys_read` as it is implemented via `read` in those versions.
 
 ## path_umount <Badge type="info" text="Optional"/> {#how-to-backport-path-umount}
 

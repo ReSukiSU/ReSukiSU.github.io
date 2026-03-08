@@ -122,6 +122,11 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 ```
 :::
 
+在这部分中，你需要在内核源码中修改以下函数：
+
+1. 在 `fs/exec.c` 中，找到 `do_execve`。注意对于 32-bit su 和 32-on-64，你还需要在同一文件中 hook `compat_do_execve`。
+2. 在 `fs/stat.c` 中，你需要找到 `newfstatat` 和 `fstatat64`（如果支持 32-bit su）并 hook 它们。你还需要 hook `newfstat` 和 `fstat64`（如果支持 32-bit su）以获取返回值。
+
 ### faccessat hook <Badge type="danger" text="必加"/> {#faccessat-hook}
 对于此 hook，不同版本内核不一致，此处单独说明
 
@@ -176,6 +181,8 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
  		return -EINVAL;
 ```
 :::
+
+在这部分中，你需要在 `fs/open.c` 中找到 `faccessat` 的 SYSCALL 并 hook 它。
 
 ### sys_reboot hook <Badge type="danger" text="必加"/> {#sys-reboot-hook}
 对于此 hook，不同版本内核不一致，此处单独说明
@@ -239,6 +246,8 @@ index a3bef5bd..08d196f5 100644
 ```
 :::
 
+在这部分中，你需要在内核源码中找到 `reboot`的 SYSCALL 并 hook 它。注意对于 3.11- 内核，你需要在 `kernel/sys.c` 中 hook `reboot`，而不是在 `kernel/reboot.c` 中。
+
 ### input hooks <Badge type="tip" text="按需必加"/> {#input-hooks}
 :::warning 一般无需此手动 hook
 对于 input handler 未损坏的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INPUT_HOOK` 处于启用状态，此 hook 即可通过 input_hanlder 自动应用
@@ -273,6 +282,8 @@ index a3bef5bd..08d196f5 100644
  		spin_lock_irqsave(&dev->event_lock, flags);
 ```
 :::
+
+在这部分中，你需要在 `drivers/input/input.c` 中找到 `input_event` 并 hook 它。
 
 ### setuid hooks <Badge type="warning" text="6.8+ 必加"/> <Badge type="warning" text="4.2- 必加"/> {#setuid-hooks}
 :::warning 大部分版本不需要此手动 hook
@@ -337,6 +348,8 @@ index a3bef5bd..0b116d7c 100644
 ```
 :::
 
+在这部分中，你需要在内核源码中找到 `__sys_setresuid`并 hook 它。注意对于 4.17- 内核，你需要 hook `setresuid` 而不是 `__sys_setresuid`。
+
 ### sys_read hook <Badge type="warning" text="6.8+ 必加"/> <Badge type="warning" text="4.2- 必加"/> {#sys-read-hook}
 :::warning 大部分版本不需要此手动 hook
 对于 4.2~6.8(不包括6.8) 的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` 处于启用状态，此 hook 即可通过 LSM 自动应用
@@ -392,6 +405,8 @@ index a3bef5bd..0b116d7c 100644
  		ret = vfs_read(f.file, buf, count, &pos);
 ```
 :::
+
+在这部分中，你需要在 `fs/read_write.c` 中找到 `read` 的 `SYSCALL` 并 hook 它。
 
 ## path_umount <Badge type="info" text="可选"/> {#how-to-backport-path-umount}
 
