@@ -7,7 +7,7 @@ hero:
   text: "一个更加稳定的SukiSU分支"
   tagline: "让SukiSU再次伟大！"
   image:
-    src: /logo-mini.svg
+    src: /logo.svg
     alt: ReSukiSU Logo
   actions:
     - theme: brand
