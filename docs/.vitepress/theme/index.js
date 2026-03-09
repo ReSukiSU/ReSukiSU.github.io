@@ -39,7 +39,7 @@ const FullScreen404 = defineComponent({
     what_can_i_do: "Check the URL or <a href=\"/\">return to the homepage</a>.",
     perf_sec_by: {
       text: "ReSukiSU Development Team",
-      link: "https://resukisu.github.io",
+      link: "https://github.com/ReSukiSU",
     },
     more_information:{
       text: "ReSukiSU Development Team Issue Tracker",
