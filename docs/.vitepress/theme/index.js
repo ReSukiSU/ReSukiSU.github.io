@@ -1,5 +1,5 @@
 // https://vitepress.dev/guide/custom-theme
-import { defineComponent, h, onErrorCaptured,ref } from "vue";
+import { defineComponent, h } from "vue";
 import DefaultTheme from "vitepress/theme-without-fonts";
 import { useData, useRoute } from "vitepress";
 import { NolebaseGitChangelogPlugin } from "@nolebase/vitepress-plugin-git-changelog/client";
@@ -28,9 +28,23 @@ const FullScreen404 = defineComponent({
     const html = render_cf_error_page({
     title: "Page not found",
     error_code: "404",
-    
+    error_source: "Cloudflare",
+    cloudflare_status: {
+      location: "Vitepress",
+      name: "Somebody",
+      status: "error",
+      status_text: "Set up us the bomb.",
+    },
     what_happened: "The page you requested does not exist.",
-    what_can_i_do: "Check the URL or return to the homepage."
+    what_can_i_do: "Check the URL or <a href=\"/\">return to the homepage</a>.",
+    perf_sec_by: {
+      text: "ReSukiSU Development Team",
+      link: "https://resukisu.github.io",
+    },
+    more_information:{
+      text: "ReSukiSU Development Team Issue Tracker",
+      link: "https://github.com/ReSukiSU/ReSukiSU.github.io/issues",
+    }
   })
     return () => h("div", {
       innerHTML: html,
@@ -44,42 +58,10 @@ const FullScreen404 = defineComponent({
   },
 });
 
-const FullScreen500 = defineComponent({
-  props: ['error'],
-  setup(props) {
-    const html = render_cf_error_page({
-    title: "Internal Server Error",
-    error_code: "500",
-    what_happened: props.error?.toString() || "An unexpected error occurred on the server.",
-    what_can_i_do: "Try refreshing the page or come back later."
-  })
-    return () => h("div", {
-      innerHTML: html,
-      style: {
-        width: "100%",
-        height: "100%",
-        position: "fixed",
-        inset: 0,
-      },
-    });
-  },
-});
-
 /** @type {import('vitepress').Theme} */
 export default {
   extends: DefaultTheme,
   Layout: () => {
-    const error = ref(null);
-    onErrorCaptured((err) => {
-      console.error("Captured error in layout:", err);
-      error.value = err;
-      return false; // prevent further propagation
-    });
-
-    if (error.value) {
-      return h(FullScreen500, { error: error.value });
-    }
-
     if (useData().page.value.isNotFound) {
       return h(FullScreen404);
     }
