@@ -456,10 +456,10 @@ index a3bef5bd..0b116d7c 100644
 
 在这部分中，你需要在 `fs/read_write.c` 中找到 `read` 的 `SYSCALL` 并 hook 它。
 
-## policy_rwlock hook <Badge type="info" text="可选"/> {#policy-rwlock-hook}
+## policy_rwlock export <Badge type="info" text="可选"/> {#policy-rwlock-export}
 
 ::: info Notes
-这是一个可选选项,但不修改这一部分可能会导致某些设备的安全性问题
+这是一个可选选项,但不修改这一部分可能会导致某些设备上内存管理方面的安全性问题
 :::
 
 ```diff

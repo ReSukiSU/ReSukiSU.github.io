@@ -455,10 +455,10 @@ For kernel 4.2~6.8 (not included 6.8), This hook can be automatically applied vi
 
 In this part, you should find `read` in `fs/read_write.c` and hook it. Note that for 4.19- kernels, you only need to hook `read`, and you can ignore `ksys_read` as it is implemented via `read` in those versions.
 
-## policy_rwlock hook <Badge type="info" text="Optional"/> {#policy-rwlock-hook}
+## policy_rwlock export <Badge type="info" text="Optional"/> {#policy-rwlock-export}
 
 ::: info Notes
-This is an optional patch，but it can improve the security of ReSukiSU on some devices. You can choose to apply it or not.
+This is an optional patch，but it can improve memory management security on some devices. You can choose to apply it or not.
 :::
 
 ```diff
@@ -478,7 +478,7 @@ index b818410d2418..ea2f3022744f 100644
 
 ```
 
-For this hook,it's easy to apply it by simply remove `static` from the definition of `policy_rwlock` in `security/selinux/ss/services.c`
+In this part,it's easy to apply it by simply remove `static` from the definition of `policy_rwlock` in `security/selinux/ss/services.c`
 
 ## path_umount <Badge type="info" text="Optional"/> {#how-to-backport-path-umount}
 
