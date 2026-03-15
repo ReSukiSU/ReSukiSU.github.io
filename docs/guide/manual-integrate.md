@@ -94,7 +94,7 @@ For this hook, different kernel versions are inconsistent, so it is explained se
 
 ::: code-group
 
-```diff[exec.c]
+```diff[3.14+]
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -1886,12 +1886,26 @@ static int do_execveat_common(int fd, struct filename *filename,
