@@ -478,7 +478,7 @@ index b818410d2418..ea2f3022744f 100644
 
 ```
 
-对于此hook,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `policy_rwlock` 的定义，并将其前面的 `static` 关键字去掉即可。
+For this hook,it's easy to apply it by simply remove `static` from the definition of `policy_rwlock` in `security/selinux/ss/services.c`
 
 ## path_umount <Badge type="info" text="Optional"/> {#how-to-backport-path-umount}
 
