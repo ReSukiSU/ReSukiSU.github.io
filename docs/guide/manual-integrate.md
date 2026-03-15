@@ -10,44 +10,9 @@ ReSukiSU will check every hook here, and if any are missing, it will **cause com
 The hook in this part is adapted from [`backslashxx/KernelSU #5`](https://github.com/backslashxx/KernelSU/issues/5)
 :::
 
-### generic hooks <Badge type="danger" text="Required"/> {#generic-hooks} 
-::: code-group
+### stat hooks <Badge type="danger" text="Required"/> {#stat-hooks} 
 
-```diff[exec.c]
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1886,12 +1886,26 @@ static int do_execveat_common(int fd, struct filename *filename,
- 	return retval;
- }
- 
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+__attribute__((hot))
-+extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
-+				void *argv, void *envp, int *flags);
-+#endif
-+
- int do_execve(struct filename *filename,
- 	const char __user *const __user *__argv,
- 	const char __user *const __user *__envp)
- {
- 	struct user_arg_ptr argv = { .ptr.native = __argv };
- 	struct user_arg_ptr envp = { .ptr.native = __envp };
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
-+#endif
- 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
- }
- 
-@@ -1919,6 +1933,10 @@ static int compat_do_execve(struct filename *filename,
- 		.is_compat = true,
- 		.ptr.compat = __envp,
- 	};
-+#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
-+#endif
- 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
- }
-```
+::: code-group
 ```diff[stat.c]
 --- a/fs/stat.c
 +++ b/fs/stat.c
@@ -122,11 +87,92 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 ```
 :::
 
-For this part,You should find the these functions in kernel source:
+In this part, you should find `newfstatat` and `fstatat64` (if 32-bit su is supported) in `fs/stat.c` and hook them. You also need to hook `newfstat` and `fstat64` (if 32-bit su is supported) for the return value.
 
-1. In `fs/exec.c`, find `do_execve`. Note that for 32-bit su and 32-on-64, you also need to hook `compat_do_execve` in the same file.
+### execve hook <Badge type="danger" text="Required"/> {#execve-hooks}
+For this hook, different kernel versions are inconsistent, so it is explained separately here
 
-2. In `fs/stat.c`, you should find `newfstatat` and `fstatat64` (if 32-bit su is supported) and hook them. You also need to hook `newfstat` and `fstat64` (if 32-bit su is supported) for the return value.
+::: code-group
+
+```diff[exec.c]
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1886,12 +1886,26 @@ static int do_execveat_common(int fd, struct filename *filename,
+ 	return retval;
+ }
+ 
++#ifdef CONFIG_KSU_MANUAL_HOOK
++__attribute__((hot))
++extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
++				void *argv, void *envp, int *flags);
++#endif
++
+ int do_execve(struct filename *filename,
+ 	const char __user *const __user *__argv,
+ 	const char __user *const __user *__envp)
+ {
+ 	struct user_arg_ptr argv = { .ptr.native = __argv };
+ 	struct user_arg_ptr envp = { .ptr.native = __envp };
++#ifdef CONFIG_KSU_MANUAL_HOOK
++	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#endif
+ 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
+ }
+ 
+@@ -1919,6 +1933,10 @@ static int compat_do_execve(struct filename *filename,
+ 		.is_compat = true,
+ 		.ptr.compat = __envp,
+ 	};
++#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
++	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#endif
+ 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
+ }
+```
+```diff[3.14-]
+diff --git a/fs/exec.c b/fs/exec.c
+index 0adbf5a882fa7..5ffdd425baa85 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1649,6 +1649,12 @@ static int do_execve_common(const char *filename,
+ 	return retval;
+ }
+ 
++#ifdef CONFIG_KSU_MANUAL_HOOK
++__attribute__((hot))
++extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
++				void *argv, void *envp, int *flags);
++#endif
++
+ int do_execve(const char *filename,
+ 	const char __user *const __user *__argv,
+ 	const char __user *const __user *__envp,
+@@ -1656,6 +1662,9 @@ int do_execve(const char *filename,
+ {
+ 	struct user_arg_ptr argv = { .ptr.native = __argv };
+ 	struct user_arg_ptr envp = { .ptr.native = __envp };
++#ifdef CONFIG_KSU_MANUAL_HOOK
++	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#endif
+ 	return do_execve_common(filename, argv, envp, regs);
+ }
+ 
+@@ -1673,6 +1682,9 @@ int compat_do_execve(char *filename,
+ 		.is_compat = true,
+ 		.ptr.compat = __envp,
+ 	};
++#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
++	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#endif
+ 	return do_execve_common(filename, argv, envp, regs);
+ }
+ #endif
+```
+:::
+
+In `fs/exec.c`, find `do_execve`. Note that for 32-bit su and 32-on-64, you also need to hook `compat_do_execve` in the same file.
+
+For 3.14- kernels, the parameter types of `ksu_handle_execveat` may be different from 3.14+ kernels, you need to adjust them according to your actual situation.
 
 ### faccessat hook <Badge type="danger" text="Required"/> {#faccessat-hook}
 For this hook, different kernel versions are inconsistent, so it is explained separately here
@@ -409,10 +455,35 @@ For kernel 4.2~6.8 (not included 6.8), This hook can be automatically applied vi
 
 In this part, you should find `read` in `fs/read_write.c` and hook it. Note that for 4.19- kernels, you only need to hook `read`, and you can ignore `ksys_read` as it is implemented via `read` in those versions.
 
+## policy_rwlock hook <Badge type="info" text="Optional"/> {#policy-rwlock-hook}
+
+::: info Notes
+This is an optional patch，but it can improve the security of ReSukiSU on some devices. You can choose to apply it or not.
+:::
+
+```diff
+diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+index b818410d2418..ea2f3022744f 100644
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -76,7 +76,7 @@ int selinux_policycap_netpeer;
+ int selinux_policycap_openperm;
+ int selinux_policycap_alwaysnetwork;
+ 
+-static DEFINE_RWLOCK(policy_rwlock);
++DEFINE_RWLOCK(policy_rwlock);
+ 
+ static struct sidtab sidtab;
+ struct policydb policydb;
+
+```
+
+对于此hook,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `policy_rwlock` 的定义，并将其前面的 `static` 关键字去掉即可。
+
 ## path_umount <Badge type="info" text="Optional"/> {#how-to-backport-path-umount}
 
 ::: info Notes
-This is an optional patch，you don't need to apply this one.
+you don't need to apply this one.
 :::
 
 You can make the "Umount modules" feature work on pre-GKI kernels by manually backporting `path_umount` from 5.9. You can use this patch as reference:
