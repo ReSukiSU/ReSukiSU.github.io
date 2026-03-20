@@ -11,6 +11,7 @@
     "@nolebase/vitepress-plugin-git-changelog": "^2.18.2",
     "@nolebase/vitepress-plugin-highlight-targeted-heading": "^2.18.2",
     "@nolebase/vitepress-plugin-inline-link-preview": "^2.18.2",
+    "cloudflare-error-page": "^0.1.0",
     "markdown-it-autospace": "^1.1.4",
     "misans-vf-4web": "^1.1.1",
     "pagefind": "^1.4.0",
