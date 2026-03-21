@@ -131,8 +131,6 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
  }
 ```
 ```diff[3.14-]
-diff --git a/fs/exec.c b/fs/exec.c
-index 0adbf5a882fa7..5ffdd425baa85 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -1649,6 +1649,12 @@ static int do_execve_common(const char *filename,
@@ -141,7 +139,7 @@ index 0adbf5a882fa7..5ffdd425baa85 100644
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +__attribute__((hot))
-+extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
++extern int ksu_handle_execve(int *fd, const char *filename,
 +				void *argv, void *envp, int *flags);
 +#endif
 +
@@ -153,7 +151,7 @@ index 0adbf5a882fa7..5ffdd425baa85 100644
  	struct user_arg_ptr argv = { .ptr.native = __argv };
  	struct user_arg_ptr envp = { .ptr.native = __envp };
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
 +#endif
  	return do_execve_common(filename, argv, envp, regs);
  }
@@ -162,8 +160,8 @@ index 0adbf5a882fa7..5ffdd425baa85 100644
  		.is_compat = true,
  		.ptr.compat = __envp,
  	};
-+#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#ifdef CONFIG_KSU_MANUAL_HOOK
++	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
 +#endif
  	return do_execve_common(filename, argv, envp, regs);
  }
@@ -173,7 +171,7 @@ index 0adbf5a882fa7..5ffdd425baa85 100644
 
 在这部分中 修改 `fs/exec.c` 中的 `do_execve`。注意对于 32-bit su 和 32-on-64，你还需要在同一文件中 hook `compat_do_execve`。
 
-对于 3.14- 内核，`ksu_handle_execveat` 的参数类型可能与 3.14+ 内核不同，你需要根据实际情况进行调整。
+对于 3.14- 内核，你需要使用 `ksu_handle_execve`，而不是 `ksu_handle_execveat`，且其传入参数也略有不同于 3.14+ 内核，需要根据实际情况进行调整。
 
 ### faccessat hook <Badge type="danger" text="必加"/> {#faccessat-hook}
 对于此 hook，不同版本内核不一致，此处单独说明
@@ -456,7 +454,46 @@ index a3bef5bd..0b116d7c 100644
 
 在这部分中，你需要在 `fs/read_write.c` 中找到 `read` 的 `SYSCALL` 并 hook 它。
 
-## policy_rwlock export <Badge type="info" text="可选"/> {#policy-rwlock-export}
+### rename hook <Badge type="warning" text="4.2- 必加"/> {#rename-hook}
+
+::: warning
+大部分版本不需要此手动 hook,该hook仅适用于 4.2- 内核
+:::
+
+：：：code-group
+```diff
+diff --git a/security/security.c b/security/security.c
+index bb41f113d3d92..584c30fd811d3 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -526,12 +526,18 @@ int security_inode_mknod(struct inode *dir, struct dentry *dentry, umode_t mode,
+ 	return security_ops->inode_mknod(dir, dentry, mode, dev);
+ }
+ 
++#ifdef CONFIG_KSU_MANUAL_HOOK
++extern void ksu_handle_rename(struct dentry *old_dentry, struct dentry *new_dentry);
++#endif
++
+ int security_inode_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 			   struct inode *new_dir, struct dentry *new_dentry)
+ {
+         if (unlikely(IS_PRIVATE(old_dentry->d_inode) ||
+             (new_dentry->d_inode && IS_PRIVATE(new_dentry->d_inode))))
+ 		return 0;
++
++#ifdef CONFIG_KSU_MANUAL_HOOK
++	ksu_handle_rename(old_dentry, new_dentry);
++#endif
+ 	return security_ops->inode_rename(old_dir, old_dentry,
+ 					   new_dir, new_dentry);
+ }
+```
+:::
+
+在这部分中，你需要在 `security/security.c` 中找到 `security_inode_rename` 并 hook 它。
+
+
+## policy_rwlock export <Badge type="info" text="4.14- 可选"/> {#policy-rwlock-export}
 
 ::: info Notes
 这是一个可选选项,但不修改这一部分可能会导致某些设备上内存管理方面的安全性问题
@@ -479,7 +516,7 @@ index b818410d2418..ea2f3022744f 100644
 
 ```
 
-对于此hook,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `policy_rwlock` 的定义，并将其前面的 `static` 关键字去掉即可。
+在这部分中,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `policy_rwlock` 的定义，并将其前面的 `static` 关键字去掉即可。
 
 ## path_umount <Badge type="info" text="可选"/> {#how-to-backport-path-umount}
 

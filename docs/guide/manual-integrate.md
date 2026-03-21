@@ -130,8 +130,6 @@ For this hook, different kernel versions are inconsistent, so it is explained se
  }
 ```
 ```diff[3.14-]
-diff --git a/fs/exec.c b/fs/exec.c
-index 0adbf5a882fa7..5ffdd425baa85 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -1649,6 +1649,12 @@ static int do_execve_common(const char *filename,
@@ -140,7 +138,7 @@ index 0adbf5a882fa7..5ffdd425baa85 100644
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +__attribute__((hot))
-+extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
++extern int ksu_handle_execve(int *fd, const char *filename,
 +				void *argv, void *envp, int *flags);
 +#endif
 +
@@ -152,7 +150,7 @@ index 0adbf5a882fa7..5ffdd425baa85 100644
  	struct user_arg_ptr argv = { .ptr.native = __argv };
  	struct user_arg_ptr envp = { .ptr.native = __envp };
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
 +#endif
  	return do_execve_common(filename, argv, envp, regs);
  }
@@ -161,8 +159,8 @@ index 0adbf5a882fa7..5ffdd425baa85 100644
  		.is_compat = true,
  		.ptr.compat = __envp,
  	};
-+#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#ifdef CONFIG_KSU_MANUAL_HOOK
++	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
 +#endif
  	return do_execve_common(filename, argv, envp, regs);
  }
@@ -172,7 +170,7 @@ index 0adbf5a882fa7..5ffdd425baa85 100644
 
 In `fs/exec.c`, find `do_execve`. Note that for 32-bit su and 32-on-64, you also need to hook `compat_do_execve` in the same file.
 
-For 3.14- kernels, the parameter types of `ksu_handle_execveat` may be different from 3.14+ kernels, you need to adjust them according to your actual situation.
+For 3.14- kernels, you should use `ksu_handle_execve` instead of `ksu_handle_execveat` and it's parameter types is different from 3.14+ kernels, you need to adjust them according to your actual situation.
 
 ### faccessat hook <Badge type="danger" text="Required"/> {#faccessat-hook}
 For this hook, different kernel versions are inconsistent, so it is explained separately here
@@ -455,10 +453,48 @@ For kernel 4.2~6.8 (not included 6.8), This hook can be automatically applied vi
 
 In this part, you should find `read` in `fs/read_write.c` and hook it. Note that for 4.19- kernels, you only need to hook `read`, and you can ignore `ksys_read` as it is implemented via `read` in those versions.
 
-## policy_rwlock export <Badge type="info" text="Optional"/> {#policy-rwlock-export}
+### rename hook <Badge type="warning" text="4.2- Required"/> {#rename-hook}
+
+::: warning
+Most versions do not require this manual hook, this hook is only required for 4.2- kernels.
+:::
+
+::: code-group
+```diff[security.c]
+diff --git a/security/security.c b/security/security.c
+index bb41f113d3d92..584c30fd811d3 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -526,12 +526,18 @@ int security_inode_mknod(struct inode *dir, struct dentry *dentry, umode_t mode,
+ 	return security_ops->inode_mknod(dir, dentry, mode, dev);
+ }
+ 
++#ifdef CONFIG_KSU_MANUAL_HOOK
++extern void ksu_handle_rename(struct dentry *old_dentry, struct dentry *new_dentry);
++#endif
++
+ int security_inode_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 			   struct inode *new_dir, struct dentry *new_dentry)
+ {
+         if (unlikely(IS_PRIVATE(old_dentry->d_inode) ||
+             (new_dentry->d_inode && IS_PRIVATE(new_dentry->d_inode))))
+ 		return 0;
++
++#ifdef CONFIG_KSU_MANUAL_HOOK
++	ksu_handle_rename(old_dentry, new_dentry);
++#endif
+ 	return security_ops->inode_rename(old_dir, old_dentry,
+ 					   new_dir, new_dentry);
+ }
+```
+:::
+
+In this part, you should find `security_inode_rename` in `security/security.c` and hook it.
+
+## policy_rwlock export <Badge type="info" text="4.14- Optional"/> {#policy-rwlock-export}
 
 ::: info Notes
-This is an optional patch，but it can improve memory management security on some devices. You can choose to apply it or not.
+This is an optional patch,but it can improve memory management security on some devices. You can choose to apply it or not.
 :::
 
 ```diff
