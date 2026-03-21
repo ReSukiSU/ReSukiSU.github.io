@@ -460,8 +460,8 @@ index a3bef5bd..0b116d7c 100644
 大部分版本不需要此手动 hook,该hook仅适用于 4.2- 内核
 :::
 
-：：：code-group
-```diff
+::: code-group
+```diff[security.c]
 diff --git a/security/security.c b/security/security.c
 index bb41f113d3d92..584c30fd811d3 100644
 --- a/security/security.c
