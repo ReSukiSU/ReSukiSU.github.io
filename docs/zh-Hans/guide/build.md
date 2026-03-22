@@ -4,7 +4,7 @@
 这个文档修改自 [KernelSU官方文档](https://kernelsu.org)
 :::
 
-ReSukiSU 可以被集成到GKI/非 GKI 内核中，现在它<mark>最低支持到内核 4.9 版本</mark>；理论上也可以支持更低的版本。
+ReSukiSU 可以被集成到GKI/非 GKI 内核中，现在它<mark>最低支持到内核 3.4 版本</mark>；理论上也可以支持更低的版本。
 
 由于非 GKI 内核的碎片化**极其严重**，因此通常没有统一的方法来编译它。但你完全可以自己集成 ReSukiSU 然后编译内核使用。
 

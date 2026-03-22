@@ -4,7 +4,7 @@
 This document modified from [KernelSU Official Documentation](https://kernelsu.org)
 :::
 
-ReSukiSU can be integrated into non-GKI kernels and was <mark>backported to 4.9 and earlier</mark> versions.
+ReSukiSU can be integrated into non-GKI kernels and was <mark>backported to 3.4 and earlier</mark> versions.
 
 Due to the fragmentation of non-GKI kernels, we don't have a universal way to build them; therefore, we cannot provide a non-GKI boot.img. However, you can build the kernel with ReSukiSU integrated on your own.
 
