@@ -9,11 +9,11 @@ gitChangelog: false
 :::
 
 ::: warning
-本文档仅方便查找设备对应源码/项目，这并不意味该源码**被** ReSukiSU 开发者**审查**，你应自行承担使用风险。
+本文档仅方便查找设备对应源码/项目，这并不意味该源码/项目**被** ReSukiSU 开发者**审查**，你应自行承担使用风险。
 :::
 
 ::: info
-增加设备请通过 文档issue 来添加
+请通过 [向文档创建issue](https://github.com/ReSukiSU/ReSukiSU.github.io/issues) 来添加设备
 :::
 
 <script setup>

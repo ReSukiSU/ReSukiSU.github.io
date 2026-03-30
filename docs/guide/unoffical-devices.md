@@ -5,7 +5,7 @@ gitChangelog: false
 # Unofficially supported devices/project
 
 ::: warning
-In this page, there are kernels for GKI/non-GKI devices supporting ReSukiSU maintained by other developers.
+In this page, there are kernels/projects for GKI/non-GKI devices supporting ReSukiSU maintained by other developers.
 :::
 
 ::: warning
@@ -13,7 +13,7 @@ This page is intended only to help you find the source code/project correspondin
 :::
 
 ::: info
-You can submit a issue to documentation repo to add devices.
+You can [submit a issue](https://github.com/ReSukiSU/ReSukiSU.github.io/issues) to the document repo to add devices you maintaining.
 :::
 
 <script setup>
