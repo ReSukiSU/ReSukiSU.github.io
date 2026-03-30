@@ -1,1 +1,9 @@
-[]
+[
+ {
+  "maintainer": "luyanci",
+  "maintainer_link": "https://github.com/luyanci",
+  "kernel_name": "op_ace6_kbuild",
+  "kernel_link": "https://github.com/luyanci/op_ace6_kbuild",
+  "devices": "Oneplus ACE6 (Stock ROM)"
+ }
+]
