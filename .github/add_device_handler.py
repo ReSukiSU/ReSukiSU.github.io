@@ -16,10 +16,10 @@ def main():
     print(device)
     code_of_conduct = lines[5]
     print(code_of_conduct)
-    assert code_of_conduct.find("[X]") > 0
+    assert code_of_conduct.upper().find("[X]") > 0
     tmp = url.removesuffix("/").replace(github, "").split("/")
     print(tmp)
-    assert len(tmp) == 2
+    assert len(tmp) >= 2
     maintainer = tmp[0]
     print(maintainer)
     maintainer_link = "%s%s" % (github, maintainer)
