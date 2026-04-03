@@ -1,9 +1,16 @@
 [
- {
-  "maintainer": "luyanci",
-  "maintainer_link": "https://github.com/luyanci",
-  "kernel_name": "op_ace6_kbuild",
-  "kernel_link": "https://github.com/luyanci/op_ace6_kbuild",
-  "devices": "Oneplus ACE6 (Stock ROM)"
- }
+    {
+        "maintainer": "luyanci",
+        "maintainer_link": "https://github.com/luyanci",
+        "kernel_name": "op_ace6_kbuild",
+        "kernel_link": "https://github.com/luyanci/op_ace6_kbuild",
+        "devices": "Oneplus ACE6 (Stock ROM)"
+    },
+    {
+        "maintainer": "huangdihd",
+        "maintainer_link": "https://github.com/huangdihd",
+        "kernel_name": "OnePlus_ReSukiSU_SUSFS",
+        "kernel_link": "https://github.com/huangdihd/OnePlus_ReSukiSU_SUSFS",
+        "devices": "OnePlus Devices"
+    }
 ]
