@@ -1,9 +1,16 @@
 [
- {
-  "maintainer": "luyanci",
-  "maintainer_link": "https://github.com/luyanci",
-  "kernel_name": "op_ace6_kbuild",
-  "kernel_link": "https://github.com/luyanci/op_ace6_kbuild",
-  "devices": "Oneplus ACE6 (Stock ROM)"
- }
+    {
+        "maintainer": "luyanci",
+        "maintainer_link": "https://github.com/luyanci",
+        "kernel_name": "op_ace6_kbuild",
+        "kernel_link": "https://github.com/luyanci/op_ace6_kbuild",
+        "devices": "Oneplus ACE6 (Stock ROM)"
+    },
+    {
+        "maintainer": "luyanci",
+        "maintainer_link": "https://github.com/luyanci",
+        "kernel_name": "kernel_xiaomi_phoenix",
+        "kernel_link": "https://github.com/luyanci/kernel_xiaomi_phoenix",
+        "devices": "Redmi K30 4G (phoenix) for PixelExprience 11"
+    }
 ]
