@@ -19,6 +19,7 @@ export default {
             { text: '构建内核', link: '/zh-Hans/guide/build',collapsed: true,items: [
                 { text: '参考钩子', link: '/zh-Hans/guide/manual-integrate' }
             ]},
+            { text: '非官方支持设备', link: '/zh-Hans/guide/unoffical-devices' },
             { text: '常见问题', link: '/zh-Hans/guide/faq' }
             ]
         },
