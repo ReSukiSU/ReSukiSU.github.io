@@ -12,5 +12,12 @@
         "kernel_name": "OnePlus_ReSukiSU_SUSFS",
         "kernel_link": "https://github.com/huangdihd/OnePlus_ReSukiSU_SUSFS",
         "devices": "OnePlus Devices"
+    },
+    {
+        "maintainer": "coolzyd9107",
+        "maintainer_link": "https://github.com/coolzyd9107",
+        "kernel_name": "GKI_KernelSU_SUSFS",
+        "kernel_link": "https://github.com/coolzyd9107/GKI_KernelSU_SUSFS",
+        "devices": "Generic Kernel Image 2.0 (GKI2.0)"
     }
 ]
