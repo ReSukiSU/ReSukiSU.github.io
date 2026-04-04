@@ -19,5 +19,12 @@
         "kernel_name": "GKI_KernelSU_SUSFS",
         "kernel_link": "https://github.com/coolzyd9107/GKI_KernelSU_SUSFS",
         "devices": "Generic Kernel Image 2.0 (GKI2.0)"
+    },
+    {
+        "maintainer": "YuzakiKokuban",
+        "maintainer_link": "https://github.com/YuzakiKokuban",
+        "kernel_name": "android_kernel_xiaomi_sm8850",
+        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_xiaomi_sm8850",
+        "devices": "Xiaomi 17 Series"
     }
 ]
