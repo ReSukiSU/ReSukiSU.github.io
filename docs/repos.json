@@ -26,5 +26,13 @@
         "kernel_name": "android_kernel_samsung_sm8750",
         "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8750",
         "devices": "Samsung S25 Series"
+    },
+    {
+        "maintainer": "YuzakiKokuban",
+        "maintainer_link": "https://github.com/YuzakiKokuban",
+        "kernel_name": "android_kernel_samsung_sm8550_S23",
+        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8550_S23",
+        "devices": "Samsung S23 Series"
+	}
     }
 ]
