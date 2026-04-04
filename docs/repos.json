@@ -23,6 +23,20 @@
     {
         "maintainer": "YuzakiKokuban",
         "maintainer_link": "https://github.com/YuzakiKokuban",
+        "kernel_name": "android_kernel_samsung_sm8550_S23",
+        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8550_S23",
+        "devices": "Samsung S23 Series"
+	},
+	{
+        "maintainer": "YuzakiKokuban",
+        "maintainer_link": "https://github.com/YuzakiKokuban",
+        "kernel_name": "android_kernel_samsung_sm8650",
+        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8650",
+        "devices": "Samsung S24 Series"
+    },
+    {
+        "maintainer": "YuzakiKokuban",
+        "maintainer_link": "https://github.com/YuzakiKokuban",
         "kernel_name": "android_kernel_samsung_sm8750",
         "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8750",
         "devices": "Samsung S25 Series"
@@ -33,19 +47,5 @@
         "kernel_name": "android_kernel_samsung_sm8650_Z6",
         "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8650_Z6",
         "devices": "Samsung Z Flip/Fold 6"
-    },
-    {
-        "maintainer": "YuzakiKokuban",
-        "maintainer_link": "https://github.com/YuzakiKokuban",
-        "kernel_name": "android_kernel_samsung_sm8750",
-        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8750",
-        "devices": "Samsung S25 Series"
-    },
-    {
-        "maintainer": "YuzakiKokuban",
-        "maintainer_link": "https://github.com/YuzakiKokuban",
-        "kernel_name": "android_kernel_samsung_sm8550_S23",
-        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8550_S23",
-        "devices": "Samsung S23 Series"
-	}
+    }
 ]
