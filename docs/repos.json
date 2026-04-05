@@ -61,5 +61,12 @@
         "kernel_name": "android_kernel_xiaomi_sm8250",
         "kernel_link": "https://github.com/coolzyd9107/android_kernel_xiaomi_sm8250",
         "devices": "Redmi K40"
+    },
+    {
+        "maintainer": "AstideLabs",
+        "maintainer_link": "https://github.com/AstideLabs",
+        "kernel_name": "android_kernel_xiaomi_sm8250",
+        "kernel_link": "https://github.com/AstideLabs/android_kernel_xiaomi_sm8250",
+        "devices": "Xiaomi SM8250 Devices"
     }
 ]
