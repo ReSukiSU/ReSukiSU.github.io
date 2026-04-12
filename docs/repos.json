@@ -68,5 +68,12 @@
         "kernel_name": "android_kernel_xiaomi_sm8250",
         "kernel_link": "https://github.com/AstideLabs/android_kernel_xiaomi_sm8250",
         "devices": "Xiaomi SM8250 Devices"
+    },
+    {
+        "maintainer": "lesdieuxx",
+        "maintainer_link": "https://github.com/lesdieuxx",
+        "kernel_name": "android_kernel_a047f_resukisu",
+        "kernel_link": "https://github.com/lesdieuxx/android_kernel_a047f_resukisu",
+        "devices": "Samsung A04s (A047F)"
     }
 ]
