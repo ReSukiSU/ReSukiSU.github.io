@@ -75,5 +75,12 @@
         "kernel_name": "android_kernel_a047f_resukisu",
         "kernel_link": "https://github.com/lesdieuxx/android_kernel_a047f_resukisu",
         "devices": "Samsung A04s (A047F)"
+    },
+    {
+        "maintainer": "TGMGT",
+        "maintainer_link": "https://github.com/TGMGT",
+        "kernel_name": "android_kernel_samsung_universal5433",
+        "kernel_link": "https://github.com/TGMGT/android_kernel_samsung_universal5433",
+        "devices": "Non-GKI T815 LTE"
     }
 ]
