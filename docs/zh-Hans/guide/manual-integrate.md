@@ -492,6 +492,38 @@ index bb41f113d3d92..584c30fd811d3 100644
 
 在这部分中，你需要在 `security/security.c` 中找到 `security_inode_rename` 并 hook 它。
 
+### ksu key permission hook {#key-permission-hook}
+
+::: warning
+大部分版本不需要此手动 hook,该hook仅适用于 4.2- 内核
+:::
+
+::: code-group
+```diff[security.c]
+diff --git a/security/security.c b/security/security.c
+index 584c30fd..57670e6a 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -1336,9 +1336,16 @@ void security_key_free(struct key *key)
+security_ops->key_free(key);
+}
+
++#ifdef CONFIG_KSU_MANUAL_HOOK
++extern int ksu_key_permission(key_ref_t key_ref, const struct cred *cred, unsigned perm);
++#endif
++
+int security_key_permission(key_ref_t key_ref,
+const struct cred *cred, key_perm_t perm)
+{
++#ifdef CONFIG_KSU_MANUAL_HOOK
++ ksu_key_permission(key_ref, cred, perm);
++#endif
+return security_ops->key_permission(key_ref, cred, perm);
+}
+```
+:::
+
+在这部分中，你需要在 `security/security.c` 中找到 `security_key_permission` 并 hook 它。
 
 ## policy_rwlock export <Badge type="info" text="4.14- 可选"/> {#policy-rwlock-export}
 
