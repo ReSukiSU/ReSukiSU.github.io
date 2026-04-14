@@ -491,7 +491,7 @@ index bb41f113d3d92..584c30fd811d3 100644
 
 In this part, you should find `security_inode_rename` in `security/security.c` and hook it.
 
-### ksu key permission hook {#key-permission-hook}
+### ksu key permission hook <Badge type="warning" text="4.2- Required"/> {#key-permission-hook}
 
 ::: warning
 Most versions do not require this manual hook, this hook is only required for 4.2- kernels.

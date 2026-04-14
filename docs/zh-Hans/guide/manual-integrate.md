@@ -492,7 +492,7 @@ index bb41f113d3d92..584c30fd811d3 100644
 
 在这部分中，你需要在 `security/security.c` 中找到 `security_inode_rename` 并 hook 它。
 
-### ksu key permission hook {#key-permission-hook}
+### ksu key permission hook <Badge type="warning" text="4.2- 必加"/> {#key-permission-hook}
 
 ::: warning
 大部分版本不需要此手动 hook,该hook仅适用于 4.2- 内核
