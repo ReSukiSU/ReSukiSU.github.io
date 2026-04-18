@@ -157,14 +157,6 @@
   transform: translateY(-2px);
 }
 
-.VPHero .actions .VPButton.brand::before {
-  content: "\EAB2";
-  font-family: "remixicon" !important;
-  font-size: 1.1rem;
-  margin-right: 0.5rem;
-  color: inherit;
-  vertical-align: middle;
-}
 
 .VPHero .actions .VPButton.alt {
   background: var(--vp-c-bg-soft);
