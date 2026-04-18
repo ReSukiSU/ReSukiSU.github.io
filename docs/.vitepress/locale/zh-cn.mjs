@@ -19,14 +19,14 @@ export default {
             { text: '构建内核', link: '/zh-Hans/guide/build',collapsed: true,items: [
                 { text: '参考钩子', link: '/zh-Hans/guide/manual-integrate' }
             ]},
-            { text: '非官方支持设备', link: '/zh-Hans/guide/unoffical-devices' },
+            { text: '非官方支持设备', link: '/zh-Hans/guide/unofficial-devices' },
             { text: '常见问题', link: '/zh-Hans/guide/faq' }
             ]
         },
         {text: '关于 ReSukiSU',link:'/zh-Hans/guide/introduce'}
         ],
         editLink: {
-            text: "在 Github 上编辑此页面",
+            text: "在 GitHub 上编辑此页面",
             pattern: "https://github.com/ReSukiSU/ReSukiSU.github.io/edit/main/docs/:path"
         },
         docFooter: {

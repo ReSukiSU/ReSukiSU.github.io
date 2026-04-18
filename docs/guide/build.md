@@ -1,4 +1,4 @@
-# How to intregate ReSukiSU {#introduction}
+# How to integrate ReSukiSU {#introduction}
 
 ::: info Notes
 This document modified from [KernelSU Official Documentation](https://kernelsu.org)

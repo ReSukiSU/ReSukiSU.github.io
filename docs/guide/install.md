@@ -12,7 +12,7 @@ Because ReSukiSU's manager have too much things to do,so ReSukiSU will not be re
 (Nightly.link allows downloading files without logging into a GitHub account.)
 :::
 
-## Install {#Installzation}
+## Install {#Installation}
 
 ReSukiSU provides the following two installation methods:
  
@@ -34,7 +34,7 @@ After that, you need to flash the patched image file to the corresponding partit
  
 Although the ReSukiSU Manager has a built-in AnyKernel3 installation method, this option will not be displayed if the Manager does not have ROOT access. You may need to perform the following steps to enable it
 
-1. Flash AnyKernel3 after LKM installzaiton to grant root.
+1. Flash AnyKernel3 after LKM installation to grant root.
 
 2. Using `magiskboot` to manual patch boot.img.
 
@@ -47,7 +47,7 @@ This part picked from [KernelSU official Documentation](https://kernelsu.org)
 1. [magiskboot](https://github.com/topjohnwu/Magisk/releases)
 2. [magiskboot_build](https://github.com/ookiineko/magiskboot_build/releases/tag/last-ci)
 
-he official build of `magiskboot` can only run on Android devices, if you want to run it on PC, you can try the second option.
+The official build of `magiskboot` can only run on Android devices, if you want to run it on PC, you can try the second option.
 
 
 ##### Preparation

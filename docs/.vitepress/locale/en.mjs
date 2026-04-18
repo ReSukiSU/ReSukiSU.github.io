@@ -18,14 +18,14 @@ export default {
             { text: 'Building Kernel', link: '/guide/build',collapsed:true, items: [
                 { text: 'Manual Hooks', link: '/guide/manual-integrate' }
             ]},
-            { text: 'Unoffical Supported Devices', link: '/guide/unoffical-devices' },
+            { text: 'Unofficial Supported Devices', link: '/guide/unofficial-devices' },
             { text: 'FAQ', link: '/guide/faq' }
             ]
         },
         { text:"About ReSukiSU",link: "/guide/introduce"}
         ],
         editLink: {
-            text: "Edit page on Github",
+            text: "Edit page on GitHub",
             pattern: "https://github.com/ReSukiSU/ReSukiSU.github.io/edit/main/docs/:path"
         },
         docFooter: {

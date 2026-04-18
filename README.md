@@ -2,19 +2,19 @@
  The ReSukiSU's Document Website
 [![Pages](https://github.com/ReSukiSU/ReSukiSU.github.io/actions/workflows/main.yml/badge.svg)](https://github.com/ReSukiSU/ReSukiSU.github.io/actions/workflows/main.yml)
 
-## Devlopment
+## Development
 
 ```shell
-pnpm install
+bun install
 
 # dev
-pnpm docs:dev --host
+bun run docs:dev --host
 
 # build
-pnpm docs:build
+bun run docs:build
 
 # preview
-pnpm docs:preview
+bun run docs:preview
 ```
 
 ## Notes

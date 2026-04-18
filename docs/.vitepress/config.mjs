@@ -67,6 +67,12 @@ export default defineConfig({
     ],
     ["meta", { property: "og:type", content: "website" }],
     ["meta", { property: "og:site_name", content: "ReSukiSU" }],
+    ["meta", { property: "og:url", content: "https://resukisu.github.io" }],
+    ["meta", { property: "og:image", content: "https://resukisu.github.io/logo.svg" }],
+    ["meta", { name: "twitter:card", content: "summary" }],
+    ["meta", { name: "twitter:title", content: "ReSukiSU Documentation" }],
+    ["meta", { name: "twitter:description", content: "Make SukiSU Great Again! The official documentation." }],
+    ["meta", { name: "twitter:image", content: "https://resukisu.github.io/logo.svg" }],
   ],
 
   themeConfig: {
@@ -77,7 +83,7 @@ export default defineConfig({
       { icon: "telegram", link: "https://t.me/ReSukiSU" },
     ],
     footer: {
-      message: "Documented with by ReSukiSU Development",
+      message: "Documented with ❤️ by ReSukiSU Development",
       copyright: "Copyright © 2025-2026 ReSukiSU, under MIT License",
     },
 

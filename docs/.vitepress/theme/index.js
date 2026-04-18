@@ -50,7 +50,7 @@ const FullScreen404 = defineComponent({
       innerHTML: html,
       style: {
         width: "100%",
-        minheight: "100vh",
+        minHeight: "100vh",
         position: "absolute",
         overflow: "auto",
       },
