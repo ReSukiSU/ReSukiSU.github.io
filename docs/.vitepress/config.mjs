@@ -77,7 +77,7 @@ export default defineConfig({
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: "/logo-mini.png",
+    logo: "/favicon.svg",
     socialLinks: [
       { icon: "github", link: "https://github.com/ReSukiSU" },
       { icon: "telegram", link: "https://t.me/ReSukiSU" },

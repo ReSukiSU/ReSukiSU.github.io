@@ -7,7 +7,7 @@ hero:
   text: "A more stable fork of SukiSU"
   tagline: "Make SukiSU Great Again!"
   image:
-    src: /logo.svg
+    src: /logo-mini.png
     alt: ReSukiSU Logo
   actions:
     - theme: brand
