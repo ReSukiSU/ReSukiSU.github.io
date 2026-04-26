@@ -330,9 +330,9 @@ For kernels where the input handler is not corrupted, this hook can be automatic
 
 In this part, you should find `input_event` in `drivers/input/input.c` and hook it.
 
-### setuid hooks <Badge type="warning" text="6.8+ Required"/> <Badge type="warning" text="4.2- Required"/> {#setuid-hooks}
+### setuid hooks <Badge type="warning" text="6.8+ Required"/> {#setuid-hooks}
 :::warning Most versions do not require this manual hook.
-For kernel 4.2~6.8 (not included 6.8), This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` is enabled.
+For kernel 6.8 (not included 6.8) and below, This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` is enabled.
 :::
 
 ::: code-group
@@ -395,9 +395,9 @@ index a3bef5bd..0b116d7c 100644
 
 In this part, you should find `__sys_setresuid` in `kernel/sys.c` and hook them. Note that for 4.17- kernels, you need to hook `setresuid` instead.
 
-### sys_read hook <Badge type="warning" text="6.8+ Required"/> <Badge type="warning" text="4.2- Required"/> {#sys-read-hook}
+### sys_read hook <Badge type="warning" text="6.8+ Required"/> {#sys-read-hook}
 :::warning Most versions do not require this manual hook.
-For kernel 4.2~6.8 (not included 6.8), This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` is enabled.
+For kernel 6.8 (not included 6.8) and below, This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` is enabled.
 :::
 
 ::: code-group
@@ -453,44 +453,6 @@ For kernel 4.2~6.8 (not included 6.8), This hook can be automatically applied vi
 
 In this part, you should find `read` in `fs/read_write.c` and hook it. Note that for 4.19- kernels, you only need to hook `read`, and you can ignore `ksys_read` as it is implemented via `read` in those versions.
 
-### rename hook <Badge type="warning" text="4.2- Required"/> {#rename-hook}
-
-::: warning
-Most versions do not require this manual hook, this hook is only required for 4.2- kernels.
-:::
-
-::: code-group
-```diff[security.c]
-diff --git a/security/security.c b/security/security.c
-index bb41f113d3d92..584c30fd811d3 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -526,12 +526,18 @@ int security_inode_mknod(struct inode *dir, struct dentry *dentry, umode_t mode,
- 	return security_ops->inode_mknod(dir, dentry, mode, dev);
- }
- 
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+extern void ksu_handle_rename(struct dentry *old_dentry, struct dentry *new_dentry);
-+#endif
-+
- int security_inode_rename(struct inode *old_dir, struct dentry *old_dentry,
- 			   struct inode *new_dir, struct dentry *new_dentry)
- {
-         if (unlikely(IS_PRIVATE(old_dentry->d_inode) ||
-             (new_dentry->d_inode && IS_PRIVATE(new_dentry->d_inode))))
- 		return 0;
-+
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_rename(old_dentry, new_dentry);
-+#endif
- 	return security_ops->inode_rename(old_dir, old_dentry,
- 					   new_dir, new_dentry);
- }
-```
-:::
-
-In this part, you should find `security_inode_rename` in `security/security.c` and hook it.
-
 ## policy_rwlock export <Badge type="info" text="4.14- Optional"/> {#policy-rwlock-export}
 
 ::: info Notes
@@ -515,6 +477,27 @@ index b818410d2418..ea2f3022744f 100644
 ```
 
 In this part,it's easy to apply it by simply remove `static` from the definition of `policy_rwlock` in `security/selinux/ss/services.c`
+
+## selinux_ops export <Badge type="info" text="4.2- Optional"/>
+
+::: info Notes
+This hook will allowed to get `selinux_ops` struct directly by `extern`.
+
+If you met manager can't be recognized before you apply this patch,Please try to apply it.
+After this patch,if it's working fine,please **submit an issue** to ReSukiSU with `System.map` file.
+:::
+
+```diff
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -XXXX,X +XXXX,X @@
+
+-static struct security_operations selinux_ops = {
++struct security_operations selinux_ops = {
+   .name =        "selinux",
+```
+
+In this part,it's easy to apply it by simply remove `static` from the struct definition of `selinux_ops` in `security/selinux/hooks.c`
 
 ## path_umount <Badge type="info" text="Optional"/> {#how-to-backport-path-umount}
 

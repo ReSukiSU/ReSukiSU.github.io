@@ -331,9 +331,9 @@ index a3bef5bd..08d196f5 100644
 
 在这部分中，你需要在 `drivers/input/input.c` 中找到 `input_event` 并 hook 它。
 
-### setuid hooks <Badge type="warning" text="6.8+ 必加"/> <Badge type="warning" text="4.2- 必加"/> {#setuid-hooks}
+### setuid hooks <Badge type="warning" text="6.8+ 必加"/> {#setuid-hooks}
 :::warning 大部分版本不需要此手动 hook
-对于 4.2~6.8(不包括6.8) 的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` 处于启用状态，此 hook 即可通过 LSM 自动应用
+对于 6.8(不包括6.8)以下 的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` 处于启用状态，此 hook 即可通过 LSM 自动应用
 :::
 
 ::: code-group
@@ -396,9 +396,9 @@ index a3bef5bd..0b116d7c 100644
 
 在这部分中，你需要在内核源码中找到 `__sys_setresuid`并 hook 它。注意对于 4.17- 内核，你需要 hook `setresuid` 而不是 `__sys_setresuid`。
 
-### sys_read hook <Badge type="warning" text="6.8+ 必加"/> <Badge type="warning" text="4.2- 必加"/> {#sys-read-hook}
+### sys_read hook <Badge type="warning" text="6.8+ 必加"/> {#sys-read-hook}
 :::warning 大部分版本不需要此手动 hook
-对于 4.2~6.8(不包括6.8) 的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` 处于启用状态，此 hook 即可通过 LSM 自动应用
+对于 6.8(不包括6.8)以下 的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` 处于启用状态，此 hook 即可通过 LSM 自动应用
 :::
 
 ::: code-group
@@ -454,45 +454,6 @@ index a3bef5bd..0b116d7c 100644
 
 在这部分中，你需要在 `fs/read_write.c` 中找到 `read` 的 `SYSCALL` 并 hook 它。
 
-### rename hook <Badge type="warning" text="4.2- 必加"/> {#rename-hook}
-
-::: warning
-大部分版本不需要此手动 hook,该hook仅适用于 4.2- 内核
-:::
-
-::: code-group
-```diff[security.c]
-diff --git a/security/security.c b/security/security.c
-index bb41f113d3d92..584c30fd811d3 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -526,12 +526,18 @@ int security_inode_mknod(struct inode *dir, struct dentry *dentry, umode_t mode,
- 	return security_ops->inode_mknod(dir, dentry, mode, dev);
- }
- 
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+extern void ksu_handle_rename(struct dentry *old_dentry, struct dentry *new_dentry);
-+#endif
-+
- int security_inode_rename(struct inode *old_dir, struct dentry *old_dentry,
- 			   struct inode *new_dir, struct dentry *new_dentry)
- {
-         if (unlikely(IS_PRIVATE(old_dentry->d_inode) ||
-             (new_dentry->d_inode && IS_PRIVATE(new_dentry->d_inode))))
- 		return 0;
-+
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_rename(old_dentry, new_dentry);
-+#endif
- 	return security_ops->inode_rename(old_dir, old_dentry,
- 					   new_dir, new_dentry);
- }
-```
-:::
-
-在这部分中，你需要在 `security/security.c` 中找到 `security_inode_rename` 并 hook 它。
-
-
 ## policy_rwlock export <Badge type="info" text="4.14- 可选"/> {#policy-rwlock-export}
 
 ::: info Notes
@@ -517,6 +478,28 @@ index b818410d2418..ea2f3022744f 100644
 ```
 
 在这部分中,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `policy_rwlock` 的定义，并将其前面的 `static` 关键字去掉即可。
+
+## selinux_ops export <Badge type="info" text="4.2- 可选"/> {#selinux-ops-export}
+
+:::info Notes
+该hook将允许通过`extern`直接获取 `selinux_ops`
+
+如果在进行此可选hook前，启动后出现无法识别管理器，请尝试进行此hook
+如果hook后一切正常，请开启一个**issue**并上传`System.map`
+:::
+
+```diff
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -XXXX,X +XXXX,X @@
+
+-static struct security_operations selinux_ops = {
++struct security_operations selinux_ops = {
+   .name =        "selinux",
+```
+
+在这部分中,修改相对较简单，仅需在 `security/selinux/hooks.c` 中找到 `selinux_ops` 的结构体定义，并将其前面的 `static` 关键字去掉即可。
+
 
 ## path_umount <Badge type="info" text="可选"/> {#how-to-backport-path-umount}
 
