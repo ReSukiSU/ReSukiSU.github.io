@@ -89,5 +89,12 @@
         "kernel_name": "android_kernel_xiaomi_sdm845_resukisu_susfs",
         "kernel_link": "https://github.com/huangdihd/android_kernel_xiaomi_sdm845_resukisu_susfs",
         "devices": "Xiaomi mix 2s running los22.2(theory for all xiaomi sdm845 devices)"
+    },
+    {
+        "maintainer": "huangdihd",
+        "maintainer_link": "https://github.com/huangdihd",
+        "kernel_name": "android_kernel_xiaomi_msm8960_resukisu",
+        "kernel_link": "https://github.com/huangdihd/android_kernel_xiaomi_msm8960_resukisu",
+        "devices": "Xiaomi 2s running los18.1(theory for all xiaomi msm8960 devices)"
     }
 ]
