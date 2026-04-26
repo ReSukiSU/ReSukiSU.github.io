@@ -96,5 +96,12 @@
         "kernel_name": "android_kernel_xiaomi_msm8960_resukisu",
         "kernel_link": "https://github.com/huangdihd/android_kernel_xiaomi_msm8960_resukisu",
         "devices": "Xiaomi 2s running los18.1(theory for all xiaomi msm8960 devices)"
+    },
+    {
+        "maintainer": "AkinaHaruka",
+        "maintainer_link": "https://github.com/AkinaHaruka",
+        "kernel_name": "android_kernel_oppo_mt6833_resukisu_susfs",
+        "kernel_link": "https://github.com/AkinaHaruka/android_kernel_oppo_mt6833_resukisu_susfs",
+        "devices": "OPPO MT6833 Devices"
     }
 ]
