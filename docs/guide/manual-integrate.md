@@ -331,7 +331,7 @@ For kernels where the input handler is not corrupted, this hook can be automatic
 In this part, you should find `input_event` in `drivers/input/input.c` and hook it.
 
 ### setuid hooks <Badge type="warning" text="6.8+ Required"/> {#setuid-hooks}
-:::warning Most versions do not require this manual hook.
+:::warning Most versions doesn't require this manual hook.
 For kernel 6.8 (not included 6.8) and below, This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` is enabled.
 :::
 
@@ -396,7 +396,7 @@ index a3bef5bd..0b116d7c 100644
 In this part, you should find `__sys_setresuid` in `kernel/sys.c` and hook them. Note that for 4.17- kernels, you need to hook `setresuid` instead.
 
 ### sys_read hook <Badge type="warning" text="6.8+ Required"/> {#sys-read-hook}
-:::warning Most versions do not require this manual hook.
+:::warning Most versions doesn't require this manual hook.
 For kernel 6.8 (not included 6.8) and below, This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` is enabled.
 :::
 
