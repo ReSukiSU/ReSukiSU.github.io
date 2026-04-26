@@ -82,5 +82,12 @@
         "kernel_name": "android_kernel_samsung_universal5433",
         "kernel_link": "https://github.com/TGMGT/android_kernel_samsung_universal5433",
         "devices": "Non-GKI T815 LTE"
+    },
+    {
+        "maintainer": "huangdihd",
+        "maintainer_link": "https://github.com/huangdihd",
+        "kernel_name": "android_kernel_xiaomi_sdm845_resukisu_susfs",
+        "kernel_link": "https://github.com/huangdihd/android_kernel_xiaomi_sdm845_resukisu_susfs",
+        "devices": "Xiaomi mix 2s running los22.2(theory for all xiaomi sdm845 devices)"
     }
 ]
