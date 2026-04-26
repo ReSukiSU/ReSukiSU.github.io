@@ -478,7 +478,7 @@ index b818410d2418..ea2f3022744f 100644
 
 In this part,it's easy to apply it by simply remove `static` from the definition of `policy_rwlock` in `security/selinux/ss/services.c`
 
-## selinux_ops export <Badge type="info" text="4.2- Optional"/>
+## selinux_ops export <Badge type="info" text="4.2- Optional"/> {#selinux-ops-export}
 
 ::: info Notes
 This hook will allowed to get `selinux_ops` struct directly by `extern`.
