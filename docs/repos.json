@@ -103,5 +103,12 @@
         "kernel_name": "android_kernel_oppo_mt6833_resukisu_susfs",
         "kernel_link": "https://github.com/AkinaHaruka/android_kernel_oppo_mt6833_resukisu_susfs",
         "devices": "OPPO MT6833 Devices"
+    },
+    {
+        "maintainer": "YuzakiKokuban",
+        "maintainer_link": "https://github.com/YuzakiKokuban",
+        "kernel_name": "android_kernel_samsung_sm8550_TabS9",
+        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8550_TabS9",
+        "devices": "Samsung Tab S9 Series"
     }
 ]
