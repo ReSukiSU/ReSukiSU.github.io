@@ -110,5 +110,12 @@
         "kernel_name": "android_kernel_samsung_sm8550_TabS9",
         "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8550_TabS9",
         "devices": "Samsung Tab S9 Series"
+    },
+    {
+        "maintainer": "YuzakiKokuban",
+        "maintainer_link": "https://github.com/YuzakiKokuban",
+        "kernel_name": "android_kernel_samsung_mt6989_TabS10",
+        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_mt6989_TabS10",
+        "devices": "Samsung Tab S10 Series"
     }
 ]
