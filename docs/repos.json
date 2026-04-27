@@ -117,5 +117,12 @@
         "kernel_name": "android_kernel_samsung_mt6989_TabS10",
         "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_mt6989_TabS10",
         "devices": "Samsung Tab S10 Series"
+    },
+    {
+        "maintainer": "MiguVT",
+        "maintainer_link": "https://github.com/MiguVT",
+        "kernel_name": "NP2_Kernel",
+        "kernel_link": "https://github.com/MiguVT/NP2_Kernel",
+        "devices": "Nothing Phone 2"
     }
 ]
