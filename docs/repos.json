@@ -124,5 +124,12 @@
         "kernel_name": "NP2_Kernel",
         "kernel_link": "https://github.com/MiguVT/NP2_Kernel",
         "devices": "Nothing Phone 2"
+    },
+    {
+        "maintainer": "huangdihd",
+        "maintainer_link": "https://github.com/huangdihd",
+        "kernel_name": "KernelSU_SUSFS_Xiaomi_Cupid",
+        "kernel_link": "https://github.com/huangdihd/KernelSU_SUSFS_Xiaomi_Cupid",
+        "devices": "xiaomi12 running Lineage OS"
     }
 ]
