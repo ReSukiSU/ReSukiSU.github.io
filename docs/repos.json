@@ -131,5 +131,12 @@
         "kernel_name": "KernelSU_SUSFS_Xiaomi_Cupid",
         "kernel_link": "https://github.com/huangdihd/KernelSU_SUSFS_Xiaomi_Cupid",
         "devices": "xiaomi12 running Lineage OS"
+    },
+    {
+        "maintainer": "momo54181",
+        "maintainer_link": "https://github.com/momo54181",
+        "kernel_name": "android_kernel_oplus_mt6853",
+        "kernel_link": "https://github.com/momo54181/android_kernel_oplus_mt6853",
+        "devices": "MT6853 (OPPO/OnePlus/Realme) Generic Devices"
     }
 ]
