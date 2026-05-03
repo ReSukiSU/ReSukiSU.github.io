@@ -504,7 +504,7 @@ In this part,it's easy to apply it by simply remove `static` from the struct def
 ## sel_mutex export <Badge type="info" text="4.17- Optional"/> {#sel-mutex-export}
 
 ::: info Notes
-This is an optional patch,but it can solved some probably race problem on some devices.>
+This is an optional patch,but it can solved some probably race problem on some devices.
 :::
 
 ```diff
