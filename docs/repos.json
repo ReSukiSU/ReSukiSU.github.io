@@ -138,5 +138,12 @@
         "kernel_name": "android_kernel_oplus_mt6853",
         "kernel_link": "https://github.com/momo54181/android_kernel_oplus_mt6853",
         "devices": "MT6853 (OPPO/OnePlus/Realme) Generic Devices"
+    },
+    {
+        "maintainer": "AlexLiuDev233",
+        "maintainer_link": "https://github.com/AlexLiuDev233",
+        "kernel_name": "android_kernel_stone",
+        "kernel_link": "https://github.com/AlexLiuDev233/android_kernel_stone",
+        "devices": "Redmi Note 12 5G/Poco X5 5G devices, maybe all xiaomi sm8350, userspace HyperOS2"
     }
 ]
