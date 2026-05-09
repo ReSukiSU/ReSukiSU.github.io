@@ -28,12 +28,12 @@ export default defineConfig({
 
   head: [
     ["link", { rel: "icon", href: "/favicon.svg" }],
-    ["link", { rel: "preconnect", href: "https://s4.zstatic.net/" }],
+    ["link", { rel: "preconnect", href: "https://cdn.jsdelivr.net/" }],
     [
       "link",
       {
         rel: "stylesheet",
-        href: "https://s4.zstatic.net/npm/jetbrains-mono-webfont@latest/jetbrains-mono.css",
+        href: "https://cdn.jsdelivr.net/npm/jetbrains-mono-webfont@latest/jetbrains-mono.css",
       },
     ],
 
