@@ -145,5 +145,12 @@
         "kernel_name": "android_kernel_stone",
         "kernel_link": "https://github.com/AlexLiuDev233/android_kernel_stone",
         "devices": "Redmi Note 12 5G/Poco X5 5G devices, maybe all xiaomi sm8350, userspace HyperOS2"
+    },
+    {
+        "maintainer": "vahiru",
+        "maintainer_link": "https://github.com/vahiru",
+        "kernel_name": "resukisu-munch",
+        "kernel_link": "https://github.com/vahiru/resukisu-munch",
+        "devices": "Android kernel 4.19 non-gki SM8250-AC"
     }
 ]
