@@ -296,7 +296,7 @@ index a3bef5bd..08d196f5 100644
 
 ### input hooks <Badge type="tip" text="按需必加"/> {#input-hooks}
 :::warning 一般无需此手动 hook
-对于 input handler 未损坏的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INPUT_HOOK` 处于启用状态，此 hook 即可通过 input_hanlder 自动应用
+对于 input handler 未损坏的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INPUT_HOOK` 处于启用状态，此 hook 即可通过 Linux 内核的 `input_handler` 特性自动应用
 :::
 
 ::: code-group
