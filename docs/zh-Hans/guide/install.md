@@ -33,7 +33,7 @@ ReSukiSU 提供了以下两种方式来安装 ReSukiSU
 
 ### GKI2/GKI1/非GKI内核（AnyKernel3）安装 {#builtin}
 
-ReSukiSU管理器虽然内置了AnyKernel3的安装方式，但是在管理器未获得**ROOT权限**时，这个安装方法不会被显示出来。您可能需要以下操作才可使用
+ReSukiSU 管理器虽然内置了 `AnyKernel3` 的安装方式，但是在管理器未获得**ROOT权限**时，这个安装方法不会被显示出来。您可能需要以下操作才可使用
 
 1.通过 [LKM安装](install#LKM) 获取root后再进行刷入AnyKernel3包
 
