@@ -454,10 +454,60 @@ index a3bef5bd..0b116d7c 100644
 
 在这部分中，你需要在 `fs/read_write.c` 中找到 `read` 的 `SYSCALL` 并 hook 它。
 
-## policy_rwlock export <Badge type="info" text="4.17- 可选"/> {#policy-rwlock-export}
+## 静态变量导出 {#static-var-export}
 
-::: info Notes
-这是一个可选选项,但不修改这一部分可能会导致某些设备上内存管理方面的安全性问题
+::: danger Notice：
+在不开启 `CONFIG_KALLSYMS_ALL` 配置下，ReSukiSU 将会检查此处每一条 export，如果缺少，将会**导致编译失败**
+:::
+
+### write_op export <Badge type="danger" text="必加"/>
+
+```diff
+--- a/security/selinux/selinuxfs.c
++++ b/security/selinux/selinuxfs.c
+@@ xx,xx @@
+-static ssize_t (*write_op[])(struct file *, char *, size_t) = {
++ssize_t (*write_op[])(struct file *, char *, size_t) = {
+	[SEL_ACCESS] = sel_write_access,
+	[SEL_CREATE] = sel_write_create,
+```
+
+在这部分中,修改相对较简单，仅需在 `security/selinux/selinuxfs.c` 中找到 `write_op` 的定义，并将其前面的 `static` 关键字去掉即可。
+
+### sel_handle_status_ops export <Badge type="danger" text="必加"/>
+
+```diff
+--- a/security/selinux/selinuxfs.c
++++ b/security/selinux/selinuxfs.c
+@@ xx,xx @@
+-static const struct file_operations sel_handle_status_ops = {
++const struct file_operations sel_handle_status_ops = {
+	.open		= sel_open_handle_status,
+	.read		= sel_read_handle_status,
+	.mmap		= sel_mmap_handle_status,
+```
+在这部分中,修改相对较简单，仅需在 `security/selinux/selinuxfs.c` 中找到 `sel_handle_status_ops` 的定义，并将其前面的 `static` 关键字去掉即可。
+
+### selinux_status_page export <Badge type="tip" text="按需添加"/>
+
+::: info
+在内核没有 `selinux_state` 结构体下，你需要对`selinux_status_page`定义进行修改
+:::
+
+WIP
+
+### selinux_status_lock export <Badge type="tip" text="按需添加"/>
+
+::: info
+在内核没有 `selinux_state` 结构体下，你需要对`selinux_status_lock`定义进行修改
+:::
+
+WIP
+
+### policy_rwlock export <Badge type="tip" text="按需添加"/> {#policy-rwlock-export}
+
+::: info
+在内核没有 `selinux_state` 结构体下，你需要对`policy_rwlock`定义进行修改
 :::
 
 ```diff
@@ -479,33 +529,10 @@ index b818410d2418..ea2f3022744f 100644
 
 在这部分中,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `policy_rwlock` 的定义，并将其前面的 `static` 关键字去掉即可。
 
-如果没有找到该定义，请忽略这一部分。
+### sel_mutex export <Badge type="tip" text="按需添加"/> {#sel-mutex-export}
 
-## selinux_ops export <Badge type="info" text="4.2- 可选"/> {#selinux-ops-export}
-
-:::info Notes
-该hook将允许通过`extern`直接获取 `selinux_ops`
-
-如果在进行此可选hook前，启动后出现无法识别管理器，请尝试进行此hook
-如果hook后一切正常，请开启一个**issue**并上传`System.map`
-:::
-
-```diff
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -XXXX,X +XXXX,X @@
-
--static struct security_operations selinux_ops = {
-+struct security_operations selinux_ops = {
-   .name =        "selinux",
-```
-
-在这部分中,修改相对较简单，仅需在 `security/selinux/hooks.c` 中找到 `selinux_ops` 的结构体定义，并将其前面的 `static` 关键字去掉即可。
-
-## sel_mutex export <Badge type="info" text="4.17- 可选"/> {#sel-mutex-export}
-
-::: info Notes
-这是一个可选选项,但不修改这一部分可能会有潜在的竞速(race)问题
+::: info
+在内核没有 `selinux_state` 结构体下，你需要对`sel_mutex`定义进行修改
 :::
 
 ```diff
@@ -520,7 +547,27 @@ index b818410d2418..ea2f3022744f 100644
 
 在这部分中,修改相对较简单，仅需在 `security/selinux/selinuxfs.c` 中找到 `sel_mutex` 的定义，并将其前面的 `static` 关键字去掉即可。
 
-如果没有找到该定义，请忽略这一部分。
+### selinux_ops export <Badge type="warning" text="4.2- 必加"/> {#selinux-ops-export}
+
+```diff
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -XXXX,X +XXXX,X @@
+
+-static struct security_operations selinux_ops = {
++struct security_operations selinux_ops = {
+   .name =        "selinux",
+```
+
+在这部分中,修改相对较简单，仅需在 `security/selinux/hooks.c` 中找到 `selinux_ops` 的结构体定义，并将其前面的 `static` 关键字去掉即可。
+
+### security_dump_masked_av <Badge type="warning" text="6.6+ 必加"/>
+
+WIP
+
+### context_struct_compute_av <Badge type="warning" text="6.6+ 必加"/>
+
+WIP
 
 ## path_umount <Badge type="info" text="可选"/> {#how-to-backport-path-umount}
 
