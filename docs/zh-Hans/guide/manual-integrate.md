@@ -1,4 +1,4 @@
-    # 手动集成参考 {#hooks}
+# 手动集成参考 {#hooks}
 
 ## 手动挂钩 {#scope-minimized-hooks}
 
