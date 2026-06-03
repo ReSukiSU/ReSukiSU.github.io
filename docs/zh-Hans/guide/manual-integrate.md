@@ -1,4 +1,4 @@
-# 手动集成参考 {#hooks}
+    # 手动集成参考 {#hooks}
 
 ## 手动挂钩 {#scope-minimized-hooks}
 
@@ -397,6 +397,7 @@ index a3bef5bd..0b116d7c 100644
 在这部分中，你需要在内核源码中找到 `__sys_setresuid`并 hook 它。注意对于 4.17- 内核，你需要 hook `setresuid` 而不是 `__sys_setresuid`。
 
 ### sys_read hook <Badge type="warning" text="6.8+ 必加"/> {#sys-read-hook}
+
 :::warning 大部分版本不需要此手动 hook
 对于 6.8(不包括6.8)以下 的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` 处于启用状态，此 hook 即可通过 LSM 自动应用
 :::
@@ -457,7 +458,7 @@ index a3bef5bd..0b116d7c 100644
 ## 静态变量导出 {#static-var-export}
 
 ::: danger Notice：
-在不开启 `CONFIG_KALLSYMS_ALL` 配置下，ReSukiSU 将会检查此处每一条 export，如果缺少，将会**导致编译失败**
+在内核未开启 `CONFIG_KALLSYMS_ALL` 配置下，ReSukiSU 将会检查此处每一条 export，如果缺少，将会**导致编译失败**
 :::
 
 ### write_op export <Badge type="danger" text="必加"/>
@@ -465,7 +466,7 @@ index a3bef5bd..0b116d7c 100644
 ```diff
 --- a/security/selinux/selinuxfs.c
 +++ b/security/selinux/selinuxfs.c
-@@ xx,xx @@
+@@ -XXXX,X +XXXX,X @@
 -static ssize_t (*write_op[])(struct file *, char *, size_t) = {
 +ssize_t (*write_op[])(struct file *, char *, size_t) = {
 	[SEL_ACCESS] = sel_write_access,
@@ -479,7 +480,7 @@ index a3bef5bd..0b116d7c 100644
 ```diff
 --- a/security/selinux/selinuxfs.c
 +++ b/security/selinux/selinuxfs.c
-@@ xx,xx @@
+@@ -XXXX,X +XXXX,X @@
 -static const struct file_operations sel_handle_status_ops = {
 +const struct file_operations sel_handle_status_ops = {
 	.open		= sel_open_handle_status,
@@ -488,21 +489,26 @@ index a3bef5bd..0b116d7c 100644
 ```
 在这部分中,修改相对较简单，仅需在 `security/selinux/selinuxfs.c` 中找到 `sel_handle_status_ops` 的定义，并将其前面的 `static` 关键字去掉即可。
 
-### selinux_status_page export <Badge type="tip" text="按需添加"/>
+### selinux_status_page & selinux_status_lock export <Badge type="tip" text="按需添加"/>
 
 ::: info
-在内核没有 `selinux_state` 结构体下，你需要对`selinux_status_page`定义进行修改
+在内核没有 `selinux_state` 结构体下，你需要对`selinux_status_page` 和 `selinux_status_lock`定义进行修改
 :::
 
-WIP
+```diff
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -XXXX,X +XXXX,X @@
+ * In most cases, application shall confirm the kernel status is not
+ * changed without any system call invocations.
+ */
+-static struct page *selinux_status_page;
+-static DEFINE_MUTEX(selinux_status_lock);
++struct page *selinux_status_page;
++DEFINE_MUTEX(selinux_status_lock);
+```
 
-### selinux_status_lock export <Badge type="tip" text="按需添加"/>
-
-::: info
-在内核没有 `selinux_state` 结构体下，你需要对`selinux_status_lock`定义进行修改
-:::
-
-WIP
+在这部分中,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `selinux_status_page` 和 `selinux_status_lock` 的定义，并将其前面的 `static` 关键字去掉即可。
 
 ### policy_rwlock export <Badge type="tip" text="按需添加"/> {#policy-rwlock-export}
 
@@ -553,7 +559,6 @@ index b818410d2418..ea2f3022744f 100644
 --- a/security/selinux/hooks.c
 +++ b/security/selinux/hooks.c
 @@ -XXXX,X +XXXX,X @@
-
 -static struct security_operations selinux_ops = {
 +struct security_operations selinux_ops = {
    .name =        "selinux",
@@ -563,13 +568,53 @@ index b818410d2418..ea2f3022744f 100644
 
 ### security_dump_masked_av <Badge type="warning" text="6.6+ 必加"/>
 
-WIP
+```diff
+diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -XXXX,X +XXXX,X @@
+-static void security_dump_masked_av(struct policydb *policydb,
++void security_dump_masked_av(struct policydb *policydb,
+				    struct context *scontext,
+				    struct context *tcontext,
+				    u16 tclass,
+				    u32 permissions,
+				    const char *reason)
+{
+	struct common_datum *common_dat;
+	struct class_datum *tclass_dat;
+```
+
+在这部分中,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `security_dump_masked_av` 的定义，并将其前面的 `static` 关键字去掉即可。
+
 
 ### context_struct_compute_av <Badge type="warning" text="6.6+ 必加"/>
 
-WIP
+```diff
+diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -XXXX,X +XXXX,X @@
+/*
+ * Compute access vectors and extended permissions based on a context
+ * structure pair for the permissions in a particular class.
+ */
+-static void context_struct_compute_av(struct policydb *policydb,
++void context_struct_compute_av(struct policydb *policydb,
 
-## path_umount <Badge type="info" text="可选"/> {#how-to-backport-path-umount}
+				      struct context *scontext,
+				      struct context *tcontext,
+				      u16 tclass,
+				      struct av_decision *avd,
+				      struct extended_perms *xperms)
+{
+```
+
+在这部分中,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `context_struct_compute_av` 的定义，并将其前面的 `static` 关键字去掉即可。
+
+## 可选移植
+
+### path_umount <Badge type="info" text="可选"/> {#how-to-backport-path-umount}
 
 ::: info Notes
 这是一个可选选项，你可以不移植这一部分
