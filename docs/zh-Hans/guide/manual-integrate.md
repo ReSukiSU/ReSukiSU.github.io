@@ -457,6 +457,10 @@ index a3bef5bd..0b116d7c 100644
 
 ## 静态变量导出 {#static-var-export}
 
+::: tip 温馨提示
+您可选择启用 `CONFIG_KALLSYMS_ALL` 内核配置，来避免需要进行此部分操作
+:::
+
 ::: danger Notice：
 在内核未开启 `CONFIG_KALLSYMS_ALL` 配置下，ReSukiSU 将会检查此处每一条 export，如果缺少，将会**导致编译失败**
 :::
@@ -473,7 +477,7 @@ index a3bef5bd..0b116d7c 100644
 	[SEL_CREATE] = sel_write_create,
 ```
 
-在这部分中,修改相对较简单，仅需在 `security/selinux/selinuxfs.c` 中找到 `write_op` 的定义，并将其前面的 `static` 关键字去掉即可。
+在 `security/selinux/selinuxfs.c` 中找到 `write_op` 的定义，并将其前面的 `static` 关键字去掉。
 
 ### sel_handle_status_ops export <Badge type="danger" text="必加"/>
 
@@ -487,9 +491,9 @@ index a3bef5bd..0b116d7c 100644
 	.read		= sel_read_handle_status,
 	.mmap		= sel_mmap_handle_status,
 ```
-在这部分中,修改相对较简单，仅需在 `security/selinux/selinuxfs.c` 中找到 `sel_handle_status_ops` 的定义，并将其前面的 `static` 关键字去掉即可。
+在 `security/selinux/selinuxfs.c` 中找到 `sel_handle_status_ops` 的定义，并将其前面的 `static` 关键字去掉。
 
-### selinux_status_page & selinux_status_lock export <Badge type="tip" text="按需添加"/>
+### selinux_status_page & selinux_status_lock export <Badge type="warning" text="4.17- 按需添加"/>
 
 ::: info
 在内核没有 `selinux_state` 结构体下，你需要对`selinux_status_page` 和 `selinux_status_lock`定义进行修改
@@ -508,9 +512,11 @@ index a3bef5bd..0b116d7c 100644
 +DEFINE_MUTEX(selinux_status_lock);
 ```
 
-在这部分中,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `selinux_status_page` 和 `selinux_status_lock` 的定义，并将其前面的 `static` 关键字去掉即可。
+在 `security/selinux/ss/services.c` 中找到 `selinux_status_page` 和 `selinux_status_lock` 的定义，并将其前面的 `static` 关键字去掉。
 
-### policy_rwlock export <Badge type="tip" text="按需添加"/> {#policy-rwlock-export}
+如果没有找到该定义，请忽略这一部分。
+
+### policy_rwlock export <Badge type="warning" text="4.17- 按需添加"/> {#policy-rwlock-export}
 
 ::: info
 在内核没有 `selinux_state` 结构体下，你需要对`policy_rwlock`定义进行修改
@@ -533,9 +539,11 @@ index b818410d2418..ea2f3022744f 100644
 
 ```
 
-在这部分中,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `policy_rwlock` 的定义，并将其前面的 `static` 关键字去掉即可。
+在 `security/selinux/ss/services.c` 中找到 `policy_rwlock` 的定义，并将其前面的 `static` 关键字去掉。
 
-### sel_mutex export <Badge type="tip" text="按需添加"/> {#sel-mutex-export}
+如果没有找到该定义，请忽略这一部分。
+
+### sel_mutex export <Badge type="warning" text="4.17- 按需添加"/> {#sel-mutex-export}
 
 ::: info
 在内核没有 `selinux_state` 结构体下，你需要对`sel_mutex`定义进行修改
@@ -551,9 +559,11 @@ index b818410d2418..ea2f3022744f 100644
 +DEFINE_MUTEX(sel_mutex);
 ```
 
-在这部分中,修改相对较简单，仅需在 `security/selinux/selinuxfs.c` 中找到 `sel_mutex` 的定义，并将其前面的 `static` 关键字去掉即可。
+在 `security/selinux/selinuxfs.c` 中找到 `sel_mutex` 的定义，并将其前面的 `static` 关键字去掉。
 
-### selinux_ops export <Badge type="warning" text="4.2- 必加"/> {#selinux-ops-export}
+如果没有找到该定义，请忽略这一部分。
+
+### selinux_ops export <Badge type="danger" text="4.2- 必加"/> {#selinux-ops-export}
 
 ```diff
 --- a/security/selinux/hooks.c
@@ -564,9 +574,9 @@ index b818410d2418..ea2f3022744f 100644
    .name =        "selinux",
 ```
 
-在这部分中,修改相对较简单，仅需在 `security/selinux/hooks.c` 中找到 `selinux_ops` 的结构体定义，并将其前面的 `static` 关键字去掉即可。
+在 `security/selinux/hooks.c` 中找到 `selinux_ops` 的结构体定义，并将其前面的 `static` 关键字去掉。
 
-### security_dump_masked_av <Badge type="warning" text="6.6+ 必加"/>
+### security_dump_masked_av <Badge type="danger" text="6.6+ 必加"/>
 
 ```diff
 diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
@@ -585,10 +595,10 @@ diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
 	struct class_datum *tclass_dat;
 ```
 
-在这部分中,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `security_dump_masked_av` 的定义，并将其前面的 `static` 关键字去掉即可。
+在 `security/selinux/ss/services.c` 中找到 `security_dump_masked_av` 的定义，并将其前面的 `static` 关键字去掉。
 
 
-### context_struct_compute_av <Badge type="warning" text="6.6+ 必加"/>
+### context_struct_compute_av <Badge type="danger" text="6.6+ 必加"/>
 
 ```diff
 diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
@@ -610,59 +620,4 @@ diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
 {
 ```
 
-在这部分中,修改相对较简单，仅需在 `security/selinux/ss/services.c` 中找到 `context_struct_compute_av` 的定义，并将其前面的 `static` 关键字去掉即可。
-
-## 可选移植
-
-### path_umount <Badge type="info" text="可选"/> {#how-to-backport-path-umount}
-
-::: info Notes
-这是一个可选选项，你可以不移植这一部分
-:::
-
-你可以通过从 K5.9 向旧版本移植 `path_umount`，在 GKI 之前的内核上获得卸载模块的功能。你可以通过以下补丁作为参考:
-
-```diff
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -1739,6 +1739,39 @@ static inline bool may_mandlock(void)
- }
- #endif
-
-+static int can_umount(const struct path *path, int flags)
-+{
-+	struct mount *mnt = real_mount(path->mnt);
-+
-+	if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
-+		return -EINVAL;
-+	if (!may_mount())
-+		return -EPERM;
-+	if (path->dentry != path->mnt->mnt_root)
-+		return -EINVAL;
-+	if (!check_mnt(mnt))
-+		return -EINVAL;
-+	if (mnt->mnt.mnt_flags & MNT_LOCKED) /* Check optimistically */
-+		return -EINVAL;
-+	if (flags & MNT_FORCE && !capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+	return 0;
-+}
-+
-+int path_umount(struct path *path, int flags)
-+{
-+	struct mount *mnt = real_mount(path->mnt);
-+	int ret;
-+
-+	ret = can_umount(path, flags);
-+	if (!ret)
-+		ret = do_umount(mnt, flags);
-+
-+	/* we mustn't call path_put() as that would clear mnt_expiry_mark */
-+	dput(path->dentry);
-+	mntput_no_expire(mnt);
-+	return ret;
-+}
- /*
-  * Now umount can handle mount points as well as block devices.
-  * This is important for filesystems which use unnamed block devices.
-```
+在 `security/selinux/ss/services.c` 中找到 `context_struct_compute_av` 的定义，并将其前面的 `static` 关键字去掉。
