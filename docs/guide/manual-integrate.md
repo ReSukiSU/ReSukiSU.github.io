@@ -453,10 +453,72 @@ For kernel 6.8 (not included 6.8) and below, This hook can be automatically appl
 
 In this part, you should find `read` in `fs/read_write.c` and hook it. Note that for 4.19- kernels, you only need to hook `read`, and you can ignore `ksys_read` as it is implemented via `read` in those versions.
 
-## policy_rwlock export <Badge type="info" text="4.17- Optional"/> {#policy-rwlock-export}
+## Static variable export {#static-var-export}
 
-::: info Notes
-This is an optional patch,but it can improve memory management security on some devices. You can choose to apply it or not.
+::: tip Tip
+You can choose enable `CONFIG_KALLSYMS_ALL` Kconfig to avoid these changes.
+:::
+
+::: danger Notice：
+When kernel does not enable `CONFIG_KALLSYMS_ALL` Kconfig, ReSukiSU will check every exports here, if any are missing, it will **cause compilation to fail**.
+:::
+
+### write_op export <Badge type="danger" text="Required"/>
+
+```diff
+--- a/security/selinux/selinuxfs.c
++++ b/security/selinux/selinuxfs.c
+@@ -XXXX,X +XXXX,X @@
+-static ssize_t (*write_op[])(struct file *, char *, size_t) = {
++ssize_t (*write_op[])(struct file *, char *, size_t) = {
+	[SEL_ACCESS] = sel_write_access,
+	[SEL_CREATE] = sel_write_create,
+```
+
+Remove `static` from the definition of `write_op` in `security/selinux/selinuxfs.c`
+
+### sel_handle_status_ops export <Badge type="danger" text="Required"/>
+
+```diff
+--- a/security/selinux/selinuxfs.c
++++ b/security/selinux/selinuxfs.c
+@@ -XXXX,X +XXXX,X @@
+-static const struct file_operations sel_handle_status_ops = {
++const struct file_operations sel_handle_status_ops = {
+	.open		= sel_open_handle_status,
+	.read		= sel_read_handle_status,
+	.mmap		= sel_mmap_handle_status,
+```
+
+Remove `static` from the definition of `sel_handle_status_ops` in `security/selinux/selinuxfs.c`
+
+### selinux_status_page & selinux_status_lock export <Badge type="warning" text="4.17- Conditionally Required"/>
+
+::: info
+When kernel does not have `selinux_state` struct, You should modify the definition of `selinux_status_page` and `selinux_status_lock`
+:::
+
+```diff
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -XXXX,X +XXXX,X @@
+ * In most cases, application shall confirm the kernel status is not
+ * changed without any system call invocations.
+ */
+-static struct page *selinux_status_page;
+-static DEFINE_MUTEX(selinux_status_lock);
++struct page *selinux_status_page;
++DEFINE_MUTEX(selinux_status_lock);
+```
+
+Remove `static` from the definition of `selinux_status_page` and `selinux_status_lock` in `security/selinux/ss/services.c`
+
+If this definition not found,please ignore this part.
+
+### policy_rwlock export <Badge type="warning" text="4.17- Conditionally Required"/> {#policy-rwlock-export}
+
+::: info
+When kernel does not have `selinux_state` struct, You should modify the definition of `policy_rwlock`
 :::
 
 ```diff
@@ -476,35 +538,14 @@ index b818410d2418..ea2f3022744f 100644
 
 ```
 
-In this part,it's easy to apply it by simply remove `static` from the definition of `policy_rwlock` in `security/selinux/ss/services.c`
+Remove `static` from the definition of `policy_rwlock` in `security/selinux/ss/services.c`
 
 If this definition not found,please ignore this part.
 
-## selinux_ops export <Badge type="info" text="4.2- Optional"/> {#selinux-ops-export}
+### sel_mutex export <Badge type="warning" text="4.17- Conditionally Required"/> {#sel-mutex-export}
 
-::: info Notes
-This hook will allowed to get `selinux_ops` struct directly by `extern`.
-
-If you met manager can't be recognized before you apply this patch,Please try to apply it.
-After this patch,if it's working fine,please **submit an issue** to ReSukiSU with `System.map` file.
-:::
-
-```diff
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -XXXX,X +XXXX,X @@
-
--static struct security_operations selinux_ops = {
-+struct security_operations selinux_ops = {
-   .name =        "selinux",
-```
-
-In this part,it's easy to apply it by simply remove `static` from the struct definition of `selinux_ops` in `security/selinux/hooks.c`
-
-## sel_mutex export <Badge type="info" text="4.17- Optional"/> {#sel-mutex-export}
-
-::: info Notes
-This is an optional patch,but it can solved some probably race problem on some devices.
+::: info
+When kernel does not have `selinux_state` struct, You should modify the definition of `policy_rwlock`
 :::
 
 ```diff
@@ -517,59 +558,65 @@ This is an optional patch,but it can solved some probably race problem on some d
 +DEFINE_MUTEX(sel_mutex);
 ```
 
-In this part,it's easy to apply it by simply remove `static` from the definition of `sel_mutex` in `security/selinux/selinuxfs.c`
+Remove `static` from the definition of `sel_mutex` in `security/selinux/selinuxfs.c`
 
 If this definition not found,please ignore this part.
 
-## path_umount <Badge type="info" text="Optional"/> {#how-to-backport-path-umount}
-
-::: info Notes
-you don't need to apply this one.
-:::
-
-You can make the "Umount modules" feature work on pre-GKI kernels by manually backporting `path_umount` from 5.9. You can use this patch as reference:
+### selinux_ops export <Badge type="danger" text="4.2- Required"/> {#selinux-ops-export}
 
 ```diff
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -1739,6 +1739,39 @@ static inline bool may_mandlock(void)
- }
- #endif
-
-+static int can_umount(const struct path *path, int flags)
-+{
-+	struct mount *mnt = real_mount(path->mnt);
-+
-+	if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
-+		return -EINVAL;
-+	if (!may_mount())
-+		return -EPERM;
-+	if (path->dentry != path->mnt->mnt_root)
-+		return -EINVAL;
-+	if (!check_mnt(mnt))
-+		return -EINVAL;
-+	if (mnt->mnt.mnt_flags & MNT_LOCKED) /* Check optimistically */
-+		return -EINVAL;
-+	if (flags & MNT_FORCE && !capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+	return 0;
-+}
-+
-+int path_umount(struct path *path, int flags)
-+{
-+	struct mount *mnt = real_mount(path->mnt);
-+	int ret;
-+
-+	ret = can_umount(path, flags);
-+	if (!ret)
-+		ret = do_umount(mnt, flags);
-+
-+	/* we mustn't call path_put() as that would clear mnt_expiry_mark */
-+	dput(path->dentry);
-+	mntput_no_expire(mnt);
-+	return ret;
-+}
- /*
-  * Now umount can handle mount points as well as block devices.
-  * This is important for filesystems which use unnamed block devices.
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -XXXX,X +XXXX,X @@
+-static struct security_operations selinux_ops = {
++struct security_operations selinux_ops = {
+   .name =        "selinux",
 ```
+
+Remove `static` from the definition of `selinux_ops` in `security/selinux/selinuxfs.c`
+
+### security_dump_masked_av <Badge type="danger" text="6.6+ 必加"/>
+
+```diff
+diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -XXXX,X +XXXX,X @@
+-static void security_dump_masked_av(struct policydb *policydb,
++void security_dump_masked_av(struct policydb *policydb,
+				    struct context *scontext,
+				    struct context *tcontext,
+				    u16 tclass,
+				    u32 permissions,
+				    const char *reason)
+{
+	struct common_datum *common_dat;
+	struct class_datum *tclass_dat;
+```
+
+Remove `static` from the definition of `security_dump_masked_av` in `security/selinux/ss/services.c`
+
+
+### context_struct_compute_av <Badge type="danger" text="6.6+ 必加"/>
+
+```diff
+diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -XXXX,X +XXXX,X @@
+/*
+ * Compute access vectors and extended permissions based on a context
+ * structure pair for the permissions in a particular class.
+ */
+-static void context_struct_compute_av(struct policydb *policydb,
++void context_struct_compute_av(struct policydb *policydb,
+
+				      struct context *scontext,
+				      struct context *tcontext,
+				      u16 tclass,
+				      struct av_decision *avd,
+				      struct extended_perms *xperms)
+{
+```
+
+Remove `static` from the definition of `context_struct_compute_av` in `security/selinux/ss/services.c`
