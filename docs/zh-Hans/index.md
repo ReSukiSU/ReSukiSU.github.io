@@ -7,7 +7,7 @@ hero:
   text: "一个更加稳定的SukiSU分支"
   tagline: "让SukiSU再次伟大！"
   image:
-    src: /logo-mini.png
+    src: /logo.svg
     alt: ReSukiSU Logo
   actions:
     - theme: brand
@@ -31,9 +31,9 @@ features:
     details: 兼容当前最新的最小化钩子方案，无需手动选择 hook。
     icon: <i class="ri-flashlight-fill"></i>
     link: ./guide/manual-integrate.md
-  - title: KPM 支持
-    details: 基于 SukiSU Ultra 分支，理论上支持内核补丁模块 (KPM)。注意此功能仍在开发中。
-    icon: <i class="ri-puzzle-2-fill"></i>
+  - title: 多 KernelSU 管理器支持
+    details: ReSukiSU 内核默认支持 KernelSU/MKSU/RKSU及SukiSU Ultra 管理器
+    icon: <i class="ri-settings-3-fill"></i>
   - title: 增强安全性
     details: 改进的安全措施，更好的模块隔离和权限处理机制。
     icon: <i class="ri-shield-check-fill"></i>

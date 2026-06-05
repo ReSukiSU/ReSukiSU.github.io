@@ -7,7 +7,7 @@ hero:
   text: "A more stable fork of SukiSU"
   tagline: "Make SukiSU Great Again!"
   image:
-    src: /logo-mini.png
+    src: /logo.svg
     alt: ReSukiSU Logo
   actions:
     - theme: brand
@@ -31,9 +31,9 @@ features:
     details: Compatible with the latest scope-minimized hooks. No need to manually select hooks anymore.
     icon: <i class="ri-flashlight-fill"></i>
     link: ./guide/manual-integrate.md
-  - title: KPM Support
-    details: Based on SukiSU Ultra, theoretically supports Kernel Patch Modules (KPM). Note that this feature is experimental.
-    icon: <i class="ri-puzzle-2-fill"></i>
+  - title: Multi-Manager Support
+    details: ReSukiSU Kernel support KernelSU/MKSU/RKSU/SukiSU Ultra's manager defaultly.
+    icon: <i class="ri-settings-3-fill"></i>
   - title: Enhanced Security
     details: Improved security measures with better module isolation and permission handling.
     icon: <i class="ri-shield-check-fill"></i>
