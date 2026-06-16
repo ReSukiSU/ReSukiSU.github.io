@@ -159,5 +159,12 @@
         "kernel_name": "OriginKernel_Galaxian",
         "kernel_link": "https://github.com/samakshkambxj/OriginKernel_Galaxian",
         "devices": "Nothing Phone (3a) Lite (Galaxian) GKI 2.0 DEVICE"
+    },
+    {
+        "maintainer": "AkinaHaruka",
+        "maintainer_link": "https://github.com/AkinaHaruka",
+        "kernel_name": "android_kernel_4.14_oppo_mtk5g_resukisu",
+        "kernel_link": "https://github.com/AkinaHaruka/android_kernel_4.14_oppo_mtk5g_resukisu",
+        "devices": "OPPO Reno6 Pro 5G/Reno6 5G/Reno5 Pro 5G/Reno6 Z 5G/Reno5 Z/A95 5G/F19 Pro+/A73 5G/A72 5G/Reno4 SE 5G/K9 Pro 5G/Reno4 Z 5G/A92S/A55 5G/A53S-5G/A55s 5G/A56 5G/A93s 5G/Reno7 Pro 5G/Reno7 SE 5G/K7x/Reno3 5G/OPPO A53 5G/Ren7 5G/Find X5 lite/K9X"
     }
 ]
