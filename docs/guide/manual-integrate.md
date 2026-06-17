@@ -10,7 +10,7 @@ ReSukiSU will check every hook here, and if any are missing, it will **cause com
 The hook in this part is adapted from [`backslashxx/KernelSU #5`](https://github.com/backslashxx/KernelSU/issues/5)
 :::
 
-### stat hooks <Badge type="danger" text="Required"/> {#stat-hooks} 
+### stat hook <Badge type="danger" text="Required"/> {#stat-hook} 
 
 ::: code-group
 ```diff[stat.c]
@@ -293,7 +293,7 @@ index a3bef5bd..08d196f5 100644
 
 In this part, you should find `reboot` SYSCALL in `kernel/reboot.c` and hook it. Note that for 3.11- kernels, you need to hook `reboot` in `kernel/sys.c` instead.
 
-### input hooks <Badge type="tip" text="Conditionally Required"/> {#input-hooks}
+### input hook <Badge type="tip" text="Conditionally Required"/> {#input-hook}
 :::warning This manual hook is generally not required
 For kernels where the input handler is not corrupted, this hook can be automatically applied via the input handler as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_INPUT_HOOK` is enabled.
 :::
@@ -330,7 +330,7 @@ For kernels where the input handler is not corrupted, this hook can be automatic
 
 In this part, you should find `input_event` in `drivers/input/input.c` and hook it.
 
-### setuid hooks <Badge type="warning" text="6.8+ Required"/> {#setuid-hooks}
+### setuid hook <Badge type="warning" text="6.8+ Required"/> {#setuid-hook}
 :::warning Most versions doesn't require this manual hook.
 For kernel 6.8 (not included 6.8) and below, This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` is enabled.
 :::
@@ -453,7 +453,7 @@ For kernel 6.8 (not included 6.8) and below, This hook can be automatically appl
 
 In this part, you should find `read` in `fs/read_write.c` and hook it. Note that for 4.19- kernels, you only need to hook `read`, and you can ignore `ksys_read` as it is implemented via `read` in those versions.
 
-## Static variable export {#static-var-export}
+## Static symbol export {#static-var-export}
 
 ::: tip Tip
 You can choose enable `CONFIG_KALLSYMS_ALL` Kconfig to avoid these changes.

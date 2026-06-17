@@ -10,7 +10,7 @@ ReSukiSU 将会检查此处每一条 hook，如果缺少，将会**导致编译�
 这一部分的钩子，改编于 [`backslashxx/KernelSU #5`](https://github.com/backslashxx/KernelSU/issues/5)
 :::
 
-### stat hooks <Badge type="danger" text="必加"/> {#stat-hooks}
+### stat hook <Badge type="danger" text="必加"/> {#stat-hook}
 
 ::: code-group
 ```diff[stat.c]
@@ -294,7 +294,7 @@ index a3bef5bd..08d196f5 100644
 
 在这部分中，你需要在内核源码中找到 `reboot`的 SYSCALL 并 hook 它。注意对于 3.11- 内核，你需要在 `kernel/sys.c` 中 hook `reboot`，而不是在 `kernel/reboot.c` 中。
 
-### input hooks <Badge type="tip" text="按需必加"/> {#input-hooks}
+### input hook <Badge type="tip" text="按需必加"/> {#input-hook}
 :::warning 一般无需此手动 hook
 对于 input handler 未损坏的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INPUT_HOOK` 处于启用状态，此 hook 即可通过 Linux 内核的 `input_handler` 特性自动应用
 :::
@@ -331,7 +331,7 @@ index a3bef5bd..08d196f5 100644
 
 在这部分中，你需要在 `drivers/input/input.c` 中找到 `input_event` 并 hook 它。
 
-### setuid hooks <Badge type="warning" text="6.8+ 必加"/> {#setuid-hooks}
+### setuid hook <Badge type="warning" text="6.8+ 必加"/> {#setuid-hook}
 :::warning 大部分版本不需要此手动 hook
 对于 6.8(不包括6.8)以下 的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` 处于启用状态，此 hook 即可通过 LSM 自动应用
 :::
@@ -455,7 +455,7 @@ index a3bef5bd..0b116d7c 100644
 
 在这部分中，你需要在 `fs/read_write.c` 中找到 `read` 的 `SYSCALL` 并 hook 它。
 
-## 静态变量导出 {#static-var-export}
+## 静态符号导出 {#static-var-export}
 
 ::: tip 温馨提示
 您可选择启用 `CONFIG_KALLSYMS_ALL` 内核配置，来避免需要进行此部分操作
