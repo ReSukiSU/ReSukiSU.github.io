@@ -453,7 +453,7 @@ For kernel 6.8 (not included 6.8) and below, This hook can be automatically appl
 
 In this part, you should find `read` in `fs/read_write.c` and hook it. Note that for 4.19- kernels, you only need to hook `read`, and you can ignore `ksys_read` as it is implemented via `read` in those versions.
 
-## Static symbol export {#static-var-export}
+## Static symbol export {#static-symbol-export}
 
 ::: tip Tip
 You can choose enable `CONFIG_KALLSYMS_ALL` Kconfig to avoid these changes.

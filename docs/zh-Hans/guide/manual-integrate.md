@@ -455,7 +455,7 @@ index a3bef5bd..0b116d7c 100644
 
 在这部分中，你需要在 `fs/read_write.c` 中找到 `read` 的 `SYSCALL` 并 hook 它。
 
-## 静态符号导出 {#static-var-export}
+## 静态符号导出 {#static-symbol-export}
 
 ::: tip 温馨提示
 您可选择启用 `CONFIG_KALLSYMS_ALL` 内核配置，来避免需要进行此部分操作
