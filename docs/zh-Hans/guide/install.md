@@ -12,6 +12,10 @@
 (Nightly.link无需登录GitHub账号即可下载文件)
 :::
 
+::: warning
+除main分支外其他分支均为测试分支，除非你受到要求，否则在使用这些分支时不要进行任何反馈
+:::
+
 ## 安装 {#Installation}
 
 ReSukiSU 提供了以下两种方式来安装 ReSukiSU

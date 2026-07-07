@@ -12,6 +12,10 @@ Because ReSukiSU's manager have too much things to do,so ReSukiSU will not be re
 (Nightly.link allows downloading files without logging into a GitHub account.)
 :::
 
+::: warning
+Except for the *main* branch, all other branches are testing branches. Unless requested, please do not provide any feedback when working with these branches.
+:::
+
 ## Install {#Installation}
 
 ReSukiSU provides the following two installation methods:
