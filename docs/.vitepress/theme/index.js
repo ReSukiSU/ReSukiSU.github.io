@@ -7,6 +7,8 @@ import { NolebaseHighlightTargetedHeading } from "@nolebase/vitepress-plugin-hig
 import { NolebaseInlineLinkPreviewPlugin } from "@nolebase/vitepress-plugin-inline-link-preview/client";
 import codeblocksFold from "vitepress-plugin-codeblocks-fold";
 import CopyOrDownloadAsMarkdownButtons from "vitepress-plugin-llms/vitepress-components/CopyOrDownloadAsMarkdownButtons.vue";
+import VivoVrPatcher from "./components/VivoVrPatcher.vue";
+import GKI_LKM_Patcher from "./components/GKI_LKM_Patcher.vue";
 import { render as render_cf_error_page } from 'cloudflare-error-page';
 
 /* plugin css */
@@ -80,6 +82,8 @@ export default {
       "CopyOrDownloadAsMarkdownButtons",
       CopyOrDownloadAsMarkdownButtons,
     );
+    app.component("VivoVrPatcher", VivoVrPatcher);
+    app.component("GKI_LKM_Patcher", GKI_LKM_Patcher);
   },
   setup() {
     const { frontmatter } = useData();

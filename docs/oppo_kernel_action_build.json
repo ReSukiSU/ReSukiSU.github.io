@@ -1,0 +1,51 @@
+[
+    {
+        "maintainer": "luyanci",
+        "maintainer_link": "https://github.com/luyanci",
+        "repo_name": "op_ace6_kbuild",
+        "repo_link": "https://github.com/luyanci/op_ace6_kbuild",
+        "devices": "Oneplus ACE6 (Stock ROM)"
+    },
+    {
+        "maintainer": "huangdihd",
+        "maintainer_link": "https://github.com/huangdihd",
+        "repo_name": "OnePlus_ReSukiSU_SUSFS",
+        "repo_link": "https://github.com/huangdihd/OnePlus_ReSukiSU_SUSFS",
+        "devices": "OnePlus Devices"
+    },
+    {
+        "maintainer": "cctv18",
+        "maintainer_link": "https://github.com/cctv18",
+        "repo_name": "oppo_oplus_realme_sm8650",
+        "repo_link": "https://github.com/cctv18/oppo_oplus_realme_sm8650",
+        "devices": "OnePlus sm8650 soc devices"
+    },
+    {
+        "maintainer": "cctv18",
+        "maintainer_link": "https://github.com/cctv18",
+        "repo_name": "oppo_oplus_realme_sm8750",
+        "repo_link": "https://github.com/cctv18/oppo_oplus_realme_sm8750",
+        "devices": "OnePlus sm8750 soc devices"
+    },
+    {
+        "maintainer": "cctv18",
+        "maintainer_link": "https://github.com/cctv18",
+        "repo_name": "oppo_oplus_realme_sm8850",
+        "repo_link": "https://github.com/cctv18/oppo_oplus_realme_sm8850",
+        "devices": "OnePlus sm8850 soc devices"
+    },
+    {
+        "maintainer": "Xiaomichael",
+        "maintainer_link": "https://github.com/Xiaomichael",
+        "repo_name": "OnePlus-Actions",
+        "repo_link": "https://github.com/Xiaomichael/OnePlus-Actions",
+        "devices": "OnePlus kernel 5.10 - 6.6"
+    },
+    {
+        "maintainer": "Numbersf",
+        "maintainer_link": "https://github.com/Numbersf",
+        "repo_name": "Action-Build",
+        "repo_link": "https://github.com/Numbersf/Action-Build",
+        "devices": "OnePlus kernel 5.10 - 6.12"
+    }
+]

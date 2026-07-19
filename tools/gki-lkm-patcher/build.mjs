@@ -1,0 +1,10 @@
+import { spawnSync } from "node:child_process";
+import { copyFileSync, mkdirSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+const dir = dirname(fileURLToPath(import.meta.url));
+const build = spawnSync(process.platform === "win32" ? "cargo.exe" : "cargo", ["build", "--manifest-path", resolve(dir, "Cargo.toml"), "--target", "wasm32-unknown-unknown", "--release"], { stdio: "inherit", shell: process.platform === "win32" });
+if (build.status !== 0) process.exit(build.status ?? 1);
+const output = resolve(dir, "../../docs/public/tools/gki-lkm-patcher.wasm");
+mkdirSync(dirname(output), { recursive: true });
+copyFileSync(resolve(dir, "target/wasm32-unknown-unknown/release/gki_lkm_patcher.wasm"), output);

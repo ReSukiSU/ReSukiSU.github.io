@@ -15,7 +15,12 @@ export default {
         {
             text: '开始使用',
             items: [
-            { text: '安装', link: '/zh-Hans/guide/install' },
+            { text: '安装', link: '/zh-Hans/guide/install', collapsed: false, items: [
+                { text: '一般 GKI 设备', link: '/zh-Hans/guide/install/gki' },
+                { text: 'Non-GKI 设备', link: '/zh-Hans/guide/install/nongki' },
+                { text: 'vivo 设备', link: '/zh-Hans/guide/install/vivo' },
+                { text: 'OPPO 设备', link: '/zh-Hans/guide/install/oppo' }
+            ]},
             { text: '构建内核', link: '/zh-Hans/guide/build',collapsed: true,items: [
                 { text: '参考钩子', link: '/zh-Hans/guide/manual-integrate' }
             ]},

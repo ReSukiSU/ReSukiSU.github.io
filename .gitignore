@@ -130,3 +130,10 @@ dist
 .pnp.*
 
 .DS_Store
+
+# Rust build output
+tools/vivo-vr-patcher/target/
+tools/gki-lkm-patcher/target/
+
+# wasm
+*.wasm

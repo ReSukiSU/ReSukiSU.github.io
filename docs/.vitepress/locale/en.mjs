@@ -14,7 +14,12 @@ export default {
         {
             text: 'Get started',
             items: [
-            { text: 'Install', link: '/guide/install' },
+            { text: 'Install', link: '/guide/install', collapsed: false, items: [
+                { text: 'Generic GKI Devices', link: '/guide/install/gki' },
+                { text: 'Non-GKI Devices', link: '/guide/install/nongki' },
+                { text: 'vivo Devices', link: '/guide/install/vivo' },
+                { text: 'OPPO Devices', link: '/guide/install/oppo' }
+            ]},
             { text: 'Building Kernel', link: '/guide/build',collapsed:true, items: [
                 { text: 'Manual Hooks', link: '/guide/manual-integrate' }
             ]},
