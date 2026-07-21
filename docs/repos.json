@@ -173,5 +173,12 @@
         "kernel_name": "android_kernel_xiaomi_sm8550",
         "kernel_link": "https://github.com/hewel/android_kernel_xiaomi_sm8550",
         "devices": "Xiaomi Redmi K60 Pro (socrates)"
+    },
+    {
+        "maintainer": "xixiaobei-bei",
+        "maintainer_link": "https://github.com/xixiaobei-bei",
+        "kernel_name": "KernelSU_on_Huawei",
+        "kernel_link": "https://github.com/xixiaobei-bei/KernelSU_on_Huawei",
+        "devices": "All Huawei & Honor devices"
     }
 ]
