@@ -180,5 +180,12 @@
         "kernel_name": "KernelSU_on_Huawei",
         "kernel_link": "https://github.com/xixiaobei-bei/KernelSU_on_Huawei",
         "devices": "All Huawei & Honor devices"
+    },
+    {
+        "maintainer": "luyanci",
+        "maintainer_link": "https://github.com/luyanci",
+        "kernel_name": "kernel_xiaomi_phoenix",
+        "kernel_link": "https://github.com/luyanci/kernel_xiaomi_phoenix",
+        "devices": "Redmi K30 4G (phoenix) for PixelExprience 11"
     }
 ]
