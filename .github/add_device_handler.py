@@ -1,7 +1,7 @@
 import json
 import sys
 import os
-
+import shlex
 
 def main():
     assert len(sys.argv) == 2
@@ -43,7 +43,7 @@ def main():
     with open(file_name, "w") as f:
         f.write(json.dumps(data, indent=4))
     os.system("echo success=true >> $GITHUB_OUTPUT")
-    os.system("echo device=%s >> $GITHUB_OUTPUT" % device)
+    os.system('echo "device=%s" >> $GITHUB_OUTPUT' % shlex.quote(device))
 
 
 if __name__ == "__main__":
