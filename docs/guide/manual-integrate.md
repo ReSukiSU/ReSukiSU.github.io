@@ -575,7 +575,7 @@ If this definition not found,please ignore this part.
 
 Remove `static` from the definition of `selinux_ops` in `security/selinux/selinuxfs.c`
 
-### security_dump_masked_av <Badge type="danger" text="6.6+ 必加"/>
+### security_dump_masked_av <Badge type="danger" text="6.6+ Required"/>
 
 ```diff
 diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
@@ -597,7 +597,7 @@ diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
 Remove `static` from the definition of `security_dump_masked_av` in `security/selinux/ss/services.c`
 
 
-### context_struct_compute_av <Badge type="danger" text="6.6+ 必加"/>
+### context_struct_compute_av <Badge type="danger" text="6.6+ Required"/>
 
 ```diff
 diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
