@@ -111,6 +111,8 @@ export default defineConfig({
       llmstxt(),
       GitChangelog({
         repoURL: () => "https://github.com/ReSukiSU/ReSukiSU.github.io",
+        maxGitLogCount: 50,
+        include: ["docs/**/*.md","!node_modules"],
       }),
       GitChangelogMarkdownSection({
         exclude: (id) => id.endsWith("index.md"),
