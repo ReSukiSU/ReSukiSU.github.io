@@ -22,17 +22,9 @@ ReSukiSU provides the following two installation methods:
  
 ### LKM Installation {#LKM}
  
-After installing the ReSukiSU Manager, if your kernel version is ≥ `5.10`, clicking `Not Installed` will redirect you to the installation interface and display the `LKM patching/installation` option.
- 
-Follow the prompts in the Manager to select the  `boot` / `init_boot` / `vendor_boot` file, then click Next.
- 
-::: info tips
-Devices requiring `vendor_boot` patching are quite rare, so you generally only need to patch the `init_boot` file.
+::: tip
+This part has been moved to [this page](./install/gki.md#lkm).
 :::
- 
-The Manager will quickly determine the LKM file based on the system's KMI, patch the provided image file, and output the patched file as  `KernelSU_patched_*.img`  to the download directory.
- 
-After that, you need to flash the patched image file to the corresponding partition using appropriate methods, and you’re all set.
  
 ### GKI2/GKI1/Non-GKI Kernel (AnyKernel3) Installation {#builtin}
  
