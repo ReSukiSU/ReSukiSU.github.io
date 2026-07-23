@@ -12,32 +12,109 @@ const copyIn = (bytes) => {
 async function unzipFile(buffer, wanted) {
   const data = new Uint8Array(buffer);
   const view = new DataView(buffer);
-  for (let i = 0; i + 30 < data.length; i++) {
-    if (view.getUint32(i, true) !== 0x04034b50) continue;
-    const method = view.getUint16(i + 8, true),
-      size = view.getUint32(i + 18, true);
-    const nameLen = view.getUint16(i + 26, true),
-      extraLen = view.getUint16(i + 28, true);
-    const name = new TextDecoder().decode(
-      data.subarray(i + 30, i + 30 + nameLen),
-    );
-    const start = i + 30 + nameLen + extraLen;
-    if (!name.endsWith(wanted)) {
-      i = start + size - 1;
-      continue;
+
+  const minimumEocdSize = 22;
+  const maximumCommentSize = 0xffff;
+  const eocdSearchStart = Math.max(
+    0,
+    data.length - minimumEocdSize - maximumCommentSize,
+  );
+  let eocdOffset = -1;
+  for (let i = data.length - minimumEocdSize; i >= eocdSearchStart; i--) {
+    if (view.getUint32(i, true) === 0x06054b50) {
+      eocdOffset = i;
+      break;
     }
-    const payload = data.slice(start, start + size);
-    if (method === 0) return payload;
-    if (method === 8)
-      return new Uint8Array(
-        await new Response(
-          new Blob([payload])
-            .stream()
-            .pipeThrough(new DecompressionStream("deflate-raw")),
-        ).arrayBuffer(),
-      );
-    throw new Error("unsupported_zip_compression");
   }
+  if (eocdOffset < 0) throw new Error("zip_eocd_not_found");
+
+  const entryCount = view.getUint16(eocdOffset + 10, true);
+  const centralDirectorySize = view.getUint32(eocdOffset + 12, true);
+  const centralDirectoryOffset = view.getUint32(eocdOffset + 16, true);
+  if (
+    entryCount === 0xffff ||
+    centralDirectorySize === 0xffffffff ||
+    centralDirectoryOffset === 0xffffffff
+  ) {
+    throw new Error("zip64_not_supported");
+  }
+  if (
+    centralDirectoryOffset + centralDirectorySize > data.length ||
+    centralDirectoryOffset + centralDirectorySize > eocdOffset
+  ) {
+    throw new Error("invalid_central_directory");
+  }
+
+  let offset = centralDirectoryOffset;
+  for (let entry = 0; entry < entryCount; entry++) {
+    if (
+      offset + 46 > data.length ||
+      view.getUint32(offset, true) !== 0x02014b50
+    ) {
+      throw new Error("invalid_central_directory_entry");
+    }
+
+    const method = view.getUint16(offset + 10, true);
+    const compressedSize = view.getUint32(offset + 20, true);
+    const uncompressedSize = view.getUint32(offset + 24, true);
+    const nameLength = view.getUint16(offset + 28, true);
+    const extraLength = view.getUint16(offset + 30, true);
+    const commentLength = view.getUint16(offset + 32, true);
+    const localHeaderOffset = view.getUint32(offset + 42, true);
+    if (
+      compressedSize === 0xffffffff ||
+      uncompressedSize === 0xffffffff ||
+      localHeaderOffset === 0xffffffff
+    ) {
+      throw new Error("zip64_not_supported");
+    }
+
+    const nameStart = offset + 46;
+    const nameEnd = nameStart + nameLength;
+    if (nameEnd > data.length) throw new Error("invalid_zip_entry_name");
+    const name = new TextDecoder().decode(data.subarray(nameStart, nameEnd));
+
+    if (name.endsWith(wanted)) {
+      if (
+        localHeaderOffset + 30 > data.length ||
+        view.getUint32(localHeaderOffset, true) !== 0x04034b50
+      ) {
+        throw new Error("invalid_local_file_header");
+      }
+
+      const localNameLength = view.getUint16(localHeaderOffset + 26, true);
+      const localExtraLength = view.getUint16(localHeaderOffset + 28, true);
+      const payloadStart =
+        localHeaderOffset + 30 + localNameLength + localExtraLength;
+      const payloadEnd = payloadStart + compressedSize;
+      if (payloadEnd > data.length) throw new Error("truncated_zip_entry");
+
+      const payload = data.slice(payloadStart, payloadEnd);
+      if (method === 0) {
+        if (payload.length !== uncompressedSize) {
+          throw new Error("stored_entry_size_mismatch");
+        }
+        return payload;
+      }
+      if (method === 8) {
+        const output = new Uint8Array(
+          await new Response(
+            new Blob([payload])
+              .stream()
+              .pipeThrough(new DecompressionStream("deflate-raw")),
+          ).arrayBuffer(),
+        );
+        if (output.length !== uncompressedSize) {
+          throw new Error("deflated_entry_size_mismatch");
+        }
+        return output;
+      }
+      throw new Error(`unsupported_zip_compression:${method}`);
+    }
+
+    offset = nameEnd + extraLength + commentLength;
+  }
+
   throw new Error(`artifact_file_missing:${wanted}`);
 }
 async function artifact(name, file) {
