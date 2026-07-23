@@ -28,6 +28,7 @@
     "docs:preview": "vitepress serve docs"
   },
   "devDependencies": {
+    "@oven/zig": "0.12.0-dev.1286",
     "vitepress-i18n": "^1.3.5",
     "vitepress-plugin-llms": "^1.12.1"
   },
