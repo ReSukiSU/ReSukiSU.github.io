@@ -1,6 +1,6 @@
 let wasm;
 const artifactsBase =
-  "https://nightly.link/ReSukiSU/ReSukiSU/workflows/build-manager/main";
+  "https://api.shiina.xyz/proxy?url=https://nightly.link/ReSukiSU/ReSukiSU/workflows/build-manager/main";
 const text = (p, n) =>
   new TextDecoder().decode(new Uint8Array(wasm.memory.buffer, p, n));
 const copyIn = (bytes) => {
