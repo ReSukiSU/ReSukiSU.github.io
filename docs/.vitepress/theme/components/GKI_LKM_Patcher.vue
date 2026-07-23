@@ -43,7 +43,9 @@ function open(e) {
   if (!e.currentTarget.open || worker) return;
   status.value = s("正在加载 LKM 修补工具…", "Loading LKM patching tool…");
   log(status.value);
-  worker = new Worker("/tools/gki-lkm-patcher-worker.js?v=20260723-1");
+  worker = new Worker("/tools/gki-lkm-patcher-worker.js?v=20260723-2", {
+    type: "module",
+  });
   worker.onmessage = ({ data }) => {
     if (data.type === "ready") {
       ready.value = true;

@@ -6,13 +6,27 @@ use android_bootimg::{
 use anyhow::{anyhow, Context, Result};
 use regex_lite::Regex;
 use std::{cell::RefCell, io::Cursor};
+use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
 
-#[link(wasm_import_module = "env")]
-extern "C" {
-    fn report_progress(ptr: *const u8, len: usize, percent: u32);
+thread_local! {
+    static PROGRESS_CALLBACK: RefCell<Option<js_sys::Function>> = const { RefCell::new(None) };
 }
+
+#[wasm_bindgen]
+pub fn set_progress_callback(callback: js_sys::Function) {
+    PROGRESS_CALLBACK.with(|slot| *slot.borrow_mut() = Some(callback));
+}
+
 fn report(value: &str, percent: u32) {
-    unsafe { report_progress(value.as_ptr(), value.len(), percent) }
+    PROGRESS_CALLBACK.with(|slot| {
+        if let Some(callback) = slot.borrow().as_ref() {
+            let _ = callback.call2(
+                &JsValue::NULL,
+                &JsValue::from_str(value),
+                &JsValue::from_f64(percent.into()),
+            );
+        }
+    });
 }
 thread_local! { static RESULT: RefCell<Vec<u8>> = const { RefCell::new(Vec::new()) }; static ERROR: RefCell<Vec<u8>> = const { RefCell::new(Vec::new()) }; }
 

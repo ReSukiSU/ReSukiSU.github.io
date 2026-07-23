@@ -137,3 +137,5 @@ tools/gki-lkm-patcher/target/
 
 # wasm
 *.wasm
+docs/public/tools/gki-lkm-patcher.js
+docs/public/tools/vivo-vr-patcher.js

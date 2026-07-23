@@ -1,3 +1,5 @@
+import init, { set_progress_callback } from "/tools/gki-lkm-patcher.js";
+
 let wasm;
 const artifactsBase =
   "https://api.shiina.xyz/proxy?url=https://nightly.link/ReSukiSU/ReSukiSU/workflows/build-manager/main";
@@ -232,16 +234,10 @@ self.onmessage = async ({ data }) => {
   }
 };
 (async () => {
-  const response = await fetch("/tools/gki-lkm-patcher.wasm");
-  const imports = {
-    env: {
-      report_progress(p, n, percent) {
-        self.postMessage({ type: "progress", percent, message: text(p, n) });
-      },
-    },
-  };
-  wasm = (await WebAssembly.instantiate(await response.arrayBuffer(), imports))
-    .instance.exports;
+  wasm = await init("/tools/gki-lkm-patcher.wasm");
+  set_progress_callback((message, percent) => {
+    self.postMessage({ type: "progress", percent, message });
+  });
   self.postMessage({ type: "ready" });
 })().catch((error) => {
   console.error("Failed to initialize GKI LKM patch worker", error);

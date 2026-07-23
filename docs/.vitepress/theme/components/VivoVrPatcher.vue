@@ -114,7 +114,9 @@ function initialize(event) {
   loading.value = true;
   status.value = t.value.loading;
   try {
-    worker = new Worker("/tools/vivo-vr-patcher-worker.js");
+    worker = new Worker("/tools/vivo-vr-patcher-worker.js?v=20260723-1", {
+      type: "module",
+    });
     worker.onmessage = handleWorkerMessage;
     worker.onerror = ({ message }) => handleError(message);
   } catch (error) {
