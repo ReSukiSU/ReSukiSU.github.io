@@ -186,6 +186,6 @@
         "maintainer_link": "https://github.com/bcggxx",
         "kernel_name": "android_kernel_xiaomi_n0_pipa",
         "kernel_link": "https://github.com/bcggxx/android_kernel_xiaomi_n0_pipa",
-        "devices": "Non-GKI"
+        "devices": "Xiaomi Pad6"
     }
 ]
