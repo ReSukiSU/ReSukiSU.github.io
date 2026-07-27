@@ -1,4 +1,6 @@
 import { defineConfig } from "vitepress";
+import wasm from "vite-plugin-wasm";
+import topLevelAwait from "vite-plugin-top-level-await";
 
 import llmstxt from "vitepress-plugin-llms";
 import { copyOrDownloadAsMarkdownButtons } from "vitepress-plugin-llms";
@@ -8,26 +10,24 @@ import {
 } from "@nolebase/vitepress-plugin-git-changelog/vite";
 import { BiDirectionalLinks } from "@nolebase/markdown-it-bi-directional-links";
 import { InlineLinkPreviewElementTransform } from "@nolebase/vitepress-plugin-inline-link-preview/markdown-it";
-import {
-  chineseSearchOptimize,
-  pagefindPlugin,
-} from "vitepress-plugin-pagefind";
+import { chineseSearchOptimize, pagefindPlugin } from "vitepress-plugin-pagefind";
 import mdAutoSpacing from "markdown-it-autospace";
 import locale from "./locale/index.mjs";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "ReSukiSU",
-  description: "Make SukiSU Great Again!",
+  description: "A more stable fork of SukiSU — KernelSU-based ROOT with enhanced Non-GKI compatibility.",
 
   sitemap: {
-    hostname: "https://ReSukiSU.github.io",
+    hostname: "https://resukisu.org",
   },
 
   locales: locale.locales,
 
   head: [
     ["link", { rel: "icon", href: "/favicon.svg" }],
+    ["link", { rel: "canonical", href: "https://resukisu.org/" }],
     ["link", { rel: "preconnect", href: "https://cdn.jsdelivr.net/" }],
     [
       "link",
@@ -45,34 +45,51 @@ export default defineConfig({
       },
     ],
 
-    ["meta", { name: "robots", content: "index, follow" }],
+    ["meta", { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" }],
+    ["meta", { name: "theme-color", content: "#ec4899", media: "(prefers-color-scheme: light)" }],
+    ["meta", { name: "theme-color", content: "#f472b6", media: "(prefers-color-scheme: dark)" }],
+    ["meta", { name: "color-scheme", content: "light dark" }],
 
     [
       "meta",
       {
         name: "keywords",
-        content:
-          "ReSukiSU, SukiSU, Android, Documentation, Root, Custom ROM, Kernel",
+        content: "ReSukiSU, SukiSU, KernelSU, Android, ROOT, Custom Kernel, GKI, Non-GKI, SukiSU Ultra, Android Root, KernelSU Modules",
       },
     ],
     ["meta", { name: "author", content: "ReSukiSU Development" }],
+    ["meta", { name: "application-name", content: "ReSukiSU" }],
+    ["meta", { name: "apple-mobile-web-app-title", content: "ReSukiSU" }],
+    ["meta", { name: "apple-mobile-web-app-status-bar-style", content: "default" }],
 
-    ["meta", { property: "og:title", content: "ReSukiSU Documentation" }],
+    ["meta", { property: "og:title", content: "ReSukiSU — Make SukiSU Great Again" }],
     [
       "meta",
       {
         property: "og:description",
-        content: "Make SukiSU Great Again! The official documentation.",
+        content: "A more stable fork of SukiSU. KernelSU-based ROOT with enhanced Non-GKI compatibility, minimal hooks, and multi-manager support.",
       },
     ],
     ["meta", { property: "og:type", content: "website" }],
     ["meta", { property: "og:site_name", content: "ReSukiSU" }],
-    ["meta", { property: "og:url", content: "https://resukisu.github.io" }],
-    ["meta", { property: "og:image", content: "https://resukisu.github.io/logo.svg" }],
-    ["meta", { name: "twitter:card", content: "summary" }],
-    ["meta", { name: "twitter:title", content: "ReSukiSU Documentation" }],
-    ["meta", { name: "twitter:description", content: "Make SukiSU Great Again! The official documentation." }],
-    ["meta", { name: "twitter:image", content: "https://resukisu.github.io/logo.svg" }],
+    ["meta", { property: "og:url", content: "https://resukisu.org" }],
+    ["meta", { property: "og:image", content: "https://resukisu.org/logo.svg" }],
+    ["meta", { property: "og:image:alt", content: "ReSukiSU Logo" }],
+    ["meta", { property: "og:image:width", content: "512" }],
+    ["meta", { property: "og:image:height", content: "512" }],
+    ["meta", { property: "og:locale", content: "en_US" }],
+    ["meta", { property: "og:locale:alternate", content: "zh_CN" }],
+    ["meta", { name: "twitter:card", content: "summary_large_image" }],
+    ["meta", { name: "twitter:title", content: "ReSukiSU — Make SukiSU Great Again" }],
+    [
+      "meta",
+      {
+        name: "twitter:description",
+        content: "A more stable fork of SukiSU. KernelSU-based ROOT with enhanced Non-GKI compatibility, minimal hooks, and multi-manager support.",
+      },
+    ],
+    ["meta", { name: "twitter:image", content: "https://resukisu.org/logo.svg" }],
+    ["meta", { name: "twitter:image:alt", content: "ReSukiSU Logo" }],
   ],
 
   themeConfig: {
@@ -121,7 +138,13 @@ export default defineConfig({
       pagefindPlugin({
         customSearchQuery: chineseSearchOptimize,
       }),
+      wasm(),
+      topLevelAwait(),
     ],
+    worker: {
+      format: "es",
+      plugins: () => [wasm(), topLevelAwait()],
+    },
     optimizeDeps: {
       exclude: [
         "@nolebase/vitepress-plugin-enhanced-readabilities/client",

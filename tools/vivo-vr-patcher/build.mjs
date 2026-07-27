@@ -1,62 +1,28 @@
 import { spawnSync } from "node:child_process";
-import { chmodSync, copyFileSync, existsSync, mkdirSync } from "node:fs";
+import { copyFileSync, mkdirSync, rmSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+const NAME = "vivo-vr-patcher";
+const PKG_NAME = "vivo_vr_patcher";
 const toolDir = dirname(fileURLToPath(import.meta.url));
-const packageDir = resolve(toolDir, "pkg");
-const output = resolve(toolDir, "../../docs/public/tools/vivo-vr-patcher.wasm");
-const glueOutput = resolve(
-  toolDir,
-  "../../docs/public/tools/vivo-vr-patcher.js",
-);
+const pkgDir = resolve(toolDir, "pkg");
+const outDir = resolve(toolDir, "../../docs/.vitepress/theme/wasm", NAME);
 const wasmPack = process.platform === "win32" ? "wasm-pack.exe" : "wasm-pack";
-const zigCc = resolve(
-  toolDir,
-  process.platform === "win32" ? "../zig-cc.cmd" : "../zig-cc",
-);
-const zigAr = resolve(
-  toolDir,
-  process.platform === "win32" ? "../zig-ar.cmd" : "../zig-ar",
-);
-if (process.platform !== "win32") {
-  if (existsSync(zigCc)) chmodSync(zigCc, 0o755);
-  if (existsSync(zigAr)) chmodSync(zigAr, 0o755);
-}
-const buildEnvironment = { ...process.env };
-if (!buildEnvironment.CC_wasm32_unknown_unknown && existsSync(zigCc)) {
-  buildEnvironment.CC_wasm32_unknown_unknown = zigCc;
-  buildEnvironment.CFLAGS_wasm32_unknown_unknown =
-    "--target=wasm32-freestanding";
-}
-if (!buildEnvironment.AR_wasm32_unknown_unknown && existsSync(zigAr)) {
-  buildEnvironment.AR_wasm32_unknown_unknown = zigAr;
-}
+
+rmSync(pkgDir, { recursive: true, force: true });
 
 const build = spawnSync(
   wasmPack,
-  [
-    "build",
-    toolDir,
-    "--target",
-    "web",
-    "--release",
-    "--out-dir",
-    packageDir,
-    "--out-name",
-    "vivo-vr-patcher",
-    "--no-typescript",
-  ],
-  {
-    env: buildEnvironment,
-    stdio: "inherit",
-  },
+  ["build", toolDir, "--target", "bundler", "--release", "--out-dir", "pkg"],
+  { stdio: "inherit" },
 );
 
 if (build.status !== 0) process.exit(build.status ?? 1);
 
-mkdirSync(dirname(output), { recursive: true });
-copyFileSync(resolve(packageDir, "vivo-vr-patcher_bg.wasm"), output);
-copyFileSync(resolve(packageDir, "vivo-vr-patcher.js"), glueOutput);
-console.log(`WASM written to ${output}`);
-console.log(`JavaScript glue written to ${glueOutput}`);
+rmSync(outDir, { recursive: true, force: true });
+mkdirSync(outDir, { recursive: true });
+for (const f of [`${PKG_NAME}.js`, `${PKG_NAME}_bg.js`, `${PKG_NAME}_bg.wasm`]) {
+  copyFileSync(resolve(pkgDir, f), resolve(outDir, f));
+}
+console.log(`bundler pkg written to ${outDir}`);

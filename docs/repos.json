@@ -1,170 +1,170 @@
 [
-    {
-        "maintainer": "luyanci",
-        "maintainer_link": "https://github.com/luyanci",
-        "kernel_name": "op_ace6_kbuild",
-        "kernel_link": "https://github.com/luyanci/op_ace6_kbuild",
-        "devices": "Oneplus ACE6 (Stock ROM)"
-    },
-    {
-        "maintainer": "huangdihd",
-        "maintainer_link": "https://github.com/huangdihd",
-        "kernel_name": "OnePlus_ReSukiSU_SUSFS",
-        "kernel_link": "https://github.com/huangdihd/OnePlus_ReSukiSU_SUSFS",
-        "devices": "OnePlus Devices"
-    },
-    {
-        "maintainer": "coolzyd9107",
-        "maintainer_link": "https://github.com/coolzyd9107",
-        "kernel_name": "GKI_KernelSU_SUSFS",
-        "kernel_link": "https://github.com/coolzyd9107/GKI_KernelSU_SUSFS",
-        "devices": "Generic Kernel Image 2.0 (GKI2.0)"
-    },
-    {
-        "maintainer": "YuzakiKokuban",
-        "maintainer_link": "https://github.com/YuzakiKokuban",
-        "kernel_name": "android_kernel_samsung_sm8550_S23",
-        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8550_S23",
-        "devices": "Samsung S23 Series"
-    },
-    {
-        "maintainer": "YuzakiKokuban",
-        "maintainer_link": "https://github.com/YuzakiKokuban",
-        "kernel_name": "android_kernel_samsung_sm8650",
-        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8650",
-        "devices": "Samsung S24 Series"
-    },
-    {
-        "maintainer": "YuzakiKokuban",
-        "maintainer_link": "https://github.com/YuzakiKokuban",
-        "kernel_name": "android_kernel_samsung_sm8750",
-        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8750",
-        "devices": "Samsung S25 Series"
-    },
-    {
-        "maintainer": "YuzakiKokuban",
-        "maintainer_link": "https://github.com/YuzakiKokuban",
-        "kernel_name": "android_kernel_samsung_sm8650_Z6",
-        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8650_Z6",
-        "devices": "Samsung Z Flip/Fold 6"
-    },
-    {
-        "maintainer": "YuzakiKokuban",
-        "maintainer_link": "https://github.com/YuzakiKokuban",
-        "kernel_name": "android_kernel_xiaomi_sm8850",
-        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_xiaomi_sm8850",
-        "devices": "Xiaomi 17 Series"
-    },
-    {
-        "maintainer": "coolzyd9107",
-        "maintainer_link": "https://github.com/coolzyd9107",
-        "kernel_name": "android_kernel_xiaomi_sm8250",
-        "kernel_link": "https://github.com/coolzyd9107/android_kernel_xiaomi_sm8250",
-        "devices": "Redmi K40"
-    },
-    {
-        "maintainer": "AstideLabs",
-        "maintainer_link": "https://github.com/AstideLabs",
-        "kernel_name": "android_kernel_xiaomi_sm8250",
-        "kernel_link": "https://github.com/AstideLabs/android_kernel_xiaomi_sm8250",
-        "devices": "Xiaomi SM8250 Devices"
-    },
-    {
-        "maintainer": "lesdieuxx",
-        "maintainer_link": "https://github.com/lesdieuxx",
-        "kernel_name": "android_kernel_a047f_resukisu",
-        "kernel_link": "https://github.com/lesdieuxx/android_kernel_a047f_resukisu",
-        "devices": "Samsung A04s (A047F)"
-    },
-    {
-        "maintainer": "TGMGT",
-        "maintainer_link": "https://github.com/TGMGT",
-        "kernel_name": "android_kernel_samsung_universal5433",
-        "kernel_link": "https://github.com/TGMGT/android_kernel_samsung_universal5433",
-        "devices": "Non-GKI T815 LTE"
-    },
-    {
-        "maintainer": "huangdihd",
-        "maintainer_link": "https://github.com/huangdihd",
-        "kernel_name": "android_kernel_xiaomi_sdm845_resukisu_susfs",
-        "kernel_link": "https://github.com/huangdihd/android_kernel_xiaomi_sdm845_resukisu_susfs",
-        "devices": "Xiaomi mix 2s running los22.2(theory for all xiaomi sdm845 devices)"
-    },
-    {
-        "maintainer": "huangdihd",
-        "maintainer_link": "https://github.com/huangdihd",
-        "kernel_name": "android_kernel_xiaomi_msm8960_resukisu",
-        "kernel_link": "https://github.com/huangdihd/android_kernel_xiaomi_msm8960_resukisu",
-        "devices": "Xiaomi 2s running los18.1(theory for all xiaomi msm8960 devices)"
-    },
-    {
-        "maintainer": "AkinaHaruka",
-        "maintainer_link": "https://github.com/AkinaHaruka",
-        "kernel_name": "android_kernel_oppo_mt6833_resukisu_susfs",
-        "kernel_link": "https://github.com/AkinaHaruka/android_kernel_oppo_mt6833_resukisu_susfs",
-        "devices": "OPPO MT6833 Devices"
-    },
-    {
-        "maintainer": "YuzakiKokuban",
-        "maintainer_link": "https://github.com/YuzakiKokuban",
-        "kernel_name": "android_kernel_samsung_sm8550_TabS9",
-        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8550_TabS9",
-        "devices": "Samsung Tab S9 Series"
-    },
-    {
-        "maintainer": "YuzakiKokuban",
-        "maintainer_link": "https://github.com/YuzakiKokuban",
-        "kernel_name": "android_kernel_samsung_mt6989_TabS10",
-        "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_mt6989_TabS10",
-        "devices": "Samsung Tab S10 Series"
-    },
-    {
-        "maintainer": "MiguVT",
-        "maintainer_link": "https://github.com/MiguVT",
-        "kernel_name": "NP2_Kernel",
-        "kernel_link": "https://github.com/MiguVT/NP2_Kernel",
-        "devices": "Nothing Phone 2"
-    },
-    {
-        "maintainer": "huangdihd",
-        "maintainer_link": "https://github.com/huangdihd",
-        "kernel_name": "KernelSU_SUSFS_Xiaomi_Cupid",
-        "kernel_link": "https://github.com/huangdihd/KernelSU_SUSFS_Xiaomi_Cupid",
-        "devices": "xiaomi12 running Lineage OS"
-    },
-    {
-        "maintainer": "momo54181",
-        "maintainer_link": "https://github.com/momo54181",
-        "kernel_name": "android_kernel_oplus_mt6853",
-        "kernel_link": "https://github.com/momo54181/android_kernel_oplus_mt6853",
-        "devices": "MT6853 (OPPO/OnePlus/Realme) Generic Devices"
-    },
-    {
-        "maintainer": "AlexLiuDev233",
-        "maintainer_link": "https://github.com/AlexLiuDev233",
-        "kernel_name": "android_kernel_stone",
-        "kernel_link": "https://github.com/AlexLiuDev233/android_kernel_stone",
-        "devices": "Redmi Note 12 5G/Poco X5 5G devices, maybe all xiaomi sm8350, userspace HyperOS2"
-    },
-    {
-        "maintainer": "vahiru",
-        "maintainer_link": "https://github.com/vahiru",
-        "kernel_name": "resukisu-munch",
-        "kernel_link": "https://github.com/vahiru/resukisu-munch",
-        "devices": "Redmi K40s (munch)"
-    },
-    {
-        "maintainer": "samakshkambxj",
-        "maintainer_link": "https://github.com/samakshkambxj",
-        "kernel_name": "OriginKernel_Galaxian",
-        "kernel_link": "https://github.com/samakshkambxj/OriginKernel_Galaxian",
-        "devices": "Nothing Phone (3a) Lite (Galaxian) GKI 2.0 DEVICE"
-    },
-    {
-        "maintainer": "AkinaHaruka",
-        "maintainer_link": "https://github.com/AkinaHaruka",
-        "kernel_name": "android_kernel_4.14_oppo_mtk5g_resukisu",
-        "kernel_link": "https://github.com/AkinaHaruka/android_kernel_4.14_oppo_mtk5g_resukisu",
-        "devices": "OPPO Reno6 Pro 5G/Reno6 5G/Reno5 Pro 5G/Reno6 Z 5G/Reno5 Z/A95 5G/F19 Pro+/A73 5G/A72 5G/Reno4 SE 5G/K9 Pro 5G/Reno4 Z 5G/A92S/A55 5G/A53S-5G/A55s 5G/A56 5G/A93s 5G/Reno7 Pro 5G/Reno7 SE 5G/K7x/Reno3 5G/OPPO A53 5G/Ren7 5G/Find X5 lite/K9X"
-    }
+  {
+    "maintainer": "luyanci",
+    "maintainer_link": "https://github.com/luyanci",
+    "kernel_name": "op_ace6_kbuild",
+    "kernel_link": "https://github.com/luyanci/op_ace6_kbuild",
+    "devices": "Oneplus ACE6 (Stock ROM)"
+  },
+  {
+    "maintainer": "huangdihd",
+    "maintainer_link": "https://github.com/huangdihd",
+    "kernel_name": "OnePlus_ReSukiSU_SUSFS",
+    "kernel_link": "https://github.com/huangdihd/OnePlus_ReSukiSU_SUSFS",
+    "devices": "OnePlus Devices"
+  },
+  {
+    "maintainer": "coolzyd9107",
+    "maintainer_link": "https://github.com/coolzyd9107",
+    "kernel_name": "GKI_KernelSU_SUSFS",
+    "kernel_link": "https://github.com/coolzyd9107/GKI_KernelSU_SUSFS",
+    "devices": "Generic Kernel Image 2.0 (GKI2.0)"
+  },
+  {
+    "maintainer": "YuzakiKokuban",
+    "maintainer_link": "https://github.com/YuzakiKokuban",
+    "kernel_name": "android_kernel_samsung_sm8550_S23",
+    "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8550_S23",
+    "devices": "Samsung S23 Series"
+  },
+  {
+    "maintainer": "YuzakiKokuban",
+    "maintainer_link": "https://github.com/YuzakiKokuban",
+    "kernel_name": "android_kernel_samsung_sm8650",
+    "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8650",
+    "devices": "Samsung S24 Series"
+  },
+  {
+    "maintainer": "YuzakiKokuban",
+    "maintainer_link": "https://github.com/YuzakiKokuban",
+    "kernel_name": "android_kernel_samsung_sm8750",
+    "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8750",
+    "devices": "Samsung S25 Series"
+  },
+  {
+    "maintainer": "YuzakiKokuban",
+    "maintainer_link": "https://github.com/YuzakiKokuban",
+    "kernel_name": "android_kernel_samsung_sm8650_Z6",
+    "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8650_Z6",
+    "devices": "Samsung Z Flip/Fold 6"
+  },
+  {
+    "maintainer": "YuzakiKokuban",
+    "maintainer_link": "https://github.com/YuzakiKokuban",
+    "kernel_name": "android_kernel_xiaomi_sm8850",
+    "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_xiaomi_sm8850",
+    "devices": "Xiaomi 17 Series"
+  },
+  {
+    "maintainer": "coolzyd9107",
+    "maintainer_link": "https://github.com/coolzyd9107",
+    "kernel_name": "android_kernel_xiaomi_sm8250",
+    "kernel_link": "https://github.com/coolzyd9107/android_kernel_xiaomi_sm8250",
+    "devices": "Redmi K40"
+  },
+  {
+    "maintainer": "AstideLabs",
+    "maintainer_link": "https://github.com/AstideLabs",
+    "kernel_name": "android_kernel_xiaomi_sm8250",
+    "kernel_link": "https://github.com/AstideLabs/android_kernel_xiaomi_sm8250",
+    "devices": "Xiaomi SM8250 Devices"
+  },
+  {
+    "maintainer": "lesdieuxx",
+    "maintainer_link": "https://github.com/lesdieuxx",
+    "kernel_name": "android_kernel_a047f_resukisu",
+    "kernel_link": "https://github.com/lesdieuxx/android_kernel_a047f_resukisu",
+    "devices": "Samsung A04s (A047F)"
+  },
+  {
+    "maintainer": "TGMGT",
+    "maintainer_link": "https://github.com/TGMGT",
+    "kernel_name": "android_kernel_samsung_universal5433",
+    "kernel_link": "https://github.com/TGMGT/android_kernel_samsung_universal5433",
+    "devices": "Non-GKI T815 LTE"
+  },
+  {
+    "maintainer": "huangdihd",
+    "maintainer_link": "https://github.com/huangdihd",
+    "kernel_name": "android_kernel_xiaomi_sdm845_resukisu_susfs",
+    "kernel_link": "https://github.com/huangdihd/android_kernel_xiaomi_sdm845_resukisu_susfs",
+    "devices": "Xiaomi mix 2s running los22.2(theory for all xiaomi sdm845 devices)"
+  },
+  {
+    "maintainer": "huangdihd",
+    "maintainer_link": "https://github.com/huangdihd",
+    "kernel_name": "android_kernel_xiaomi_msm8960_resukisu",
+    "kernel_link": "https://github.com/huangdihd/android_kernel_xiaomi_msm8960_resukisu",
+    "devices": "Xiaomi 2s running los18.1(theory for all xiaomi msm8960 devices)"
+  },
+  {
+    "maintainer": "AkinaHaruka",
+    "maintainer_link": "https://github.com/AkinaHaruka",
+    "kernel_name": "android_kernel_oppo_mt6833_resukisu_susfs",
+    "kernel_link": "https://github.com/AkinaHaruka/android_kernel_oppo_mt6833_resukisu_susfs",
+    "devices": "OPPO MT6833 Devices"
+  },
+  {
+    "maintainer": "YuzakiKokuban",
+    "maintainer_link": "https://github.com/YuzakiKokuban",
+    "kernel_name": "android_kernel_samsung_sm8550_TabS9",
+    "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_sm8550_TabS9",
+    "devices": "Samsung Tab S9 Series"
+  },
+  {
+    "maintainer": "YuzakiKokuban",
+    "maintainer_link": "https://github.com/YuzakiKokuban",
+    "kernel_name": "android_kernel_samsung_mt6989_TabS10",
+    "kernel_link": "https://github.com/YuzakiKokuban/android_kernel_samsung_mt6989_TabS10",
+    "devices": "Samsung Tab S10 Series"
+  },
+  {
+    "maintainer": "MiguVT",
+    "maintainer_link": "https://github.com/MiguVT",
+    "kernel_name": "NP2_Kernel",
+    "kernel_link": "https://github.com/MiguVT/NP2_Kernel",
+    "devices": "Nothing Phone 2"
+  },
+  {
+    "maintainer": "huangdihd",
+    "maintainer_link": "https://github.com/huangdihd",
+    "kernel_name": "KernelSU_SUSFS_Xiaomi_Cupid",
+    "kernel_link": "https://github.com/huangdihd/KernelSU_SUSFS_Xiaomi_Cupid",
+    "devices": "xiaomi12 running Lineage OS"
+  },
+  {
+    "maintainer": "momo54181",
+    "maintainer_link": "https://github.com/momo54181",
+    "kernel_name": "android_kernel_oplus_mt6853",
+    "kernel_link": "https://github.com/momo54181/android_kernel_oplus_mt6853",
+    "devices": "MT6853 (OPPO/OnePlus/Realme) Generic Devices"
+  },
+  {
+    "maintainer": "AlexLiuDev233",
+    "maintainer_link": "https://github.com/AlexLiuDev233",
+    "kernel_name": "android_kernel_stone",
+    "kernel_link": "https://github.com/AlexLiuDev233/android_kernel_stone",
+    "devices": "Redmi Note 12 5G/Poco X5 5G devices, maybe all xiaomi sm8350, userspace HyperOS2"
+  },
+  {
+    "maintainer": "vahiru",
+    "maintainer_link": "https://github.com/vahiru",
+    "kernel_name": "resukisu-munch",
+    "kernel_link": "https://github.com/vahiru/resukisu-munch",
+    "devices": "Redmi K40s (munch)"
+  },
+  {
+    "maintainer": "samakshkambxj",
+    "maintainer_link": "https://github.com/samakshkambxj",
+    "kernel_name": "OriginKernel_Galaxian",
+    "kernel_link": "https://github.com/samakshkambxj/OriginKernel_Galaxian",
+    "devices": "Nothing Phone (3a) Lite (Galaxian) GKI 2.0 DEVICE"
+  },
+  {
+    "maintainer": "AkinaHaruka",
+    "maintainer_link": "https://github.com/AkinaHaruka",
+    "kernel_name": "android_kernel_4.14_oppo_mtk5g_resukisu",
+    "kernel_link": "https://github.com/AkinaHaruka/android_kernel_4.14_oppo_mtk5g_resukisu",
+    "devices": "OPPO Reno6 Pro 5G/Reno6 5G/Reno5 Pro 5G/Reno6 Z 5G/Reno5 Z/A95 5G/F19 Pro+/A73 5G/A72 5G/Reno4 SE 5G/K9 Pro 5G/Reno4 Z 5G/A92S/A55 5G/A53S-5G/A55s 5G/A56 5G/A93s 5G/Reno7 Pro 5G/Reno7 SE 5G/K7x/Reno3 5G/OPPO A53 5G/Ren7 5G/Find X5 lite/K9X"
+  }
 ]

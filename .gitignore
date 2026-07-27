@@ -135,7 +135,6 @@ dist
 tools/vivo-vr-patcher/target/
 tools/gki-lkm-patcher/target/
 
-# wasm
+# wasm (built by CI via wasm-pack, never committed)
 *.wasm
-docs/public/tools/gki-lkm-patcher.js
-docs/public/tools/vivo-vr-patcher.js
+docs/.vitepress/theme/wasm/

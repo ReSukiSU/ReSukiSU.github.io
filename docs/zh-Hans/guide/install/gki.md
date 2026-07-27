@@ -20,7 +20,7 @@
 我们也同时提供了在线工具来在线修补 `init_boot` / `boot` / `vendor_boot`
 :::
 <ClientOnly>
-  <GKI_LKM_Patcher />
+<GKI_LKM_Patcher />
 </ClientOnly>
 
 ::: warning
@@ -29,4 +29,4 @@
 
 ## GKI 安装 {#built-in}
 
-请参阅 [Google 文档](https://source.android.com/docs/setup/build/building-kernels?hl=zh-cn)  和 [ReSukiSU 构建指南](../build#introduction) 了解详情。
+请参阅 [Google 文档](https://source.android.com/docs/setup/build/building-kernels?hl=zh-cn) 和 [ReSukiSU 构建指南](../build#introduction) 了解详情。

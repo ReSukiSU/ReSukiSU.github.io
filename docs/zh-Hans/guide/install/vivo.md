@@ -13,7 +13,7 @@ LKM 安装与正常 GKI 设备无任何区别，请参见：[一般 GKI 设备�
 ## vivo 安全策略兼容
 
 ::: danger 警告
-vivo 设备由于[安全策略](https://github.com/tiann/KernelSU/issues/1289#issuecomment-2709964742), 
+vivo 设备由于[安全策略](https://github.com/tiann/KernelSU/issues/1289#issuecomment-2709964742),
 需要使 `vr.ko` 失效才可正常使用 `ksud` 和 `su`
 :::
 

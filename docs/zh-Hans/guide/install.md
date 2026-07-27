@@ -1,6 +1,6 @@
 # 安装 ReSukiSU {#install}
 
-::: tip 
+::: tip
 我们默认你已经拥有一定的刷机基础能力，和基本的救砖知识，所以这一部分的文档并不会写得很详细
 :::
 
@@ -74,5 +74,3 @@ Magisk 官方提供的 `magiskboot` 只能运行在 Android/Linux 设备上，�
 :::info
 Magisk 官方的 `magiskboot` 可以在 Linux 设备上执行，如果你是 Linux 用户，可以直接用官方版本。
 :::
-
-

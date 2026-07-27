@@ -13,15 +13,16 @@ ReSukiSU 将会检查此处每一条 hook，如果缺少，将会**导致编译�
 ### stat hook <Badge type="danger" text="必加"/> {#stat-hook}
 
 ::: code-group
+
 ```diff[stat.c]
 --- a/fs/stat.c
 +++ b/fs/stat.c
 @@ -353,6 +353,10 @@ SYSCALL_DEFINE2(newlstat, const char __user *, filename,
  	return cp_new_stat(&stat, statbuf);
  }
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+__attribute__((hot)) 
++__attribute__((hot))
 +extern int ksu_handle_stat(int *dfd, const char __user **filename_user,
 +				int *flags);
 +
@@ -37,7 +38,7 @@ ReSukiSU 将会检查此处每一条 hook，如果缺少，将会**导致编译�
 @@ -360,6 +364,9 @@ SYSCALL_DEFINE4(newfstatat, int, dfd, const char __user *, filename,
  	struct kstat stat;
  	int error;
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +	ksu_handle_stat(&dfd, &filename, &flag);
 +#endif
@@ -47,15 +48,15 @@ ReSukiSU 将会检查此处每一条 hook，如果缺少，将会**导致编译�
 @@ -504,6 +511,9 @@ SYSCALL_DEFINE4(fstatat64, int, dfd, const char __user *, filename,
  	struct kstat stat;
  	int error;
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit su
-+	ksu_handle_stat(&dfd, &filename, &flag); 
++	ksu_handle_stat(&dfd, &filename, &flag);
 +#endif
  	error = vfs_fstatat(dfd, filename, &stat, flag);
  	if (error)
  		return error;
 
-@@ -364,X +364,XX @@  
+@@ -364,X +364,XX @@
 SYSCALL_DEFINE2(newfstat, unsigned int, fd, struct stat __user *, statbuf)
 {
 	struct kstat stat;
@@ -69,7 +70,7 @@ SYSCALL_DEFINE2(newfstat, unsigned int, fd, struct stat __user *, statbuf)
 +#endif
 	return error;
 
- 
+
 @@ -490,X +497,X @@
 SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 {
@@ -85,6 +86,7 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 	return error;
 }
 ```
+
 :::
 
 在 `fs/stat.c` 中，你需要找到 `newfstatat` 和 `fstatat64`（如果支持 32-bit su）并 hook 它们。你还需要 hook `newfstat` 和 `fstat64`（如果支持 32-bit su）以获取返回值。
@@ -93,15 +95,15 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 
 对于此 hook，不同版本内核不一致，此处单独说明
 
-
 ::: code-group
+
 ```diff[3.14+]
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -1886,12 +1886,26 @@ static int do_execveat_common(int fd, struct filename *filename,
  	return retval;
  }
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +__attribute__((hot))
 +extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
@@ -119,7 +121,7 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 +#endif
  	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
  }
- 
+
 @@ -1919,6 +1933,10 @@ static int compat_do_execve(struct filename *filename,
  		.is_compat = true,
  		.ptr.compat = __envp,
@@ -130,13 +132,14 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
  	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
  }
 ```
+
 ```diff[3.14-]
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -1649,6 +1649,12 @@ static int do_execve_common(const char *filename,
  	return retval;
  }
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +__attribute__((hot))
 +extern int ksu_handle_execve(int *fd, const char *filename,
@@ -155,7 +158,7 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 +#endif
  	return do_execve_common(filename, argv, envp, regs);
  }
- 
+
 @@ -1673,6 +1682,9 @@ int compat_do_execve(char *filename,
  		.is_compat = true,
  		.ptr.compat = __envp,
@@ -167,6 +170,7 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
  }
  #endif
 ```
+
 :::
 
 在这部分中 修改 `fs/exec.c` 中的 `do_execve`。注意对于 32-bit su 和 32-on-64，你还需要在同一文件中 hook `compat_do_execve`。
@@ -174,6 +178,7 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 对于 3.14- 内核，你需要使用 `ksu_handle_execve`，而不是 `ksu_handle_execveat`，且其传入参数也略有不同于 3.14+ 内核，需要根据实际情况进行调整。
 
 ### faccessat hook <Badge type="danger" text="必加"/> {#faccessat-hook}
+
 对于此 hook，不同版本内核不一致，此处单独说明
 
 ::: code-group
@@ -184,9 +189,9 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 @@ -450,8 +450,16 @@ long do_faccessat(int dfd, const char __user *filename, int mode)
  	return res;
  }
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+__attribute__((hot)) 
++__attribute__((hot))
 +extern int ksu_handle_faccessat(int *dfd, const char __user **filename_user,
 +				int *mode, int *flags);
 +#endif
@@ -199,15 +204,16 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
  	return do_faccessat(dfd, filename, mode);
  }
 ```
+
 ```diff[4.19-]
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -354,6 +354,11 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
  	return error;
  }
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+__attribute__((hot)) 
++__attribute__((hot))
 +extern int ksu_handle_faccessat(int *dfd, const char __user **filename_user,
 +				int *mode, int *flags);
 +#endif
@@ -218,7 +224,7 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 @@ -369,6 +374,10 @@ SYSCALL_DEFINE3(faccessat, int, dfd, const char __user *, filename, int, mode)
  	int res;
  	unsigned int lookup_flags = LOOKUP_FOLLOW;
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +	ksu_handle_faccessat(&dfd, &filename, &mode, NULL);
 +#endif
@@ -226,11 +232,13 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
  	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
  		return -EINVAL;
 ```
+
 :::
 
 在这部分中，你需要在 `fs/open.c` 中找到 `faccessat` 的 SYSCALL 并 hook 它。
 
 ### sys_reboot hook <Badge type="danger" text="必加"/> {#sys-reboot-hook}
+
 对于此 hook，不同版本内核不一致，此处单独说明
 
 ::: code-group
@@ -253,7 +261,7 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 @@ -284,6 +289,9 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
  	char buffer[256];
  	int ret = 0;
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +	ksu_handle_sys_reboot(magic1, magic2, cmd, &arg);
 +#endif
@@ -290,16 +298,19 @@ index a3bef5bd..08d196f5 100644
         if (!ns_capable(pid_ns->user_ns, CAP_SYS_BOOT))
                 return -EPERM;
 ```
+
 :::
 
 在这部分中，你需要在内核源码中找到 `reboot`的 SYSCALL 并 hook 它。注意对于 3.11- 内核，你需要在 `kernel/sys.c` 中 hook `reboot`，而不是在 `kernel/reboot.c` 中。
 
 ### input hook <Badge type="tip" text="按需必加"/> {#input-hook}
+
 :::warning 一般无需此手动 hook
 对于 input handler 未损坏的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_INPUT_HOOK` 处于启用状态，此 hook 即可通过 Linux 内核的 `input_handler` 特性自动应用
 :::
 
 ::: code-group
+
 ```diff[input.c]
 --- a/drivers/input/input.c
 +++ b/drivers/input/input.c
@@ -317,26 +328,29 @@ index a3bef5bd..08d196f5 100644
  		 unsigned int type, unsigned int code, int value)
  {
  	unsigned long flags;
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +	if (unlikely(ksu_input_hook))
 +		ksu_handle_input_handle_event(&type, &code, &value);
 +#endif
 +
  	if (is_event_supported(type, dev->evbit, EV_MAX)) {
- 
+
  		spin_lock_irqsave(&dev->event_lock, flags);
 ```
+
 :::
 
 在这部分中，你需要在 `drivers/input/input.c` 中找到 `input_event` 并 hook 它。
 
 ### setuid hook <Badge type="warning" text="6.8+ 必加"/> {#setuid-hook}
+
 :::warning 大部分版本不需要此手动 hook
 对于 6.8(不包括6.8)以下 的内核，只需保证 `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` 处于启用状态，此 hook 即可通过 LSM 自动应用
 :::
 
 ::: code-group
+
 ```diff[4.17+]
 diff --git a/kernel/sys.c b/kernel/sys.c
 index 4a87dc5fa..aac25df8c 100644
@@ -365,6 +379,7 @@ index 4a87dc5fa..aac25df8c 100644
         keuid = make_kuid(ns, euid);
         ksuid = make_kuid(ns, suid);
 ```
+
 ```diff[4.17-]
 diff --git a/kernel/sys.c b/kernel/sys.c
 index a3bef5bd..0b116d7c 100644
@@ -392,6 +407,7 @@ index a3bef5bd..0b116d7c 100644
         keuid = make_kuid(ns, euid);
         ksuid = make_kuid(ns, suid);
 ```
+
 :::
 
 在这部分中，你需要在内核源码中找到 `__sys_setresuid`并 hook 它。注意对于 4.17- 内核，你需要 hook `setresuid` 而不是 `__sys_setresuid`。
@@ -403,13 +419,14 @@ index a3bef5bd..0b116d7c 100644
 :::
 
 ::: code-group
+
 ```diff[4.19+]
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -586,8 +586,18 @@ ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)
  	return ret;
  }
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +extern bool ksu_init_rc_hook __read_mostly;
 +extern __attribute__((cold)) int ksu_handle_sys_read(unsigned int fd,
@@ -419,19 +436,20 @@ index a3bef5bd..0b116d7c 100644
  SYSCALL_DEFINE3(read, unsigned int, fd, char __user *, buf, size_t, count)
  {
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	if (unlikely(ksu_init_rc_hook)) 
++	if (unlikely(ksu_init_rc_hook))
 +		ksu_handle_sys_read(fd, &buf, &count);
 +#endif
  	return ksys_read(fd, buf, count);
  }
 ```
+
 ```diff[4.19-]
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -568,11 +568,21 @@ static inline void file_pos_write(struct file *file, loff_t pos)
  		file->f_pos = pos;
  }
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +extern bool ksu_init_rc_hook __read_mostly;
 +extern __attribute__((cold)) int ksu_handle_sys_read(unsigned int fd,
@@ -442,15 +460,16 @@ index a3bef5bd..0b116d7c 100644
  {
  	struct fd f = fdget_pos(fd);
  	ssize_t ret = -EBADF;
- 
+
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	if (unlikely(ksu_init_rc_hook)) 
++	if (unlikely(ksu_init_rc_hook))
 +		ksu_handle_sys_read(fd, &buf, &count);
 +#endif
  	if (f.file) {
  		loff_t pos = file_pos_read(f.file);
  		ret = vfs_read(f.file, buf, count, &pos);
 ```
+
 :::
 
 在这部分中，你需要在 `fs/read_write.c` 中找到 `read` 的 `SYSCALL` 并 hook 它。
@@ -491,6 +510,7 @@ index a3bef5bd..0b116d7c 100644
 	.read		= sel_read_handle_status,
 	.mmap		= sel_mmap_handle_status,
 ```
+
 在 `security/selinux/selinuxfs.c` 中找到 `sel_handle_status_ops` 的定义，并将其前面的 `static` 关键字去掉。
 
 ### selinux_status_page & selinux_status_lock export <Badge type="warning" text="4.17- 按需添加"/>
@@ -530,10 +550,10 @@ index b818410d2418..ea2f3022744f 100644
 @@ -76,7 +76,7 @@ int selinux_policycap_netpeer;
  int selinux_policycap_openperm;
  int selinux_policycap_alwaysnetwork;
- 
+
 -static DEFINE_RWLOCK(policy_rwlock);
 +DEFINE_RWLOCK(policy_rwlock);
- 
+
  static struct sidtab sidtab;
  struct policydb policydb;
 
@@ -596,7 +616,6 @@ diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
 ```
 
 在 `security/selinux/ss/services.c` 中找到 `security_dump_masked_av` 的定义，并将其前面的 `static` 关键字去掉。
-
 
 ### context_struct_compute_av <Badge type="danger" text="6.6+ 必加"/>
 

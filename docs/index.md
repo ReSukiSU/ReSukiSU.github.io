@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "ReSukiSU"
   text: "A more stable fork of SukiSU"
-  tagline: "Make SukiSU Great Again!"
+  tagline: "KernelSU-based ROOT with enhanced Non-GKI compatibility, minimal hooks, and multi-manager support."
   image:
     src: /logo.svg
     alt: ReSukiSU Logo
@@ -32,7 +32,7 @@ features:
     icon: <i class="ri-flashlight-fill"></i>
     link: ./guide/manual-integrate.md
   - title: Multi-Manager Support
-    details: ReSukiSU Kernel support KernelSU/MKSU/RKSU/SukiSU Ultra's manager defaultly.
+    details: ReSukiSU Kernel supports KernelSU/MKSU/RKSU/SukiSU Ultra's manager by default.
     icon: <i class="ri-settings-3-fill"></i>
   - title: Enhanced Security
     details: Improved security measures with better module isolation and permission handling.
@@ -42,4 +42,3 @@ features:
     icon: <i class="ri-telegram-fill"></i>
     link: https://t.me/ReSukiSU
 ---
-

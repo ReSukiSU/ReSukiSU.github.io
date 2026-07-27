@@ -1,5 +1,6 @@
 # ReSukiSU-Docs
- The ReSukiSU's Document Website
+
+The ReSukiSU's Document Website
 [![Pages](https://github.com/ReSukiSU/ReSukiSU.github.io/actions/workflows/main.yml/badge.svg)](https://github.com/ReSukiSU/ReSukiSU.github.io/actions/workflows/main.yml)
 
 ## Development

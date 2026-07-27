@@ -1,9 +1,9 @@
 # Installing ReSukiSU {#install}
- 
+
 ::: tip
 We assume you already have basic firmware flashing skills and bricking recovery knowledge, so this section of the documentation will not be overly detailed.
 :::
- 
+
 ## Get Manager {#Get-manager}
 
 ::: tip Still Work in Progress...
@@ -13,21 +13,21 @@ Because ReSukiSU's manager have too much things to do,so ReSukiSU will not be re
 :::
 
 ::: warning
-Except for the *main* branch, all other branches are testing branches. Unless requested, please do not provide any feedback when working with these branches.
+Except for the _main_ branch, all other branches are testing branches. Unless requested, please do not provide any feedback when working with these branches.
 :::
 
 ## Install {#Installation}
 
 ReSukiSU provides the following two installation methods:
- 
+
 ### LKM Installation {#LKM}
- 
+
 ::: tip
 This part has been moved to [this page](./install/gki.md#lkm).
 :::
- 
+
 ### GKI2/GKI1/Non-GKI Kernel (AnyKernel3) Installation {#builtin}
- 
+
 Although the ReSukiSU Manager has a built-in AnyKernel3 installation method, this option will not be displayed if the Manager does not have ROOT access. You may need to perform the following steps to enable it
 
 1. Flash AnyKernel3 after LKM installation to grant root.
@@ -44,7 +44,6 @@ This part picked from [KernelSU official Documentation](https://kernelsu.org)
 2. [magiskboot_build](https://github.com/ookiineko/magiskboot_build/releases/tag/last-ci)
 
 The official build of `magiskboot` can only run on Android devices, if you want to run it on PC, you can try the second option.
-
 
 ##### Preparation
 

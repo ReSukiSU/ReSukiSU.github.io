@@ -11,4 +11,3 @@
 ## 为什么会创建这个项目？{#why}
 
 由于 <mark>ShirkNeko的代码质量及commit习惯问题</mark>，且近段时间SukiSU出现的bug很多，我们**难以忍受**，便创建了这个项目
-
