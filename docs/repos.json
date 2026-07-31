@@ -187,5 +187,12 @@
         "kernel_name": "android_kernel_xiaomi_n0_pipa",
         "kernel_link": "https://github.com/bcggxx/android_kernel_xiaomi_n0_pipa",
         "devices": "Xiaomi Pad6"
+    },
+    {
+        "maintainer": "sanba0519",
+        "maintainer_link": "https://github.com/sanba0519",
+        "kernel_name": "OPPO-Realme_kernel_4.14_MT6853",
+        "kernel_link": "https://github.com/sanba0519/OPPO-Realme_kernel_4.14_MT6853",
+        "devices": "OPPO/Realme MT6853(Dimensity 720/800U) Devices:OPPO A72, OPPO A53, OPPO K7x, OPPO Reno4SE, Realme Q2, Realme V15, Realme Q2 pro, OPPO A95, Realme V5 5G, Realme X7 5G "
     }
 ]
