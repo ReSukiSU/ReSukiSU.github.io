@@ -194,5 +194,12 @@
         "kernel_name": "OPPO-Realme_kernel_4.14_MT6853",
         "kernel_link": "https://github.com/sanba0519/OPPO-Realme_kernel_4.14_MT6853",
         "devices": "OPPO/Realme MT6853(Dimensity 720/800U) Devices:OPPO A72, OPPO A53, OPPO K7x, OPPO Reno4SE, Realme Q2, Realme V15, Realme Q2 pro, OPPO A95, Realme V5 5G, Realme X7 5G "
+    },
+    {
+        "maintainer": "hestudio-community",
+        "maintainer_link": "https://github.com/hestudio-community",
+        "kernel_name": "android_kernel_xiaomi_violet",
+        "kernel_link": "https://github.com/hestudio-community/android_kernel_xiaomi_violet",
+        "devices": "Redmi Note 7 Pro (violet) (sm6150)"
     }
 ]
