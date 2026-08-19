@@ -7,6 +7,20 @@
         "devices": "Oneplus ACE6 (Stock ROM)"
     },
     {
+        "maintainer": "Numbersf",
+        "maintainer_link": "https://github.com/Numbersf",
+        "kernel_name": "Action-Build",
+        "kernel_link": "https://github.com/Numbersf/Action-Build",
+        "devices": "OnePlus Devices"
+    },
+    {
+        "maintainer": "Bouteillepleine",
+        "maintainer_link": "https://github.com/Bouteillepleine",
+        "kernel_name": "OnePlus-ReSukiSu_NMS",
+        "kernel_link": "https://github.com/Bouteillepleine/OnePlus-ReSukiSu_NMS",
+        "devices": "OnePlus Devices"
+    },
+    {
         "maintainer": "huangdihd",
         "maintainer_link": "https://github.com/huangdihd",
         "kernel_name": "OnePlus_ReSukiSU_SUSFS",
