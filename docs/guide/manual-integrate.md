@@ -95,9 +95,11 @@ For this hook, different kernel versions are inconsistent, so it is explained se
 ::: code-group
 
 ```diff[3.14+]
+diff --git a/fs/exec.c b/fs/exec.c
+index 90e14cdddb88..962e6436e930 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -1886,12 +1886,26 @@ static int do_execveat_common(int fd, struct filename *filename,
+@@ -1898,11 +1898,21 @@ static int __do_execve_file(int fd, struct filename *filename,
  	return retval;
  }
  
@@ -107,27 +109,18 @@ For this hook, different kernel versions are inconsistent, so it is explained se
 +				void *argv, void *envp, int *flags);
 +#endif
 +
- int do_execve(struct filename *filename,
- 	const char __user *const __user *__argv,
- 	const char __user *const __user *__envp)
+ static int do_execveat_common(int fd, struct filename *filename,
+ 			      struct user_arg_ptr argv,
+ 			      struct user_arg_ptr envp,
+ 			      int flags)
  {
- 	struct user_arg_ptr argv = { .ptr.native = __argv };
- 	struct user_arg_ptr envp = { .ptr.native = __envp };
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++	ksu_handle_execveat(&fd, &filename, &argv, &envp, &flags);
 +#endif
- 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
++
+ 	return __do_execve_file(fd, filename, argv, envp, flags, NULL);
  }
  
-@@ -1919,6 +1933,10 @@ static int compat_do_execve(struct filename *filename,
- 		.is_compat = true,
- 		.ptr.compat = __envp,
- 	};
-+#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
-+#endif
- 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
- }
 ```
 ```diff[3.14-]
 --- a/fs/exec.c
@@ -168,9 +161,56 @@ For this hook, different kernel versions are inconsistent, so it is explained se
 ```
 :::
 
-In `fs/exec.c`, find `do_execve`. Note that for 32-bit su and 32-on-64, you also need to hook `compat_do_execve` in the same file.
+::: details Deprecated hook
 
-For 3.14- kernels, you should use `ksu_handle_execve` instead of `ksu_handle_execveat` and it's parameter types is different from 3.14+ kernels, you need to adjust them according to your actual situation.
+This hook is NOT recommended to use for Android 17 QPR2 and above. Unless you want failed to get root.
+
+::: code-group
+
+```diff[3.14+]
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1886,12 +1886,26 @@ static int do_execveat_common(int fd, struct filename *filename,
+ 	return retval;
+ }
+ 
++#ifdef CONFIG_KSU_MANUAL_HOOK
++__attribute__((hot))
++extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
++				void *argv, void *envp, int *flags);
++#endif
++
+ int do_execve(struct filename *filename,
+ 	const char __user *const __user *__argv,
+ 	const char __user *const __user *__envp)
+ {
+ 	struct user_arg_ptr argv = { .ptr.native = __argv };
+ 	struct user_arg_ptr envp = { .ptr.native = __envp };
++#ifdef CONFIG_KSU_MANUAL_HOOK
++	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#endif
+ 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
+ }
+ 
+@@ -1919,6 +1933,10 @@ static int compat_do_execve(struct filename *filename,
+ 		.is_compat = true,
+ 		.ptr.compat = __envp,
+ 	};
++#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
++	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#endif
+ 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
+ }
+```
+::::::
+
+For 3.14+ kernels, use `ksu_handle_execveat` and hook `do_execveat_common` in `fs/exec.c`.
+
+For this deprecated hook, find `do_execve` in `fs/exec.c`. For 32-bit `su` and 32-on-64 support, also hook `compat_do_execve` in the same file.
+
+For 3.14- kernels, use `ksu_handle_execve` instead of `ksu_handle_execveat`, and hook `do_execve` and `compat_do_execve` in `fs/exec.c`. 
+
+If kernel's `do_execve_common` uses `struct filename` instead of `char filename`, refer to the 3.14+ hook pattern to that kernel's function signature.
 
 ### faccessat hook <Badge type="danger" text="Required"/> {#faccessat-hook}
 For this hook, different kernel versions are inconsistent, so it is explained separately here
