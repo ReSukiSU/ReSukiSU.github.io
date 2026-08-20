@@ -1,3 +1,7 @@
+---
+cbf: [4] # Don't enable code fold in deprecated hook,it will cause bug...
+---
+
 # Manual Integrate reference {#hooks}
 
 ## Manual hooks

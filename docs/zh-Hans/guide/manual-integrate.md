@@ -1,3 +1,7 @@
+---
+cbf: [4] # 在弃置hook中要禁用代码折叠，插件会搞出渲染问题的
+---
+
 # 手动集成参考 {#hooks}
 
 ## 手动挂钩 {#scope-minimized-hooks}
@@ -203,7 +207,7 @@ index 90e14cdddb88..962e6436e930 100644
  	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
  }
 ```
-::::::
+::: :::
 
 对于 3.14+ 的内核，请使用 `ksu_handle_execveat`，并在 `fs/exec.c` 中 hook `do_execveat_common`。
 
