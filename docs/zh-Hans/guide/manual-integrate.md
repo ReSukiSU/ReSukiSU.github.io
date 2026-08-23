@@ -1,3 +1,7 @@
+---
+cbf: [4] # 在弃置hook中要禁用代码折叠，插件会搞出渲染问题的
+---
+
 # 手动集成参考 {#hooks}
 
 ## 手动挂钩 {#scope-minimized-hooks}
@@ -93,12 +97,14 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 
 对于此 hook，不同版本内核不一致，此处单独说明
 
-
 ::: code-group
+
 ```diff[3.14+]
+diff --git a/fs/exec.c b/fs/exec.c
+index 90e14cdddb88..962e6436e930 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -1886,12 +1886,26 @@ static int do_execveat_common(int fd, struct filename *filename,
+@@ -1898,11 +1898,21 @@ static int __do_execve_file(int fd, struct filename *filename,
  	return retval;
  }
  
@@ -108,27 +114,18 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 +				void *argv, void *envp, int *flags);
 +#endif
 +
- int do_execve(struct filename *filename,
- 	const char __user *const __user *__argv,
- 	const char __user *const __user *__envp)
+ static int do_execveat_common(int fd, struct filename *filename,
+ 			      struct user_arg_ptr argv,
+ 			      struct user_arg_ptr envp,
+ 			      int flags)
  {
- 	struct user_arg_ptr argv = { .ptr.native = __argv };
- 	struct user_arg_ptr envp = { .ptr.native = __envp };
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++	ksu_handle_execveat(&fd, &filename, &argv, &envp, &flags);
 +#endif
- 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
++
+ 	return __do_execve_file(fd, filename, argv, envp, flags, NULL);
  }
  
-@@ -1919,6 +1933,10 @@ static int compat_do_execve(struct filename *filename,
- 		.is_compat = true,
- 		.ptr.compat = __envp,
- 	};
-+#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
-+#endif
- 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
- }
 ```
 ```diff[3.14-]
 --- a/fs/exec.c
@@ -169,9 +166,56 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 ```
 :::
 
-在这部分中 修改 `fs/exec.c` 中的 `do_execve`。注意对于 32-bit su 和 32-on-64，你还需要在同一文件中 hook `compat_do_execve`。
+::: details 弃置 hook
 
-对于 3.14- 内核，你需要使用 `ksu_handle_execve`，而不是 `ksu_handle_execveat`，且其传入参数也略有不同于 3.14+ 内核，需要根据实际情况进行调整。
+这个hook不推荐在Android 17 QPR2及以上的系统中使用！ 否则无法获取root！
+
+::: code-group
+
+```diff[3.14+]
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1886,12 +1886,26 @@ static int do_execveat_common(int fd, struct filename *filename,
+ 	return retval;
+ }
+ 
++#ifdef CONFIG_KSU_MANUAL_HOOK
++__attribute__((hot))
++extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
++				void *argv, void *envp, int *flags);
++#endif
++
+ int do_execve(struct filename *filename,
+ 	const char __user *const __user *__argv,
+ 	const char __user *const __user *__envp)
+ {
+ 	struct user_arg_ptr argv = { .ptr.native = __argv };
+ 	struct user_arg_ptr envp = { .ptr.native = __envp };
++#ifdef CONFIG_KSU_MANUAL_HOOK
++	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#endif
+ 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
+ }
+ 
+@@ -1919,6 +1933,10 @@ static int compat_do_execve(struct filename *filename,
+ 		.is_compat = true,
+ 		.ptr.compat = __envp,
+ 	};
++#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
++	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#endif
+ 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
+ }
+```
+::::::
+
+对于 3.14+ 的内核，请使用 `ksu_handle_execveat`，并在 `fs/exec.c` 中 hook `do_execveat_common`。
+
+对于 3.14+ 弃置 hook，请在 `fs/exec.c` 中找到 `do_execve` 并进行 hook。如果需要支持 32 位 `su` 或 32-on-64，还需要在同一文件中 hook `compat_do_execve`。
+
+对于 3.14- 的内核，请使用 `ksu_handle_execve` 而不是 `ksu_handle_execveat`，并在 `fs/exec.c` 中 hook `do_execve` 和 `compat_do_execve`。
+
+如果旧版内核的 `do_execve_common` 使用 `struct filename` 而不是 `char filename`，请参照 3.14 及以上版本的 hook 方式。
 
 ### faccessat hook <Badge type="danger" text="必加"/> {#faccessat-hook}
 对于此 hook，不同版本内核不一致，此处单独说明
