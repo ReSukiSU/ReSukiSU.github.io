@@ -215,5 +215,12 @@
         "kernel_name": "OnePlus-ReSukiSu_NMS",
         "kernel_link": "https://github.com/Bouteillepleine/OnePlus-ReSukiSu_NMS",
         "devices": "OnePlus Devices"
+    },
+    {
+        "maintainer": "samakshkambxj",
+        "maintainer_link": "https://github.com/samakshkambxj",
+        "kernel_name": "origin-kernel",
+        "kernel_link": "https://github.com/samakshkambxj/origin-kernel",
+        "devices": "CMF Phone 1, CMF Phone 2 Pro, Nothing Phone (3a) Lite "
     }
 ]
