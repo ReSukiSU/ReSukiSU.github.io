@@ -1,6 +1,4 @@
 import { defineConfig } from "vitepress";
-import wasm from "vite-plugin-wasm";
-import topLevelAwait from "vite-plugin-top-level-await";
 
 import llmstxt from "vitepress-plugin-llms";
 import { copyOrDownloadAsMarkdownButtons } from "vitepress-plugin-llms";
@@ -138,12 +136,9 @@ export default defineConfig({
       pagefindPlugin({
         customSearchQuery: chineseSearchOptimize,
       }),
-      wasm(),
-      topLevelAwait(),
     ],
     worker: {
       format: "es",
-      plugins: () => [wasm(), topLevelAwait()],
     },
     optimizeDeps: {
       exclude: [

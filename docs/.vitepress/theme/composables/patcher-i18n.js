@@ -46,8 +46,10 @@ export const patcherI18n = {
 export const vivoVrI18n = {
   zh: {
     summary: "在 vendor_boot 中移除 vr.ko",
+    sub: "本地浏览器处理 · 文件不上传",
     intro:
       "文件仅在本机浏览器中处理，不会上传到服务器。工具会直接删除 vr.ko 文件，并清理相关的 modules.* 索引记录。",
+    steps: { upload: "上传镜像", patch: "移除 vr.ko", done: "下载" },
     choose: "选择 vendor_boot.img",
     patch: "移除 vr.ko 并下载",
     working: "正在解析并重打包镜像，请勿关闭页面…",
@@ -78,8 +80,10 @@ export const vivoVrI18n = {
   },
   en: {
     summary: "Remove vr.ko from vendor_boot",
+    sub: "Processed locally in your browser · never uploaded",
     intro:
       "The file is processed locally in your browser and is never uploaded. The tool removes vr.ko and cleans its modules.* index entries.",
+    steps: { upload: "Upload image", patch: "Remove vr.ko", done: "Download" },
     choose: "Choose vendor_boot.img",
     patch: "Remove vr.ko and download",
     working: "Parsing and repacking the image. Keep this page open…",
@@ -114,7 +118,9 @@ export const vivoVrI18n = {
 export const gkiLkmI18n = {
   zh: {
     summary: "在线修补 LKM",
+    sub: "本地处理 · ksuinit 与 LKM 从 CI 下载",
     intro: "镜像在本地处理；ksuinit 和匹配的 LKM 仅在开始修补后从 ReSukiSU CI 下载。",
+    steps: { upload: "上传镜像", kmi: "选择 KMI", patch: "注入 LKM", done: "下载" },
     choose: "待修补镜像",
     working: "正在修补…",
     detecting: "正在识别 KMI…",
@@ -134,8 +140,10 @@ export const gkiLkmI18n = {
   },
   en: {
     summary: "Online LKM patching",
+    sub: "Images processed locally · assets fetched from CI on demand",
     intro:
       "Images are processed locally. ksuinit and the matching LKM are downloaded from ReSukiSU CI only after patching starts.",
+    steps: { upload: "Upload image", kmi: "Select KMI", patch: "Inject LKM", done: "Download" },
     choose: "Image to patch",
     working: "Patching…",
     detecting: "Detecting KMI…",

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useData } from "vitepress";
 import { usePatcherWorker, formatBytes } from "../composables/usePatcherWorker.js";
 import VivoVrWorker from "../workers/vivo-vr-patcher.worker.js?worker";
@@ -12,7 +12,9 @@ const t = computed(() => (isZh.value ? vivoVrI18n.zh : vivoVrI18n.en));
 
 const file = ref(null);
 const dragging = ref(false);
-const showLogs = ref(false);
+const fileInput = ref(null);
+const dropzone = ref(null);
+let dragDepth = 0;
 
 function localizeError(value) {
   const [code, detail] = value.split(/:(.*)/s);
@@ -30,7 +32,7 @@ function localizeProgress(value) {
   return value;
 }
 
-const { ready, loading, busy, progress, status, logs, i18n, addLog, start, post, fail } =
+const { ready, busy, progress, status, logs, i18n, addLog, start, post, fail } =
   usePatcherWorker(() => new VivoVrWorker(), {
     onProgress: (data, { addLog: log, setStatus }) => {
       const msg = localizeProgress(data.message);
@@ -40,14 +42,12 @@ const { ready, loading, busy, progress, status, logs, i18n, addLog, start, post,
     onError: (msg) => fail(localizeError(msg)),
   });
 
-function onToggle(event) {
-  if (!event.currentTarget.open) return;
-  start();
-}
+onMounted(() => start());
 
 function onFilePicked(f) {
+  if (!f || busy.value) return;
   file.value = f;
-  if (f) addLog(`${i18n().selected} ${f.name} (${formatBytes(f.size)})`);
+  addLog(`${i18n().selected} ${f.name} (${formatBytes(f.size)})`);
 }
 
 function onInputChange(event) {
@@ -55,105 +55,120 @@ function onInputChange(event) {
   if (event.target.value) event.target.value = "";
 }
 
-function onDrop(event) {
-  dragging.value = false;
-  const f = event.dataTransfer?.files?.[0];
-  if (f) onFilePicked(f);
+function onKeydown(event) {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    fileInput.value?.click();
+  }
 }
 
-function onDragOver() {
+function onDragEnter(event) {
+  event.preventDefault();
+  dragDepth++;
   dragging.value = true;
 }
 
-function onDragLeave() {
+function onDragOver(event) {
+  event.preventDefault();
+  dragging.value = true;
+}
+
+function onDragLeave(event) {
+  event.preventDefault();
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (dragDepth === 0) dragging.value = false;
+}
+
+function onDrop(event) {
+  event.preventDefault();
+  dragDepth = 0;
   dragging.value = false;
+  onFilePicked(event.dataTransfer?.files?.[0] ?? null);
+}
+
+function clearFile(event) {
+  event.preventDefault();
+  file.value = null;
 }
 
 function patch() {
   if (!file.value || busy.value) return;
+  const name = file.value.name;
   file.value.arrayBuffer().then((buf) => {
-    addLog(`${i18n().started} ${file.value.name}`);
+    addLog(`${i18n().started} ${name}`);
     post({ type: "patch", buffer: buf }, [buf]);
   });
 }
 
-const statusClass = computed(() => {
-  if (status.value.startsWith(i18n().failed)) return "error";
-  if (progress.value === 100) return "success";
-  return "";
-});
-
-const buttonLabel = computed(() => {
-  if (busy.value) return i18n().processing;
-  return t.value.patch;
-});
+const isError = computed(() => status.value.startsWith(i18n().failed));
+const isDone = computed(() => progress.value === 100 && !isError.value);
 </script>
 
 <template>
-  <details class="patcher" :open="false" @toggle="onToggle">
-    <summary>{{ t.summary }}</summary>
-    <div class="patcher-body">
-      <p class="patcher-intro">{{ t.intro }}</p>
+  <div class="pt">
+    <p class="pt-title">{{ t.summary }}</p>
+    <p class="pt-desc">{{ t.intro }}</p>
 
-      <div
-        class="dropzone"
-        :class="{ dragging, disabled: !ready || busy }"
-        role="button"
-        tabindex="0"
-        :aria-label="i18n().choose"
-        @dragover.prevent="onDragOver"
-        @dragleave.prevent="onDragLeave"
-        @drop.prevent="onDrop"
-      >
-        <span class="dropzone-icon"><i class="ri-upload-cloud-2-line" /></span>
-        <span class="dropzone-hint">
-          {{ file ? file.name : i18n().drop }}
-        </span>
-        <span v-if="file" class="dropzone-file">{{ formatBytes(file.size) }}</span>
-        <input
-          type="file"
-          accept=".img,application/octet-stream"
-          :disabled="!ready || busy"
-          @change="onInputChange"
+    <label
+      ref="dropzone"
+      class="pt-drop"
+      :class="{ dragging, disabled: !ready || busy }"
+      tabindex="0"
+      @keydown="onKeydown"
+      @dragenter="onDragEnter"
+      @dragover="onDragOver"
+      @dragleave="onDragLeave"
+      @drop="onDrop"
+    >
+      <span v-if="!file" class="pt-drop-hint">{{ t.choose }}</span>
+      <span v-if="!file" class="pt-drop-sub">{{ i18n().drop }} · .img</span>
+      <span v-if="file" class="pt-file">
+        <span class="name">{{ file.name }}</span>
+        <span class="size">{{ formatBytes(file.size) }}</span>
+        <button v-if="!busy" type="button" @click="clearFile">{{ i18n().close }}</button>
+      </span>
+      <input
+        ref="fileInput"
+        type="file"
+        accept=".img,application/octet-stream"
+        :disabled="!ready || busy"
+        tabindex="-1"
+        @change="onInputChange"
+      />
+    </label>
+
+    <div class="pt-actions">
+      <button type="button" class="pt-btn" :disabled="!ready || !file || busy" @click="patch">
+        {{ busy ? i18n().processing : t.patch }}
+      </button>
+    </div>
+
+    <div
+      class="pt-progress"
+      role="progressbar"
+      :aria-valuenow="progress"
+      aria-valuemin="0"
+      aria-valuemax="100"
+    >
+      <div class="pt-track">
+        <div
+          class="pt-fill"
+          :class="{ error: isError, done: isDone }"
+          :style="{ width: `${progress}%` }"
         />
       </div>
-
-      <div class="patcher-controls">
-        <button
-          type="button"
-          class="patcher-btn"
-          :disabled="!ready || !file || busy"
-          @click="patch"
-        >
-          <span v-if="busy" class="spin" />
-          {{ buttonLabel }}
-        </button>
-      </div>
-
-      <div
-        class="progress-row"
-        role="progressbar"
-        :aria-valuenow="progress"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        :aria-label="i18n().processing"
-      >
-        <div class="progress-track">
-          <div class="progress-value" :style="{ width: `${progress}%` }" />
-        </div>
-        <span class="progress-pct">{{ progress }}%</span>
-      </div>
-
-      <p class="status" :class="statusClass" aria-live="polite">
-        {{ status || i18n().idle }}
-      </p>
-
-      <details v-if="logs.length" class="log-toggle" :aria-label="i18n().logLabel">
-        <summary>{{ i18n().logLabel }}</summary>
-        <pre class="logs"><code>{{ logs.join("\n") }}</code></pre>
-      </details>
-
-      <p class="warning">{{ i18n().warning }}</p>
+      <span class="pt-pct">{{ progress }}%</span>
     </div>
-  </details>
+
+    <p class="pt-status" :class="{ error: isError }" aria-live="polite">
+      {{ status || i18n().idle }}
+    </p>
+
+    <details v-if="logs.length" class="pt-logs">
+      <summary>{{ i18n().logLabel }} ({{ logs.length }})</summary>
+      <pre><code>{{ logs.join("\n") }}</code></pre>
+    </details>
+
+    <p class="pt-warn">{{ i18n().warning }}</p>
+  </div>
 </template>
