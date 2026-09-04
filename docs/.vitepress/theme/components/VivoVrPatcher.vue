@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useData } from "vitepress";
 import { usePatcherWorker, formatBytes } from "../composables/usePatcherWorker.js";
 import VivoVrWorker from "../workers/vivo-vr-patcher.worker.js?worker";
@@ -13,8 +13,8 @@ const t = computed(() => (isZh.value ? vivoVrI18n.zh : vivoVrI18n.en));
 const file = ref(null);
 const dragging = ref(false);
 const fileInput = ref(null);
-const dropzone = ref(null);
 let dragDepth = 0;
+let pendingAuto = false;
 
 function localizeError(value) {
   const [code, detail] = value.split(/:(.*)/s);
@@ -32,7 +32,7 @@ function localizeProgress(value) {
   return value;
 }
 
-const { ready, busy, progress, status, logs, i18n, addLog, start, post, fail } =
+const { ready, busy, progress, status, logs, i18n, addLog, setStatus, start, post, fail } =
   usePatcherWorker(() => new VivoVrWorker(), {
     onProgress: (data, { addLog: log, setStatus }) => {
       const msg = localizeProgress(data.message);
@@ -44,11 +44,28 @@ const { ready, busy, progress, status, logs, i18n, addLog, start, post, fail } =
 
 onMounted(() => start());
 
+function patch(f) {
+  if (!f || busy.value) return;
+  pendingAuto = false;
+  addLog(`${i18n().started} ${f.name}`);
+  f.arrayBuffer().then((buf) => {
+    post({ type: "patch", buffer: buf }, [buf]);
+  });
+}
+
 function onFilePicked(f) {
   if (!f || busy.value) return;
   file.value = f;
   addLog(`${i18n().selected} ${f.name} (${formatBytes(f.size)})`);
+  // No button — patching starts immediately once the worker is ready.
+  if (ready.value) patch(f);
+  else pendingAuto = true;
 }
+
+// Worker loads async; start the pending patch as soon as it's ready.
+watch(ready, (ok) => {
+  if (ok && pendingAuto && file.value) patch(file.value);
+});
 
 function onInputChange(event) {
   onFilePicked(event.target.files?.[0] ?? null);
@@ -89,30 +106,36 @@ function onDrop(event) {
 function clearFile(event) {
   event.preventDefault();
   file.value = null;
-}
-
-function patch() {
-  if (!file.value || busy.value) return;
-  const name = file.value.name;
-  file.value.arrayBuffer().then((buf) => {
-    addLog(`${i18n().started} ${name}`);
-    post({ type: "patch", buffer: buf }, [buf]);
-  });
+  pendingAuto = false;
+  progress.value = 0;
+  setStatus("");
 }
 
 const isError = computed(() => status.value.startsWith(i18n().failed));
 const isDone = computed(() => progress.value === 100 && !isError.value);
+const dropHint = computed(() => {
+  if (dragging.value) return i18n().drop;
+  if (busy.value) return t.value.working;
+  if (isDone.value) return t.value.doneHint;
+  return t.value.choose;
+});
 </script>
 
 <template>
   <div class="pt">
-    <p class="pt-title">{{ t.summary }}</p>
-    <p class="pt-desc">{{ t.intro }}</p>
+    <div class="pt-head">
+      <p class="pt-title">{{ t.summary }}</p>
+      <span class="pt-pill" :class="{ ready: ready && !busy, busy }">
+        <span class="dot"></span>
+        {{ busy ? i18n().processing : ready ? i18n().ready : i18n().loading }}
+      </span>
+    </div>
+    <div class="pt-body">
+      <p class="pt-desc">{{ t.intro }}</p>
 
     <label
-      ref="dropzone"
       class="pt-drop"
-      :class="{ dragging, disabled: !ready || busy }"
+      :class="{ dragging, disabled: !ready || busy, 'has-file': !!file }"
       tabindex="0"
       @keydown="onKeydown"
       @dragenter="onDragEnter"
@@ -120,13 +143,20 @@ const isDone = computed(() => progress.value === 100 && !isError.value);
       @dragleave="onDragLeave"
       @drop="onDrop"
     >
-      <span v-if="!file" class="pt-drop-hint">{{ t.choose }}</span>
+      <span class="pt-drop-icon" aria-hidden="true">
+        <i v-if="isDone" class="ri-checkbox-circle-line ok"></i>
+        <i v-else-if="busy" class="ri-loader-4-line pt-spin-icon"></i>
+        <i v-else-if="dragging" class="ri-download-cloud-2-line"></i>
+        <i v-else class="ri-upload-cloud-2-line"></i>
+      </span>
+      <span v-if="!file" class="pt-drop-hint">{{ dropHint }}</span>
       <span v-if="!file" class="pt-drop-sub">{{ i18n().drop }} · .img</span>
       <span v-if="file" class="pt-file">
         <span class="name">{{ file.name }}</span>
         <span class="size">{{ formatBytes(file.size) }}</span>
-        <button v-if="!busy" type="button" @click="clearFile">{{ i18n().close }}</button>
+        <button v-if="!busy" type="button" :aria-label="i18n().remove" @click="clearFile">×</button>
       </span>
+      <span v-if="file && !busy" class="pt-drop-sub">{{ dropHint }}</span>
       <input
         ref="fileInput"
         type="file"
@@ -136,12 +166,6 @@ const isDone = computed(() => progress.value === 100 && !isError.value);
         @change="onInputChange"
       />
     </label>
-
-    <div class="pt-actions">
-      <button type="button" class="pt-btn" :disabled="!ready || !file || busy" @click="patch">
-        {{ busy ? i18n().processing : t.patch }}
-      </button>
-    </div>
 
     <div
       class="pt-progress"
@@ -155,7 +179,7 @@ const isDone = computed(() => progress.value === 100 && !isError.value);
           class="pt-fill"
           :class="{ error: isError, done: isDone }"
           :style="{ width: `${progress}%` }"
-        />
+        ></div>
       </div>
       <span class="pt-pct">{{ progress }}%</span>
     </div>
@@ -168,7 +192,9 @@ const isDone = computed(() => progress.value === 100 && !isError.value);
       <summary>{{ i18n().logLabel }} ({{ logs.length }})</summary>
       <pre><code>{{ logs.join("\n") }}</code></pre>
     </details>
-
-    <p class="pt-warn">{{ i18n().warning }}</p>
+    </div>
+    <div class="pt-foot">
+      <p class="pt-warn">{{ i18n().warning }}</p>
+    </div>
   </div>
 </template>
