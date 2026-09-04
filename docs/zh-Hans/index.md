@@ -42,4 +42,3 @@ features:
     icon: <i class="ri-telegram-fill"></i>
     link: https://t.me/ReSukiSU
 ---
-

@@ -130,3 +130,10 @@ dist
 .pnp.*
 
 .DS_Store
+
+# Rust build output
+tools/gki-lkm-patcher/target/
+
+# wasm (built by CI via wasm-pack, never committed)
+*.wasm
+docs/.vitepress/theme/wasm/

@@ -6,7 +6,7 @@ The error occurs because the `input handler` **in the kernel source code** is c
 
 Please add the corresponding calls to the kernel source code according to [the document](manual-integrate.md#input-hooks)
 
-## Module not working  {#MODULE-NOT-WORKING}
+## Module not working {#MODULE-NOT-WORKING}
 
 ::: info Notes
 This part is only answered for modules which is require sepolicy changes. Like LSPosed/ZygiskNext module will have this problem.

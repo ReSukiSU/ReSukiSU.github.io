@@ -60,12 +60,14 @@ curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup
 ::: tip
 Keep in mind that, on some devices, your defconfig may be located at `arch/arm64/configs` or in other cases, it may be at `arch/arm64/configs/vendor/your_defconfig`. Regardless of the defconfig you're using, make sure to enable `CONFIG_KSU` with `y` to enable or `n` to disable it. For example, if you choose to enable it, your defconfig should contain the following string：
 
-`arch/arm64/configs/...` 
+`arch/arm64/configs/...`
+
 ```diff
 +# ReSukiSU
 +CONFIG_KSU=y
 +CONFIG_KSU_MANUAL_HOOK=y
 ```
+
 :::
 
 Then,add [ReSukiSU's hooks](manual-integrate.md) into your kernel, and build your kernel again, and ReSukiSU should work correctly.
@@ -75,12 +77,14 @@ Then,add [ReSukiSU's hooks](manual-integrate.md) into your kernel, and build you
 ::: tip
 Keep in mind that, on some devices, your defconfig may be located at `arch/arm64/configs` or in other cases, it may be at `arch/arm64/configs/vendor/your_defconfig`. Regardless of the defconfig you're using, make sure to enable `CONFIG_KSU` with `y` to enable or `n` to disable it. For example, if you choose to enable it, your defconfig should contain the following string：
 
-`arch/arm64/configs/...` 
+`arch/arm64/configs/...`
+
 ```diff
 +# ReSukiSU
 +CONFIG_KSU=y
 +CONFIG_KSU_SUSFS=y
 ```
+
 :::
 
 Then, in the [SUSFS repository](https://gitlab.com/simonpunk/susfs4ksu), **choose the branch that matches your kernel version** and apply the **kernel-side patches** as instructed; after making the changes, rebuild the kernel.

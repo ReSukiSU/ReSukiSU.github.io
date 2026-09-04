@@ -2,11 +2,13 @@ name: Pages
 
 on:
   workflow_dispatch:
+  pull_request:
   push:
     branches:
       - main
     paths:
       - docs/**
+      - tools/gki-lkm-patcher/**
       - package.json
       - bun.lock
       - .github/workflows/main.yml
@@ -25,10 +27,13 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
       - name: Install Dependencies
         run: bun install --frozen-lockfile
       - name: Build
-        run: bun run --bun docs:build
+        run: bun run docs:build
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v5
         with:
