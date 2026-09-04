@@ -8,7 +8,6 @@ on:
       - main
     paths:
       - docs/**
-      - tools/vivo-vr-patcher/**
       - tools/gki-lkm-patcher/**
       - package.json
       - bun.lock

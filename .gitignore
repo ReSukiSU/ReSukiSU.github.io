@@ -132,7 +132,6 @@ dist
 .DS_Store
 
 # Rust build output
-tools/vivo-vr-patcher/target/
 tools/gki-lkm-patcher/target/
 
 # wasm (built by CI via wasm-pack, never committed)

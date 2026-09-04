@@ -12,7 +12,6 @@ import {
 } from "@nolebase/vitepress-plugin-enhanced-readabilities/client";
 import codeblocksFold from "vitepress-plugin-codeblocks-fold";
 import CopyOrDownloadAsMarkdownButtons from "vitepress-plugin-llms/vitepress-components/CopyOrDownloadAsMarkdownButtons.vue";
-import VivoVrPatcher from "./components/VivoVrPatcher.vue";
 import GKI_LKM_Patcher from "./components/GKI_LKM_Patcher.vue";
 import { render as render_cf_error_page } from "cloudflare-error-page";
 
@@ -88,7 +87,6 @@ export default {
     app.use(NolebaseInlineLinkPreviewPlugin);
     app.use(NolebaseEnhancedReadabilitiesPlugin);
     app.component("CopyOrDownloadAsMarkdownButtons", CopyOrDownloadAsMarkdownButtons);
-    app.component("VivoVrPatcher", VivoVrPatcher);
     app.component("GKI_LKM_Patcher", GKI_LKM_Patcher);
   },
   setup() {

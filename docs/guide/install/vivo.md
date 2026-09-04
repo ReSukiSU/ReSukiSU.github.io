@@ -16,10 +16,4 @@ LKM installation is identical to that on a standard GKI device. See [LKM install
 Due to vivo's [security policy](https://github.com/tiann/KernelSU/issues/1289#issuecomment-2709964742), `vr.ko` must be disabled before `ksud` and `su` can work correctly.
 :::
 
-We provide a convenient browser-based method that modifies `vendor_boot` and removes `vr.ko`, thereby disabling this security policy.
-
-You can also prevent it from taking effect by other means, such as compiling the kernel yourself and blacklisting the `vr` module, or hooking the process-killing path and causing it to crash.
-
-<ClientOnly>
-  <VivoVrPatcher />
-</ClientOnly>
+You can prevent it from taking effect by other means, such as compiling the kernel yourself and blacklisting the `vr` module, or hooking the process-killing path and causing it to crash.

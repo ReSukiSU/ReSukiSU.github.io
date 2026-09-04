@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "wasm:build": "node tools/vivo-vr-patcher/build.mjs && node tools/gki-lkm-patcher/build.mjs",
+    "wasm:build": "node tools/gki-lkm-patcher/build.mjs",
     "docs:dev": "bun run wasm:build && vitepress dev docs",
     "docs:build": "bun run wasm:build && vitepress build docs",
     "docs:preview": "vitepress serve docs",
