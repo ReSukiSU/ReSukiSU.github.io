@@ -30,7 +30,7 @@
     "vue": "^3.5.42"
   },
   "devDependencies": {
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "vitepress-i18n": "^1.4.0",
     "vitepress-plugin-llms": "^1.13.5"
   }
