@@ -1,3 +1,7 @@
+---
+cbf: [4] # Don't enable code fold in deprecated hook,it will cause bug...
+---
+
 # Manual Integrate reference {#hooks}
 
 ## Manual hooks
@@ -10,19 +14,18 @@ ReSukiSU will check every hook here, and if any are missing, it will **cause com
 The hook in this part is adapted from [`backslashxx/KernelSU #5`](https://github.com/backslashxx/KernelSU/issues/5)
 :::
 
-### stat hook <Badge type="danger" text="Required"/> {#stat-hook}
+### stat hook <Badge type="danger" text="Required"/> {#stat-hook} 
 
 ::: code-group
-
 ```diff[stat.c]
 --- a/fs/stat.c
 +++ b/fs/stat.c
 @@ -353,6 +353,10 @@ SYSCALL_DEFINE2(newlstat, const char __user *, filename,
  	return cp_new_stat(&stat, statbuf);
  }
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+__attribute__((hot))
++__attribute__((hot)) 
 +extern int ksu_handle_stat(int *dfd, const char __user **filename_user,
 +				int *flags);
 +
@@ -38,7 +41,7 @@ The hook in this part is adapted from [`backslashxx/KernelSU #5`](https://github
 @@ -360,6 +364,9 @@ SYSCALL_DEFINE4(newfstatat, int, dfd, const char __user *, filename,
  	struct kstat stat;
  	int error;
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +	ksu_handle_stat(&dfd, &filename, &flag);
 +#endif
@@ -48,15 +51,15 @@ The hook in this part is adapted from [`backslashxx/KernelSU #5`](https://github
 @@ -504,6 +511,9 @@ SYSCALL_DEFINE4(fstatat64, int, dfd, const char __user *, filename,
  	struct kstat stat;
  	int error;
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit su
-+	ksu_handle_stat(&dfd, &filename, &flag);
++	ksu_handle_stat(&dfd, &filename, &flag); 
 +#endif
  	error = vfs_fstatat(dfd, filename, &stat, flag);
  	if (error)
  		return error;
 
-@@ -364,X +364,XX @@
+@@ -364,X +364,XX @@  
 SYSCALL_DEFINE2(newfstat, unsigned int, fd, struct stat __user *, statbuf)
 {
 	struct kstat stat;
@@ -70,7 +73,7 @@ SYSCALL_DEFINE2(newfstat, unsigned int, fd, struct stat __user *, statbuf)
 +#endif
 	return error;
 
-
+ 
 @@ -490,X +497,X @@
 SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 {
@@ -86,60 +89,50 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 	return error;
 }
 ```
-
 :::
 
 In this part, you should find `newfstatat` and `fstatat64` (if 32-bit su is supported) in `fs/stat.c` and hook them. You also need to hook `newfstat` and `fstat64` (if 32-bit su is supported) for the return value.
 
 ### execve hook <Badge type="danger" text="Required"/> {#execve-hooks}
-
 For this hook, different kernel versions are inconsistent, so it is explained separately here
 
 ::: code-group
 
 ```diff[3.14+]
+diff --git a/fs/exec.c b/fs/exec.c
+index 90e14cdddb88..962e6436e930 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -1886,12 +1886,26 @@ static int do_execveat_common(int fd, struct filename *filename,
+@@ -1898,11 +1898,21 @@ static int __do_execve_file(int fd, struct filename *filename,
  	return retval;
  }
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +__attribute__((hot))
 +extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
 +				void *argv, void *envp, int *flags);
 +#endif
 +
- int do_execve(struct filename *filename,
- 	const char __user *const __user *__argv,
- 	const char __user *const __user *__envp)
+ static int do_execveat_common(int fd, struct filename *filename,
+ 			      struct user_arg_ptr argv,
+ 			      struct user_arg_ptr envp,
+ 			      int flags)
  {
- 	struct user_arg_ptr argv = { .ptr.native = __argv };
- 	struct user_arg_ptr envp = { .ptr.native = __envp };
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++	ksu_handle_execveat(&fd, &filename, &argv, &envp, &flags);
 +#endif
- 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
++
+ 	return __do_execve_file(fd, filename, argv, envp, flags, NULL);
  }
-
-@@ -1919,6 +1933,10 @@ static int compat_do_execve(struct filename *filename,
- 		.is_compat = true,
- 		.ptr.compat = __envp,
- 	};
-+#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
-+#endif
- 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
- }
+ 
 ```
-
 ```diff[3.14-]
 --- a/fs/exec.c
 +++ b/fs/exec.c
 @@ -1649,6 +1649,12 @@ static int do_execve_common(const char *filename,
  	return retval;
  }
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +__attribute__((hot))
 +extern int ksu_handle_execve(int *fd, const char *filename,
@@ -158,7 +151,7 @@ For this hook, different kernel versions are inconsistent, so it is explained se
 +#endif
  	return do_execve_common(filename, argv, envp, regs);
  }
-
+ 
 @@ -1673,6 +1682,9 @@ int compat_do_execve(char *filename,
  		.is_compat = true,
  		.ptr.compat = __envp,
@@ -170,15 +163,60 @@ For this hook, different kernel versions are inconsistent, so it is explained se
  }
  #endif
 ```
-
 :::
 
-In `fs/exec.c`, find `do_execve`. Note that for 32-bit su and 32-on-64, you also need to hook `compat_do_execve` in the same file.
+::: details Deprecated hook
 
-For 3.14- kernels, you should use `ksu_handle_execve` instead of `ksu_handle_execveat` and it's parameter types is different from 3.14+ kernels, you need to adjust them according to your actual situation.
+This hook is NOT recommended to use for Android 17 QPR2 and above. Unless you want failed to get root.
+
+::: code-group
+
+```diff[3.14+]
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1886,12 +1886,26 @@ static int do_execveat_common(int fd, struct filename *filename,
+ 	return retval;
+ }
+ 
++#ifdef CONFIG_KSU_MANUAL_HOOK
++__attribute__((hot))
++extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
++				void *argv, void *envp, int *flags);
++#endif
++
+ int do_execve(struct filename *filename,
+ 	const char __user *const __user *__argv,
+ 	const char __user *const __user *__envp)
+ {
+ 	struct user_arg_ptr argv = { .ptr.native = __argv };
+ 	struct user_arg_ptr envp = { .ptr.native = __envp };
++#ifdef CONFIG_KSU_MANUAL_HOOK
++	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#endif
+ 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
+ }
+ 
+@@ -1919,6 +1933,10 @@ static int compat_do_execve(struct filename *filename,
+ 		.is_compat = true,
+ 		.ptr.compat = __envp,
+ 	};
++#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
++	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#endif
+ 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
+ }
+```
+::::::
+
+For 3.14+ kernels, use `ksu_handle_execveat` and hook `do_execveat_common` in `fs/exec.c`.
+
+For this deprecated hook, find `do_execve` in `fs/exec.c`. For 32-bit `su` and 32-on-64 support, also hook `compat_do_execve` in the same file.
+
+For 3.14- kernels, use `ksu_handle_execve` instead of `ksu_handle_execveat`, and hook `do_execve` and `compat_do_execve` in `fs/exec.c`. 
+
+If kernel's `do_execve_common` uses `struct filename` instead of `char filename`, refer to the 3.14+ hook pattern to that kernel's function signature.
 
 ### faccessat hook <Badge type="danger" text="Required"/> {#faccessat-hook}
-
 For this hook, different kernel versions are inconsistent, so it is explained separately here
 
 ::: code-group
@@ -189,9 +227,9 @@ For this hook, different kernel versions are inconsistent, so it is explained se
 @@ -450,8 +450,16 @@ long do_faccessat(int dfd, const char __user *filename, int mode)
  	return res;
  }
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+__attribute__((hot))
++__attribute__((hot)) 
 +extern int ksu_handle_faccessat(int *dfd, const char __user **filename_user,
 +				int *mode, int *flags);
 +#endif
@@ -204,16 +242,15 @@ For this hook, different kernel versions are inconsistent, so it is explained se
  	return do_faccessat(dfd, filename, mode);
  }
 ```
-
 ```diff[4.19-]
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -354,6 +354,11 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
  	return error;
  }
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+__attribute__((hot))
++__attribute__((hot)) 
 +extern int ksu_handle_faccessat(int *dfd, const char __user **filename_user,
 +				int *mode, int *flags);
 +#endif
@@ -224,7 +261,7 @@ For this hook, different kernel versions are inconsistent, so it is explained se
 @@ -369,6 +374,10 @@ SYSCALL_DEFINE3(faccessat, int, dfd, const char __user *, filename, int, mode)
  	int res;
  	unsigned int lookup_flags = LOOKUP_FOLLOW;
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +	ksu_handle_faccessat(&dfd, &filename, &mode, NULL);
 +#endif
@@ -232,13 +269,11 @@ For this hook, different kernel versions are inconsistent, so it is explained se
  	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
  		return -EINVAL;
 ```
-
 :::
 
 In this part, you should find `faccessat` in `fs/open.c` and hook it.
 
 ### sys_reboot hook <Badge type="danger" text="Required"/> {#sys-reboot-hook}
-
 For this hook, different kernel versions are inconsistent, so it is explained separately here
 
 ::: code-group
@@ -261,7 +296,7 @@ For this hook, different kernel versions are inconsistent, so it is explained se
 @@ -284,6 +289,9 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
  	char buffer[256];
  	int ret = 0;
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +	ksu_handle_sys_reboot(magic1, magic2, cmd, &arg);
 +#endif
@@ -298,19 +333,16 @@ index a3bef5bd..08d196f5 100644
         if (!ns_capable(pid_ns->user_ns, CAP_SYS_BOOT))
                 return -EPERM;
 ```
-
 :::
 
 In this part, you should find `reboot` SYSCALL in `kernel/reboot.c` and hook it. Note that for 3.11- kernels, you need to hook `reboot` in `kernel/sys.c` instead.
 
 ### input hook <Badge type="tip" text="Conditionally Required"/> {#input-hook}
-
 :::warning This manual hook is generally not required
 For kernels where the input handler is not corrupted, this hook can be automatically applied via the input handler as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_INPUT_HOOK` is enabled.
 :::
 
 ::: code-group
-
 ```diff[input.c]
 --- a/drivers/input/input.c
 +++ b/drivers/input/input.c
@@ -328,29 +360,26 @@ For kernels where the input handler is not corrupted, this hook can be automatic
  		 unsigned int type, unsigned int code, int value)
  {
  	unsigned long flags;
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +	if (unlikely(ksu_input_hook))
 +		ksu_handle_input_handle_event(&type, &code, &value);
 +#endif
 +
  	if (is_event_supported(type, dev->evbit, EV_MAX)) {
-
+ 
  		spin_lock_irqsave(&dev->event_lock, flags);
 ```
-
 :::
 
 In this part, you should find `input_event` in `drivers/input/input.c` and hook it.
 
 ### setuid hook <Badge type="warning" text="6.8+ Required"/> {#setuid-hook}
-
 :::warning Most versions doesn't require this manual hook.
 For kernel 6.8 (not included 6.8) and below, This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK` is enabled.
 :::
 
 ::: code-group
-
 ```diff[4.17+]
 diff --git a/kernel/sys.c b/kernel/sys.c
 index 4a87dc5fa..aac25df8c 100644
@@ -379,7 +408,6 @@ index 4a87dc5fa..aac25df8c 100644
         keuid = make_kuid(ns, euid);
         ksuid = make_kuid(ns, suid);
 ```
-
 ```diff[4.17-]
 diff --git a/kernel/sys.c b/kernel/sys.c
 index a3bef5bd..0b116d7c 100644
@@ -407,26 +435,23 @@ index a3bef5bd..0b116d7c 100644
         keuid = make_kuid(ns, euid);
         ksuid = make_kuid(ns, suid);
 ```
-
 :::
 
 In this part, you should find `__sys_setresuid` in `kernel/sys.c` and hook them. Note that for 4.17- kernels, you need to hook `setresuid` instead.
 
 ### sys_read hook <Badge type="warning" text="6.8+ Required"/> {#sys-read-hook}
-
 :::warning Most versions doesn't require this manual hook.
 For kernel 6.8 (not included 6.8) and below, This hook can be automatically applied via LSM as long as `CONFIG_KSU_MANUAL_HOOK_AUTO_INITRC_HOOK` is enabled.
 :::
 
 ::: code-group
-
 ```diff[4.19+]
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -586,8 +586,18 @@ ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)
  	return ret;
  }
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +extern bool ksu_init_rc_hook __read_mostly;
 +extern __attribute__((cold)) int ksu_handle_sys_read(unsigned int fd,
@@ -436,20 +461,19 @@ For kernel 6.8 (not included 6.8) and below, This hook can be automatically appl
  SYSCALL_DEFINE3(read, unsigned int, fd, char __user *, buf, size_t, count)
  {
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	if (unlikely(ksu_init_rc_hook))
++	if (unlikely(ksu_init_rc_hook)) 
 +		ksu_handle_sys_read(fd, &buf, &count);
 +#endif
  	return ksys_read(fd, buf, count);
  }
 ```
-
 ```diff[4.19-]
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -568,11 +568,21 @@ static inline void file_pos_write(struct file *file, loff_t pos)
  		file->f_pos = pos;
  }
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +extern bool ksu_init_rc_hook __read_mostly;
 +extern __attribute__((cold)) int ksu_handle_sys_read(unsigned int fd,
@@ -460,16 +484,15 @@ For kernel 6.8 (not included 6.8) and below, This hook can be automatically appl
  {
  	struct fd f = fdget_pos(fd);
  	ssize_t ret = -EBADF;
-
+ 
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	if (unlikely(ksu_init_rc_hook))
++	if (unlikely(ksu_init_rc_hook)) 
 +		ksu_handle_sys_read(fd, &buf, &count);
 +#endif
  	if (f.file) {
  		loff_t pos = file_pos_read(f.file);
  		ret = vfs_read(f.file, buf, count, &pos);
 ```
-
 :::
 
 In this part, you should find `read` in `fs/read_write.c` and hook it. Note that for 4.19- kernels, you only need to hook `read`, and you can ignore `ksys_read` as it is implemented via `read` in those versions.
@@ -550,10 +573,10 @@ index b818410d2418..ea2f3022744f 100644
 @@ -76,7 +76,7 @@ int selinux_policycap_netpeer;
  int selinux_policycap_openperm;
  int selinux_policycap_alwaysnetwork;
-
+ 
 -static DEFINE_RWLOCK(policy_rwlock);
 +DEFINE_RWLOCK(policy_rwlock);
-
+ 
  static struct sidtab sidtab;
  struct policydb policydb;
 
@@ -596,7 +619,7 @@ If this definition not found,please ignore this part.
 
 Remove `static` from the definition of `selinux_ops` in `security/selinux/selinuxfs.c`
 
-### security_dump_masked_av <Badge type="danger" text="6.6+ 必加"/>
+### security_dump_masked_av <Badge type="danger" text="6.6+ Required"/>
 
 ```diff
 diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
@@ -617,7 +640,8 @@ diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
 
 Remove `static` from the definition of `security_dump_masked_av` in `security/selinux/ss/services.c`
 
-### context_struct_compute_av <Badge type="danger" text="6.6+ 必加"/>
+
+### context_struct_compute_av <Badge type="danger" text="6.6+ Required"/>
 
 ```diff
 diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
