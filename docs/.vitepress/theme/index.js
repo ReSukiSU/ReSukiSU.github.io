@@ -66,6 +66,28 @@ const FullScreen404 = defineComponent({
   },
 });
 
+/** Redirect to the appropriate locale based on the user's language preference */
+function autoLocaleRedirect() {
+  if (typeof window === "undefined") return;
+  try {
+    const KEY = "resukisu-locale";
+    if (localStorage.getItem(KEY)) return;
+    const path = window.location.pathname;
+    if (path.startsWith("/zh-Hans")) {
+      localStorage.setItem(KEY, "zh");
+      return;
+    }
+    if (/^zh/i.test(navigator.language || "")) {
+      localStorage.setItem(KEY, "zh");
+      window.location.replace(`/zh-Hans${path === "/" ? "/" : path}${window.location.search}${window.location.hash}`);
+    } else {
+      localStorage.setItem(KEY, "en");
+    }
+  } catch {
+    // storage or navigation unavailable — stay put
+  }
+}
+
 /** @type {import('vitepress').Theme} */
 export default {
   extends: DefaultTheme,
@@ -88,6 +110,8 @@ export default {
     app.use(NolebaseEnhancedReadabilitiesPlugin);
     app.component("CopyOrDownloadAsMarkdownButtons", CopyOrDownloadAsMarkdownButtons);
     app.component("GKI_LKM_Patcher", GKI_LKM_Patcher);
+
+    autoLocaleRedirect();
   },
   setup() {
     const { frontmatter } = useData();

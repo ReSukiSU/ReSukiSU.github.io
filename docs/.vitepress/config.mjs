@@ -26,6 +26,9 @@ export default defineConfig({
   head: [
     ["link", { rel: "icon", href: "/favicon.svg" }],
     ["link", { rel: "canonical", href: "https://resukisu.org/" }],
+    ["link", { rel: "alternate", hreflang: "en", href: "https://resukisu.org/" }],
+    ["link", { rel: "alternate", hreflang: "zh-CN", href: "https://resukisu.org/zh-Hans/" }],
+    ["link", { rel: "alternate", hreflang: "x-default", href: "https://resukisu.org/" }],
     ["link", { rel: "preconnect", href: "https://cdn.jsdelivr.net/" }],
     [
       "link",
@@ -44,6 +47,13 @@ export default defineConfig({
     ],
 
     ["meta", { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" }],
+    [
+      "meta",
+      {
+        name: "description",
+        content: "A more stable fork of SukiSU. KernelSU-based ROOT with enhanced Non-GKI compatibility, minimal hooks, and multi-manager support.",
+      },
+    ],
     ["meta", { name: "theme-color", content: "#ec4899", media: "(prefers-color-scheme: light)" }],
     ["meta", { name: "theme-color", content: "#f472b6", media: "(prefers-color-scheme: dark)" }],
     ["meta", { name: "color-scheme", content: "light dark" }],
@@ -70,7 +80,7 @@ export default defineConfig({
     ],
     ["meta", { property: "og:type", content: "website" }],
     ["meta", { property: "og:site_name", content: "ReSukiSU" }],
-    ["meta", { property: "og:url", content: "https://resukisu.org" }],
+    ["meta", { property: "og:url", content: "https://resukisu.org/" }],
     ["meta", { property: "og:image", content: "https://resukisu.org/logo.svg" }],
     ["meta", { property: "og:image:alt", content: "ReSukiSU Logo" }],
     ["meta", { property: "og:image:width", content: "512" }],
@@ -88,6 +98,28 @@ export default defineConfig({
     ],
     ["meta", { name: "twitter:image", content: "https://resukisu.org/logo.svg" }],
     ["meta", { name: "twitter:image:alt", content: "ReSukiSU Logo" }],
+    [
+      "script",
+      { type: "application/ld+json" },
+      JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            name: "ReSukiSU",
+            url: "https://resukisu.org/",
+            logo: "https://resukisu.org/logo.svg",
+            sameAs: ["https://github.com/ReSukiSU", "https://t.me/ReSukiSU"],
+          },
+          {
+            "@type": "WebSite",
+            name: "ReSukiSU",
+            url: "https://resukisu.org/",
+            inLanguage: ["en", "zh-CN"],
+          },
+        ],
+      }),
+    ],
   ],
 
   themeConfig: {
