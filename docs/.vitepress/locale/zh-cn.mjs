@@ -25,7 +25,6 @@ export default {
             items: [
               { text: "一般 GKI 设备", link: "/zh-Hans/guide/install/gki" },
               { text: "Non-GKI 设备", link: "/zh-Hans/guide/install/nongki" },
-              { text: "vivo 设备", link: "/zh-Hans/guide/install/vivo" },
               { text: "OPPO 设备", link: "/zh-Hans/guide/install/oppo" },
             ],
           },

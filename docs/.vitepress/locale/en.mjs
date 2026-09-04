@@ -24,7 +24,6 @@ export default {
             items: [
               { text: "Generic GKI Devices", link: "/guide/install/gki" },
               { text: "Non-GKI Devices", link: "/guide/install/nongki" },
-              { text: "vivo Devices", link: "/guide/install/vivo" },
               { text: "OPPO Devices", link: "/guide/install/oppo" },
             ],
           },
