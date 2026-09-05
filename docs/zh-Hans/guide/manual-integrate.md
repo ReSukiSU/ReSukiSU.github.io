@@ -544,8 +544,8 @@ index a3bef5bd..0b116d7c 100644
 :::
 
 ```diff
---- a/security/selinux/ss/services.c
-+++ b/security/selinux/ss/services.c
+--- a/security/selinux/ss/status.c
++++ b/security/selinux/ss/status.c
 @@ -XXXX,X +XXXX,X @@
  * In most cases, application shall confirm the kernel status is not
  * changed without any system call invocations.
@@ -556,7 +556,7 @@ index a3bef5bd..0b116d7c 100644
 +DEFINE_MUTEX(selinux_status_lock);
 ```
 
-在 `security/selinux/ss/services.c` 中找到 `selinux_status_page` 和 `selinux_status_lock` 的定义，并将其前面的 `static` 关键字去掉。
+在 `security/selinux/ss/status.c` 中找到 `selinux_status_page` 和 `selinux_status_lock` 的定义，并将其前面的 `static` 关键字去掉。
 
 如果没有找到该定义，请忽略这一部分。
 

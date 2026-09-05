@@ -543,8 +543,8 @@ When kernel does not have `selinux_state` struct, You should modify the definiti
 :::
 
 ```diff
---- a/security/selinux/ss/services.c
-+++ b/security/selinux/ss/services.c
+--- a/security/selinux/ss/status.c
++++ b/security/selinux/ss/status.c
 @@ -XXXX,X +XXXX,X @@
  * In most cases, application shall confirm the kernel status is not
  * changed without any system call invocations.
@@ -555,7 +555,7 @@ When kernel does not have `selinux_state` struct, You should modify the definiti
 +DEFINE_MUTEX(selinux_status_lock);
 ```
 
-Remove `static` from the definition of `selinux_status_page` and `selinux_status_lock` in `security/selinux/ss/services.c`
+Remove `static` from the definition of `selinux_status_page` and `selinux_status_lock` in `security/selinux/ss/status.c`
 
 If this definition not found,please ignore this part.
 
