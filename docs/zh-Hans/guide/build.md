@@ -88,5 +88,5 @@ curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup
 然后，在[SUSFS仓库](https://gitlab.com/simonpunk/susfs4ksu)中**根据你的内核版本选择分支**并按照指导打**内核侧**补丁，改完之后重新编译内核即可。
 
 ::: warning
-NonGKI 的分支处于弃置状态，如果需要使用SUSFS,请自行backport移植
+SUSFS **已放弃 NonGKI 支持**，如需在 NonGKI 使用 SUSFS，请自行从 `gki-android12-5.10` 移植
 :::

@@ -90,5 +90,5 @@ Keep in mind that, on some devices, your defconfig may be located at `arch/arm64
 Then, in the [SUSFS repository](https://gitlab.com/simonpunk/susfs4ksu), **choose the branch that matches your kernel version** and apply the **kernel-side patches** as instructed; after making the changes, rebuild the kernel.
 
 ::: warning
-The NonGKI branches are deprecated. If you need to use SUSFS, please backport it yourself.
+SUSFS is no longer supported for NonGKI kernels,if you want to use SUSFS on NonGKI kernel, please manually backport the patches from `gki-android12-5.10` branch.
 :::
