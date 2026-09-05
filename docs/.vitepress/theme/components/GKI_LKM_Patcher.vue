@@ -3,7 +3,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useData } from "vitepress";
 import { usePatcherWorker, formatBytes } from "../composables/usePatcherWorker.js";
 import GkiLkmWorker from "../workers/gki-lkm-patcher.worker.js?worker";
-import { gkiLkmI18n, SUPPORTED_KMIS } from "../composables/patcher-i18n.js";
+import { gkiLkmI18n, SUPPORTED_ARCHS, SUPPORTED_KMIS } from "../composables/patcher-i18n.js";
 import "../styles/patcher.css";
 
 const { lang } = useData();
@@ -16,6 +16,7 @@ const fileInput = ref(null);
 const detecting = ref(false);
 const kmiRequired = ref(false);
 const selectedKmi = ref("");
+const selectedArch = ref("");
 let dragDepth = 0;
 let pendingDetect = false;
 
@@ -27,8 +28,12 @@ const onCustom = (data) => {
   if (data.type === "kmi") {
     setStatus(`KMI: ${data.kmi}`);
     addLog(`KMI: ${data.kmi}`);
+  } else if (data.type === "arch") {
+    setStatus(`Arch: ${data.arch}`);
+    addLog(`Arch: ${data.arch}`);
   } else if (data.type === "kmi_detected") {
     detecting.value = false;
+    busy.value = false;
     selectedKmi.value = data.kmi;
     kmiRequired.value = false;
     progress.value = 0;
@@ -38,6 +43,7 @@ const onCustom = (data) => {
     patch();
   } else if (data.type === "kmi_required") {
     detecting.value = false;
+    busy.value = false;
     kmiRequired.value = true;
     progress.value = 0;
     setStatus(i18n().kmiRequired);
@@ -61,6 +67,7 @@ function onFilePicked(f) {
   if (!f || busy.value) return;
   file.value = f;
   selectedKmi.value = "";
+  selectedArch.value = "";
   kmiRequired.value = false;
   addLog(`${i18n().selected} ${f.name} (${formatBytes(f.size)})`);
   if (ready.value) detectKmi();
@@ -75,8 +82,8 @@ watch(ready, (ok) => {
 });
 
 // Manual KMI choice — patch starts as soon as a KMI is selected.
-watch(selectedKmi, (kmi) => {
-  if (kmi && file.value && !busy.value) patch();
+watch([selectedKmi, selectedArch], ([kmi, arch]) => {
+  if (kmi && arch && file.value && !busy.value) patch();
 });
 
 function onInputChange(event) {
@@ -119,6 +126,7 @@ function clearFile(event) {
   event.preventDefault();
   file.value = null;
   selectedKmi.value = "";
+  selectedArch.value = "";
   kmiRequired.value = false;
   pendingDetect = false;
   progress.value = 0;
@@ -138,13 +146,13 @@ async function detectKmi() {
 function patch() {
   if (!file.value || !selectedKmi.value || busy.value) return;
   const name = file.value.name;
-  addLog(`${i18n().started} ${name}`);
   file.value.arrayBuffer().then((buf) => {
-    post({ type: "patch", image: buf, kmi: selectedKmi.value }, [buf]);
+    post({ type: "patch", image: buf, kmi: selectedKmi.value, arch: selectedArch.value }, [buf]);
+    addLog(`${i18n().started} ${name}`);
   });
 }
 
-const isError = computed(() => status.value.startsWith(i18n().failed));
+const isError = computed(() => (status.value ?? "").startsWith(i18n().failed));
 const isDone = computed(() => progress.value === 100 && !isError.value);
 const dropHint = computed(() => {
   if (dragging.value) return i18n().drop;
@@ -207,6 +215,16 @@ const dropHint = computed(() => {
         <option value="" disabled>{{ t.selectKmiPlaceholder }}</option>
         <option v-for="kmi in SUPPORTED_KMIS" :key="kmi" :value="kmi">
           {{ kmi }}
+        </option>
+      </select>
+    </div>
+
+    <div v-if="file" class="pt-field">
+      <span>{{ t.selectArch }}</span>
+      <select v-model="selectedArch" :disabled="busy">
+        <option value="" disabled>{{ t.selectArchPlaceholder }}</option>
+        <option v-for="arch in SUPPORTED_ARCHS" :key="arch" :value="arch">
+          {{ arch }}
         </option>
       </select>
     </div>

@@ -134,6 +134,7 @@ self.postMessage({ type: "ready" });
 self.onmessage = async ({ data }) => {
   let phase = data.type || "unknown";
   let activeKmi = data.kmi || "auto-detect";
+  let activeArch = data.arch || "aarch64";
   try {
     const image = new Uint8Array(data.image);
     if (data.type === "detect_kmi") {
@@ -151,14 +152,18 @@ self.onmessage = async ({ data }) => {
     }
 
     const kmi = data.kmi;
+    const arch = data.arch;
     if (!kmi) throw new Error("kmi_required");
+    if (!arch) throw new Error("arch_required");
     activeKmi = kmi;
+    activeArch = arch;
     self.postMessage({ type: "kmi", kmi });
+    self.postMessage({ type: "arch", arch });
     self.postMessage({ type: "progress", percent: 25, message: "download_assets" });
     phase = "download_assets";
     const [module, init] = await Promise.all([
-      fetchArtifact(`${kmi}-lkm`, `${kmi}_kernelsu.ko`),
-      fetchArtifact("ksuinit", "ksuinit"),
+      fetchArtifact(`${activeArch}-${kmi}-lkm`, `${kmi}_kernelsu.ko`),
+      fetchArtifact(`ksuinit-${activeArch}`, "ksuinit"),
     ]);
     const ip = copyIn(image);
     const mp = copyIn(module);
@@ -179,8 +184,8 @@ self.onmessage = async ({ data }) => {
     ];
     if (phase === "download_assets") {
       details.push(
-        `lkm_url=${ARTIFACTS_BASE}/${activeKmi}-lkm.zip`,
-        `ksuinit_url=${ARTIFACTS_BASE}/ksuinit.zip`,
+        `lkm_url=${ARTIFACTS_BASE}/${activeArch}-${activeKmi}-lkm.zip`,
+        `ksuinit_url=${ARTIFACTS_BASE}/ksuinit-${activeArch}.zip`,
         "hint=Open both URLs directly; check DevTools Network. If direct navigation works but fetch fails, remote is blocking CORS.",
       );
     }

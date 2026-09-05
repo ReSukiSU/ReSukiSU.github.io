@@ -59,6 +59,8 @@ export const gkiLkmI18n = {
     kmiRequired: "镜像中未检测到 kernel，请选择 KMI",
     selectKmi: "选择 KMI",
     selectKmiPlaceholder: "请选择 KMI",
+    selectArch: "选择架构",
+    selectArchPlaceholder: "请选择架构",
     detectKmi: "识别 KMI",
     stages: {
       detect_kmi: "正在识别 KMI",
@@ -83,6 +85,8 @@ export const gkiLkmI18n = {
     kmiRequired: "No kernel was detected in the image. Select a KMI.",
     selectKmi: "Select KMI",
     selectKmiPlaceholder: "Select a KMI",
+    selectArch: "Select architecture",
+    selectArchPlaceholder: "Select an architecture",
     detectKmi: "Detect KMI",
     stages: {
       detect_kmi: "Detecting KMI",
@@ -103,4 +107,7 @@ export const SUPPORTED_KMIS = [
   "android14-6.1",
   "android15-6.6",
   "android16-6.12",
+  "android17-6.18",
 ];
+
+export const SUPPORTED_ARCHS = ["aarch64", "x86_64"];
