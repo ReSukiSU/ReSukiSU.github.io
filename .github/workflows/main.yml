@@ -30,6 +30,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
+      - name: Cache Rust dependencies and build artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "tools/gki-lkm-patcher -> target"
       - name: Install Dependencies
         run: bun install --frozen-lockfile
       - name: Build
