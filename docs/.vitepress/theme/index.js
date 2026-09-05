@@ -98,7 +98,7 @@ export default {
 
     return h(DefaultTheme.Layout, null, {
       "layout-top": () => [h(NolebaseHighlightTargetedHeading)],
-      "nav-bar-title-after": () => h(NolebaseEnhancedReadabilitiesMenu),
+      "nav-bar-content-after": () => h(NolebaseEnhancedReadabilitiesMenu),
       "nav-screen-content-after": () => h(NolebaseEnhancedReadabilitiesScreenMenu),
     });
   },
