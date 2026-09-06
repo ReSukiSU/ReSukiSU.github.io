@@ -25,8 +25,6 @@ import "vitepress-plugin-codeblocks-fold/style/index.css";
 import "markdown-it-autospace/spacing.css";
 
 /* font & style css */
-import "misans-vf-4web/dist/result.css";
-import "remixicon/fonts/remixicon.css";
 import "./style.css";
 import "./fonts.css";
 

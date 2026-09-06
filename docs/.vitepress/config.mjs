@@ -37,7 +37,20 @@ export default defineConfig({
         href: "https://cdn.jsdelivr.net/npm/jetbrains-mono-webfont@latest/jetbrains-mono.css",
       },
     ],
-
+    [
+      "link",
+      {
+        rel: "stylesheet",
+        href: "https://cdn.jsdelivr.net/npm/misans-vf-4web@latest/dist/result.css",
+      },
+    ],
+    [
+      "link",
+      {
+        rel: "stylesheet",
+        href: "https://cdn.jsdelivr.net/npm/remixicon@latest/fonts/remixicon.css",
+      },
+    ],
     [
       "meta",
       {
