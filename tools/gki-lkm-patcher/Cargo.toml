@@ -1,5 +1,7 @@
 [package]
 name = "gki-lkm-patcher"
+description = "A simple LKM patcher via WebAssembly"
+repository = "https://github.com/ReSukiSU/ReSukiSU.github.io"
 version = "0.1.0"
 edition = "2021"
 license = "GPL-3.0-only"
