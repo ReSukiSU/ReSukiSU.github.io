@@ -34,6 +34,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: "tools/gki-lkm-patcher -> target"
+          save-if: ${{ github.event_name != 'pull_request' }}
       - name: Install Dependencies
         run: bun install --frozen-lockfile
       - name: Build
