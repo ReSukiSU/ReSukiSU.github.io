@@ -108,11 +108,11 @@ ReSukiSU 虽然可以在没有更新hook的情况下工作，但我们强烈推�
 
 ```diff [3.14+]
 diff --git a/fs/exec.c b/fs/exec.c
-index 90e14cdddb88..b401919842a5
+index 90e14cdddb88..0bcde889d7b9
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -1722,6 +1722,13 @@ static int exec_binprm(struct linux_binprm *bprm)
- 	return ret;
+@@ -1898,12 +1898,31 @@ static int __do_execve_file(int fd, struct filename *filename,
+ 	return retval;
  }
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
@@ -123,78 +123,76 @@ index 90e14cdddb88..b401919842a5
 +				void *argv, void *envp, int *flags, int *retval);
 +#endif
 +
- /*
-  * sys_execve() executes a new program.
-  */
-@@ -1895,14 +1902,21 @@ static int __do_execve_file(int fd, struct filename *filename,
- out_ret:
- 	if (filename)
- 		putname(filename);
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_post_execveat(&fd, &filename, &argv, &envp, &flags, &retval);
-+#endif
- 	return retval;
- }
- 
  static int do_execveat_common(int fd, struct filename *filename,
  			      struct user_arg_ptr argv,
  			      struct user_arg_ptr envp,
  			      int flags)
  {
 +#ifdef CONFIG_KSU_MANUAL_HOOK
++	int retval;
 +	ksu_handle_execveat(&fd, &filename, &argv, &envp, &flags);
-+#endif
-+
++	
++	retval = __do_execve_file(fd, filename, argv, envp, flags, NULL);
++	
++	ksu_handle_post_execveat(&fd, &filename, &argv, &envp, &flags, &retval);
++	
++	return retval;
++#else
  	return __do_execve_file(fd, filename, argv, envp, flags, NULL);
++#endif
  }
  
+ int do_execve_file(struct file *file, void *__argv, void *__envp)
 ```
 ```diff [3.14-]
 diff --git a/exec.c b/exec.c
-index 7ea097f..0226408 100755
+old mode 100755
+new mode 100644
+index 7ea097f..c66f917
 --- a/exec.c
 +++ b/exec.c
-@@ -1443,6 +1443,14 @@ static int exec_binprm(struct linux_binprm *bprm)
- 	return ret;
+@@ -1572,12 +1574,30 @@ out_ret:
+ 	return retval;
  }
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +__attribute__((hot))
 +extern int ksu_handle_execve(int *fd, const char *filename,
 +				void *argv, void *envp, int *flags);
++__attribute__((hot))
 +extern int ksu_handle_post_execve(int *fd, const char *filename, 
 +				void *argv, void *envp, int *flags, int *retval)
 +#endif
 +
- /*
-  * sys_execve() executes a new program.
-  */
-@@ -1569,6 +1577,9 @@ out_files:
- 	if (displaced)
- 		reset_files_struct(displaced);
- out_ret:
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_post_execve(&fd, &filename, &argv, &envp, 0, &retval)
-+#endif
- 	return retval;
- }
- 
-@@ -1578,6 +1589,9 @@ int do_execve(const char *filename,
+ int do_execve(const char *filename,
+ 	const char __user *const __user *__argv,
+ 	const char __user *const __user *__envp)
  {
  	struct user_arg_ptr argv = { .ptr.native = __argv };
  	struct user_arg_ptr envp = { .ptr.native = __envp };
 +#ifdef CONFIG_KSU_MANUAL_HOOK
++	int retval;
 +	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
++
++	retval = do_execve_common(filename, argv, envp);
++
++	ksu_handle_post_execve((int *)AT_FDCWD, &filename, &argv, &envp, &retval);
++	returm retval;
 +#endif
  	return do_execve_common(filename, argv, envp);
  }
  
-@@ -1594,6 +1608,9 @@ static int compat_do_execve(const char *filename,
+@@ -1594,6 +1614,14 @@ static int compat_do_execve(const char *filename,
  		.is_compat = true,
  		.ptr.compat = __envp,
  	};
 +#ifdef CONFIG_KSU_MANUAL_HOOK
++	int retval;
 +	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
++
++	retval = do_execve_common(filename, argv, envp);
++	ksu_handle_post_execve((int *)AT_FDCWD, &filename, &argv, &envp, &retval);
++	return retval;
 +#endif
  	return do_execve_common(filename, argv, envp);
  }
@@ -209,50 +207,57 @@ index 7ea097f..0226408 100755
 ```diff [3.14+]
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -1673,6 +1673,13 @@ static int exec_binprm(struct linux_binprm *bprm)
- 	return ret;
+@@ -1837,13 +1837,32 @@ static int do_execveat_common(int fd, struct filename *filename,
+   return retval;
  }
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+__attribute__((hot))
++attribute((hot))
 +extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
-+				void *argv, void *envp, int *flags);
++        void *argv, void *envp, int *flags);
 +extern int ksu_handle_post_execveat(int *fd, struct filename **filename_ptr,
-+				void *argv, void *envp, int *flags, int *retval);
++        void *argv, void *envp, int *flags, int *retval);
 +#endif
 +
- /*
-  * sys_execve() executes a new program.
-  */
-@@ -1834,6 +1841,7 @@ static int do_execveat_common(int fd, struct filename *filename,
- 		reset_files_struct(displaced);
- out_ret:
- 	putname(filename);
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_post_execveat(&fd, &filename, &argv, &envp, &flags, &retval);
-+#endif
- 	return retval;
- }
- 
-@@ -1843,6 +1851,9 @@ int do_execve(struct filename *filename,
++
+ int do_execve(struct filename *filename,
+   const char __user *const __user *__argv,
+   const char __user *const __user *__envp)
  {
- 	struct user_arg_ptr argv = { .ptr.native = __argv };
- 	struct user_arg_ptr envp = { .ptr.native = __envp };
+   struct user_arg_ptr argv = { .ptr.native = __argv };
+   struct user_arg_ptr envp = { .ptr.native = __envp };
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++  int retval;
++  ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++  retval = do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
++
++  ksu_handle_post_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0, &retval);
++  return retval;
++#else
+   return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
 +#endif
- 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
++
  }
  
-@@ -1870,6 +1881,9 @@ static int compat_do_execve(struct filename *filename,
- 		.is_compat = true,
- 		.ptr.compat = __envp,
- 	};
+ int do_execveat(int fd, struct filename *filename,
+ 
+@@ -1870,7 +1888,17 @@ static int compat_do_execve(struct filename *filename,
+     .is_compat = true,
+     .ptr.compat = __envp,
+   };
 +#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++  int retval;
++  ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++
++  retval = do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
++
++  ksu_handle_post_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0, &retval);
++  return retval;
++#else
+   return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
 +#endif
- 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
  }
+ 
 ```
 :::
 
