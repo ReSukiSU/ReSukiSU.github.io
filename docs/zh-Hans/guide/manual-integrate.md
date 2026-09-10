@@ -254,17 +254,16 @@ index 7ea097f..c66f917
 ```
 :::
 
-对于 3.14+ 的内核，请使用 `ksu_handle_execveat`，并在 `fs/exec.c` 中 hook `do_execveat_common`。
+对于 3.14+ 的内核，请使用 `ksu_handle_execveat` 和 `ksu_handle_post_execveat`，并在 `fs/exec.c` 中 hook `do_execveat_common`。
 
 对于 3.14+ 弃置 hook，请在 `fs/exec.c` 中找到 `do_execve` 并进行 hook。如果需要支持 32 位 `su` 或 32-on-64，还需要在同一文件中 hook `compat_do_execve`。
 
-对于 3.14- 的内核，请使用 `ksu_handle_execve` 而不是 `ksu_handle_execveat`，并在 `fs/exec.c` 中 hook `do_execve` 和 `compat_do_execve`。
+对于 3.14- 的内核，请使用 `ksu_handle_execve` 和 `ksu_handle_post_execve` 而不是 `ksu_handle_execveat` 和 `ksu_handle_post_execveat`，并在 `fs/exec.c` 中 hook `do_execve` 和 `compat_do_execve`。
 
 如果旧版内核的 `do_execve_common` 使用 `struct filename` 而不是 `char filename`，请参照 3.14 及以上版本的 hook 方式。
 
-对于新增的 `ksu_handle_post_execveat` / `ksu_handle_post_execve`，请在 `fs/exec.c` 中 对 `__do_execve_file`的末尾 `return` 前添加hook。
-
 ### faccessat hook <Badge type="danger" text="必加"/> {#faccessat-hook}
+
 对于此 hook，不同版本内核不一致，此处单独说明
 
 ::: code-group

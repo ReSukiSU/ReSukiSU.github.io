@@ -169,7 +169,7 @@ index 7ea097f..c66f917
 +
 +	retval = do_execve_common(filename, argv, envp);
 +
-+	ksu_handle_post_execve((int *)AT_FDCWD, &filename, &argv, &envp, &retval);
++	ksu_handle_post_execve((int *)AT_FDCWD, &filename, &argv, &envp, 0, &retval);
 +	returm retval;
 +#endif
  	return do_execve_common(filename, argv, envp);
@@ -184,7 +184,7 @@ index 7ea097f..c66f917
 +	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
 +
 +	retval = do_execve_common(filename, argv, envp);
-+	ksu_handle_post_execve((int *)AT_FDCWD, &filename, &argv, &envp, &retval);
++	ksu_handle_post_execve((int *)AT_FDCWD, &filename, &argv, &envp, 0, &retval);
 +	return retval;
 +#endif
  	return do_execve_common(filename, argv, envp);
@@ -256,15 +256,13 @@ This hook is NOT recommended to use for Android 17 QPR2 and above. Unless you wa
 ```
 :::
 
-For 3.14+ kernels, use `ksu_handle_execveat` and hook `do_execveat_common` in `fs/exec.c`.
+For 3.14+ kernels, use `ksu_handle_execveat` and `ksu_handle_post_execveat` then hook `do_execveat_common` in `fs/exec.c`. Notice that `ksu_handle_post_execveat` is called after `do_execveat_common` and before `retval` is returned.
 
 For this deprecated hook, find `do_execve` in `fs/exec.c`. For 32-bit `su` and 32-on-64 support, also hook `compat_do_execve` in the same file.
 
-For 3.14- kernels, use `ksu_handle_execve` instead of `ksu_handle_execveat`, and hook `do_execve` and `compat_do_execve` in `fs/exec.c`.
+For 3.14- kernels, use `ksu_handle_execve` and `ksu_handle_post_execve` instead of `ksu_handle_execveat` and `ksu_handle_post_execveat`, and hook `do_execve` and `compat_do_execve` in `fs/exec.c`. Notice that `ksu_handle_post_execve` is called after `do_execve`/`compat_do_execve` and before `retval` is returned.
 
 If kernel's `do_execve_common` uses `struct filename` instead of `char filename`, refer to the 3.14+ hook pattern to that kernel's function signature.
-
-For added `ksu_handle_post_execveat` / `ksu_handle_post_execve`，please add the hook before the `return` statement in `__do_execve_file`.
 
 ### faccessat hook <Badge type="danger" text="Required"/> {#faccessat-hook}
 For this hook, different kernel versions are inconsistent, so it is explained separately here
