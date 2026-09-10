@@ -222,5 +222,12 @@
         "kernel_name": "origin-kernel",
         "kernel_link": "https://github.com/samakshkambxj/origin-kernel",
         "devices": "CMF Phone 1, CMF Phone 2 Pro, Nothing Phone (3a) Lite "
+    },
+    {
+        "maintainer": "MrGadget84",
+        "maintainer_link": "https://github.com/MrGadget84",
+        "kernel_name": "white_kernel_samsung_mt6768",
+        "kernel_link": "https://github.com/MrGadget84/white_kernel_samsung_mt6768",
+        "devices": "Samsung Galaxy A32 4G (SM-A325F)"
     }
 ]
