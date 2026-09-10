@@ -17,7 +17,7 @@ ReSukiSU 将会检查此处每一条 hook，如果缺少，将会**导致编译�
 ### stat hook <Badge type="danger" text="必加"/> {#stat-hook}
 
 ::: code-group
-```diff[stat.c]
+```diff [stat.c]
 --- a/fs/stat.c
 +++ b/fs/stat.c
 @@ -353,6 +353,10 @@ SYSCALL_DEFINE2(newlstat, const char __user *, filename,
@@ -99,12 +99,12 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 
 ::: code-group
 
-```diff[3.14+]
+```diff [3.14+]
 diff --git a/fs/exec.c b/fs/exec.c
-index 90e14cdddb88..962e6436e930 100644
+index 90e14cdddb88..0bcde889d7b9
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -1898,11 +1898,21 @@ static int __do_execve_file(int fd, struct filename *filename,
+@@ -1898,12 +1898,31 @@ static int __do_execve_file(int fd, struct filename *filename,
  	return retval;
  }
  
@@ -112,6 +112,9 @@ index 90e14cdddb88..962e6436e930 100644
 +__attribute__((hot))
 +extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
 +				void *argv, void *envp, int *flags);
++__attribute__((hot))
++extern int ksu_handle_post_execveat(int *fd, struct filename **filename_ptr,
++				void *argv, void *envp, int *flags, int *retval);
 +#endif
 +
  static int do_execveat_common(int fd, struct filename *filename,
@@ -120,109 +123,142 @@ index 90e14cdddb88..962e6436e930 100644
  			      int flags)
  {
 +#ifdef CONFIG_KSU_MANUAL_HOOK
++	int retval;
 +	ksu_handle_execveat(&fd, &filename, &argv, &envp, &flags);
-+#endif
-+
++	
++	retval = __do_execve_file(fd, filename, argv, envp, flags, NULL);
++	
++	ksu_handle_post_execveat(&fd, &filename, &argv, &envp, &flags, &retval);
++	
++	return retval;
++#else
  	return __do_execve_file(fd, filename, argv, envp, flags, NULL);
++#endif
  }
  
+ int do_execve_file(struct file *file, void *__argv, void *__envp)
 ```
-```diff[3.14-]
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1649,6 +1649,12 @@ static int do_execve_common(const char *filename,
- 	return retval;
+```diff [3.14-]
+diff --git a/exec.c b/exec.c
+index 7ea097f..591dc94
+--- a/exec.c
++++ b/exec.c
+@@ -1443,6 +1443,15 @@ static int exec_binprm(struct linux_binprm *bprm)
+ 	return ret;
  }
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +__attribute__((hot))
 +extern int ksu_handle_execve(int *fd, const char *filename,
 +				void *argv, void *envp, int *flags);
++__attribute__((hot))
++extern int ksu_handle_post_execve(int *fd, const char *filename, 
++				void *argv, void *envp, int *flags, int *retval)
 +#endif
 +
- int do_execve(const char *filename,
- 	const char __user *const __user *__argv,
- 	const char __user *const __user *__envp,
-@@ -1656,6 +1662,9 @@ int do_execve(const char *filename,
- {
- 	struct user_arg_ptr argv = { .ptr.native = __argv };
- 	struct user_arg_ptr envp = { .ptr.native = __envp };
+ /*
+  * sys_execve() executes a new program.
+  */
+@@ -1455,6 +1464,9 @@ static int do_execve_common(const char *filename,
+ 	struct files_struct *displaced;
+ 	bool clear_in_exec;
+ 	int retval;
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
 +#endif
- 	return do_execve_common(filename, argv, envp, regs);
- }
  
-@@ -1673,6 +1682,9 @@ int compat_do_execve(char *filename,
- 		.is_compat = true,
- 		.ptr.compat = __envp,
- 	};
+ 	/*
+ 	 * We move the actual failure in case of RLIMIT_NPROC excess from
+@@ -1569,6 +1581,9 @@ out_files:
+ 	if (displaced)
+ 		reset_files_struct(displaced);
+ out_ret:
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
++	ksu_handle_post_execve((int *)AT_FDCWD, &filename, &argv, &envp, 0, &retval);
 +#endif
- 	return do_execve_common(filename, argv, envp, regs);
- }
- #endif
-```
-:::
-
-::: details 弃置 hook
-
-这个hook不推荐在Android 17 QPR2及以上的系统中使用！ 否则无法获取root！
-
-::: code-group
-
-```diff[3.14+]
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1886,12 +1886,26 @@ static int do_execveat_common(int fd, struct filename *filename,
  	return retval;
  }
  
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+__attribute__((hot))
-+extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
-+				void *argv, void *envp, int *flags);
-+#endif
-+
- int do_execve(struct filename *filename,
- 	const char __user *const __user *__argv,
- 	const char __user *const __user *__envp)
- {
- 	struct user_arg_ptr argv = { .ptr.native = __argv };
- 	struct user_arg_ptr envp = { .ptr.native = __envp };
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
-+#endif
- 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
+```
+:::
+
+::: details 弃置 hook (3.14+)
+
+这个hook不推荐在Android 17 QPR2及以上的系统中使用！ 否则无法获取root！
+
+```diff [3.14+]
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1837,13 +1837,32 @@ static int do_execveat_common(int fd, struct filename *filename,
+   return retval;
  }
  
-@@ -1919,6 +1933,10 @@ static int compat_do_execve(struct filename *filename,
- 		.is_compat = true,
- 		.ptr.compat = __envp,
- 	};
-+#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
-+	ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++#ifdef CONFIG_KSU_MANUAL_HOOK
++attribute((hot))
++extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
++        void *argv, void *envp, int *flags);
++attribute((hot))
++extern int ksu_handle_post_execveat(int *fd, struct filename **filename_ptr,
++        void *argv, void *envp, int *flags, int *retval);
 +#endif
- 	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
++
++
+ int do_execve(struct filename *filename,
+   const char __user *const __user *__argv,
+   const char __user *const __user *__envp)
+ {
+   struct user_arg_ptr argv = { .ptr.native = __argv };
+   struct user_arg_ptr envp = { .ptr.native = __envp };
++#ifdef CONFIG_KSU_MANUAL_HOOK
++  int retval;
++  ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++  retval = do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
++
++  ksu_handle_post_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0, &retval);
++  return retval;
++#else
+   return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
++#endif
++
  }
+ 
+ int do_execveat(int fd, struct filename *filename,
+ 
+@@ -1870,7 +1888,17 @@ static int compat_do_execve(struct filename *filename,
+     .is_compat = true,
+     .ptr.compat = __envp,
+   };
++#ifdef CONFIG_KSU_MANUAL_HOOK // 32-bit ksud and 32-on-64 support
++  int retval;
++  ksu_handle_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0);
++
++  retval = do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
++
++  ksu_handle_post_execveat((int *)AT_FDCWD, &filename, &argv, &envp, 0, &retval);
++  return retval;
++#else
+   return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);
++#endif
+ }
+ 
 ```
-::::::
+:::
 
-对于 3.14+ 的内核，请使用 `ksu_handle_execveat`，并在 `fs/exec.c` 中 hook `do_execveat_common`。
+对于 3.14+ 的内核，请使用 `ksu_handle_execveat` 和 `ksu_handle_post_execveat`，并在 `fs/exec.c` 中 hook `do_execveat_common`。
 
 对于 3.14+ 弃置 hook，请在 `fs/exec.c` 中找到 `do_execve` 并进行 hook。如果需要支持 32 位 `su` 或 32-on-64，还需要在同一文件中 hook `compat_do_execve`。
 
-对于 3.14- 的内核，请使用 `ksu_handle_execve` 而不是 `ksu_handle_execveat`，并在 `fs/exec.c` 中 hook `do_execve` 和 `compat_do_execve`。
+对于 3.14- 的内核，请使用 `ksu_handle_execve` 和 `ksu_handle_post_execve` 而不是 `ksu_handle_execveat` 和 `ksu_handle_post_execveat`，并在 `fs/exec.c` 中 hook `do_execve` 和 `compat_do_execve`。
 
 如果旧版内核的 `do_execve_common` 使用 `struct filename` 而不是 `char filename`，请参照 3.14 及以上版本的 hook 方式。
 
 ### faccessat hook <Badge type="danger" text="必加"/> {#faccessat-hook}
+
 对于此 hook，不同版本内核不一致，此处单独说明
 
 ::: code-group
 
-```diff[4.19+]
+```diff [4.19+]
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -450,8 +450,16 @@ long do_faccessat(int dfd, const char __user *filename, int mode)
@@ -243,7 +279,7 @@ index 90e14cdddb88..962e6436e930 100644
  	return do_faccessat(dfd, filename, mode);
  }
 ```
-```diff[4.19-]
+```diff [4.19-]
 --- a/fs/open.c
 +++ b/fs/open.c
 @@ -354,6 +354,11 @@ SYSCALL_DEFINE4(fallocate, int, fd, int, mode, loff_t, offset, loff_t, len)
@@ -279,7 +315,7 @@ index 90e14cdddb88..962e6436e930 100644
 
 ::: code-group
 
-```diff[3.11+]
+```diff [3.11+]
 --- a/kernel/reboot.c
 +++ b/kernel/reboot.c
 @@ -277,6 +277,11 @@ static DEFINE_MUTEX(reboot_mutex);
@@ -306,7 +342,7 @@ index 90e14cdddb88..962e6436e930 100644
  		return -EPERM;
 ```
 
-```diff[3.11-]
+```diff [3.11-]
 diff --git a/kernel/sys.c b/kernel/sys.c
 index a3bef5bd..08d196f5 100644
 --- a/kernel/sys.c
@@ -344,7 +380,7 @@ index a3bef5bd..08d196f5 100644
 :::
 
 ::: code-group
-```diff[input.c]
+```diff [input.c]
 --- a/drivers/input/input.c
 +++ b/drivers/input/input.c
 @@ -436,11 +436,22 @@ static void input_handle_event(struct input_dev *dev,
@@ -381,7 +417,7 @@ index a3bef5bd..08d196f5 100644
 :::
 
 ::: code-group
-```diff[4.17+]
+```diff [4.17+]
 diff --git a/kernel/sys.c b/kernel/sys.c
 index 4a87dc5fa..aac25df8c 100644
 --- a/kernel/sys.c
@@ -409,7 +445,7 @@ index 4a87dc5fa..aac25df8c 100644
         keuid = make_kuid(ns, euid);
         ksuid = make_kuid(ns, suid);
 ```
-```diff[4.17-]
+```diff [4.17-]
 diff --git a/kernel/sys.c b/kernel/sys.c
 index a3bef5bd..0b116d7c 100644
 --- a/kernel/sys.c
@@ -447,7 +483,7 @@ index a3bef5bd..0b116d7c 100644
 :::
 
 ::: code-group
-```diff[4.19+]
+```diff [4.19+]
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -586,8 +586,18 @@ ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)
@@ -469,7 +505,7 @@ index a3bef5bd..0b116d7c 100644
  	return ksys_read(fd, buf, count);
  }
 ```
-```diff[4.19-]
+```diff [4.19-]
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
 @@ -568,11 +568,21 @@ static inline void file_pos_write(struct file *file, loff_t pos)
