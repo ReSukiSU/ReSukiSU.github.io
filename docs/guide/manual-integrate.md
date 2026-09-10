@@ -170,7 +170,7 @@ index 7ea097f..c66f917
 +	retval = do_execve_common(filename, argv, envp);
 +
 +	ksu_handle_post_execve((int *)AT_FDCWD, &filename, &argv, &envp, 0, &retval);
-+	returm retval;
++	return retval;
 +#endif
  	return do_execve_common(filename, argv, envp);
  }
