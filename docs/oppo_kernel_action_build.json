@@ -47,5 +47,12 @@
     "repo_name": "Action-Build",
     "repo_link": "https://github.com/Numbersf/Action-Build",
     "devices": "OnePlus kernel 5.10 - 6.12"
+  },
+  {
+    "maintainer": "palazik",
+    "maintainer_link": "https://github.com/palazik",
+    "repo_name": "actions_oplus_sm8750",
+    "repo_link": "https://github.com/palazik/actions_oplus_sm8750",
+    "devices": "OnePlus SM8750 soc devices"
   }
 ]
