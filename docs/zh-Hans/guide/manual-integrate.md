@@ -150,39 +150,53 @@ index 90e14cdddb88..b401919842a5
  
 ```
 ```diff [3.14-]
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1649,6 +1649,12 @@ static int do_execve_common(const char *filename,
- 	return retval;
+diff --git a/exec.c b/exec.c
+index 7ea097f..0226408 100755
+--- a/exec.c
++++ b/exec.c
+@@ -1443,6 +1443,14 @@ static int exec_binprm(struct linux_binprm *bprm)
+ 	return ret;
  }
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +__attribute__((hot))
 +extern int ksu_handle_execve(int *fd, const char *filename,
 +				void *argv, void *envp, int *flags);
++extern int ksu_handle_post_execve(int *fd, const char *filename, 
++				void *argv, void *envp, int *flags, int *retval)
 +#endif
 +
- int do_execve(const char *filename,
- 	const char __user *const __user *__argv,
- 	const char __user *const __user *__envp,
-@@ -1656,6 +1662,9 @@ int do_execve(const char *filename,
+ /*
+  * sys_execve() executes a new program.
+  */
+@@ -1569,6 +1577,9 @@ out_files:
+ 	if (displaced)
+ 		reset_files_struct(displaced);
+ out_ret:
++#ifdef CONFIG_KSU_MANUAL_HOOK
++	ksu_handle_post_execve(&fd, &filename, &argv, &envp, 0, &retval)
++#endif
+ 	return retval;
+ }
+ 
+@@ -1578,6 +1589,9 @@ int do_execve(const char *filename,
  {
  	struct user_arg_ptr argv = { .ptr.native = __argv };
  	struct user_arg_ptr envp = { .ptr.native = __envp };
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
 +#endif
- 	return do_execve_common(filename, argv, envp, regs);
+ 	return do_execve_common(filename, argv, envp);
  }
  
-@@ -1673,6 +1682,9 @@ int compat_do_execve(char *filename,
+@@ -1594,6 +1608,9 @@ static int compat_do_execve(const char *filename,
  		.is_compat = true,
  		.ptr.compat = __envp,
  	};
 +#ifdef CONFIG_KSU_MANUAL_HOOK
 +	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
 +#endif
- 	return do_execve_common(filename, argv, envp, regs);
+ 	return do_execve_common(filename, argv, envp);
  }
  #endif
 ```
