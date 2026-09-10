@@ -112,6 +112,7 @@ index 90e14cdddb88..0bcde889d7b9
 +__attribute__((hot))
 +extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
 +				void *argv, void *envp, int *flags);
++__attribute__((hot))
 +extern int ksu_handle_post_execveat(int *fd, struct filename **filename_ptr,
 +				void *argv, void *envp, int *flags, int *retval);
 +#endif
@@ -139,13 +140,11 @@ index 90e14cdddb88..0bcde889d7b9
 ```
 ```diff [3.14-]
 diff --git a/exec.c b/exec.c
-old mode 100755
-new mode 100644
-index 7ea097f..c66f917
+index 7ea097f..591dc94
 --- a/exec.c
 +++ b/exec.c
-@@ -1572,12 +1574,30 @@ out_ret:
- 	return retval;
+@@ -1443,6 +1443,15 @@ static int exec_binprm(struct linux_binprm *bprm)
+ 	return ret;
  }
  
 +#ifdef CONFIG_KSU_MANUAL_HOOK
@@ -157,39 +156,29 @@ index 7ea097f..c66f917
 +				void *argv, void *envp, int *flags, int *retval)
 +#endif
 +
- int do_execve(const char *filename,
- 	const char __user *const __user *__argv,
- 	const char __user *const __user *__envp)
- {
- 	struct user_arg_ptr argv = { .ptr.native = __argv };
- 	struct user_arg_ptr envp = { .ptr.native = __envp };
+ /*
+  * sys_execve() executes a new program.
+  */
+@@ -1455,6 +1464,9 @@ static int do_execve_common(const char *filename,
+ 	struct files_struct *displaced;
+ 	bool clear_in_exec;
+ 	int retval;
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	int retval;
 +	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
-+
-+	retval = do_execve_common(filename, argv, envp);
-+
-+	ksu_handle_post_execve((int *)AT_FDCWD, &filename, &argv, &envp, &retval);
-+	return retval;
 +#endif
- 	return do_execve_common(filename, argv, envp);
+ 
+ 	/*
+ 	 * We move the actual failure in case of RLIMIT_NPROC excess from
+@@ -1569,6 +1581,9 @@ out_files:
+ 	if (displaced)
+ 		reset_files_struct(displaced);
+ out_ret:
++#ifdef CONFIG_KSU_MANUAL_HOOK
++	ksu_handle_post_execve((int *)AT_FDCWD, &filename, &argv, &envp, 0, &retval);
++#endif
+ 	return retval;
  }
  
-@@ -1594,6 +1614,14 @@ static int compat_do_execve(const char *filename,
- 		.is_compat = true,
- 		.ptr.compat = __envp,
- 	};
-+#ifdef CONFIG_KSU_MANUAL_HOOK
-+	int retval;
-+	ksu_handle_execve((int *)AT_FDCWD, filename, &argv, &envp, 0);
-+
-+	retval = do_execve_common(filename, argv, envp);
-+	ksu_handle_post_execve((int *)AT_FDCWD, &filename, &argv, &envp, &retval);
-+	return retval;
-+#endif
- 	return do_execve_common(filename, argv, envp);
- }
- #endif
 ```
 :::
 
@@ -208,6 +197,7 @@ index 7ea097f..c66f917
 +attribute((hot))
 +extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr,
 +        void *argv, void *envp, int *flags);
++attribute((hot))
 +extern int ksu_handle_post_execveat(int *fd, struct filename **filename_ptr,
 +        void *argv, void *envp, int *flags, int *retval);
 +#endif
