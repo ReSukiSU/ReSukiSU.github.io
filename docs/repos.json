@@ -229,5 +229,12 @@
         "kernel_name": "white_kernel_samsung_mt6768",
         "kernel_link": "https://github.com/MrGadget84/white_kernel_samsung_mt6768",
         "devices": "Samsung Galaxy A32 4G (SM-A325F)"
+    },
+    {
+        "maintainer": "luyanci",
+        "maintainer_link": "https://github.com/luyanci",
+        "kernel_name": "op_ace6_manifest",
+        "kernel_link": "https://github.com/luyanci/op_ace6_manifest",
+        "devices": "Oneplus ACE 6 (testing)"
     }
 ]
