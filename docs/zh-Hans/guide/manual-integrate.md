@@ -95,13 +95,6 @@ SYSCALL_DEFINE2(fstat64, unsigned long, fd, struct stat64 __user *, statbuf)
 
 ### execve hook <Badge type="danger" text="必加"/> {#execve-hooks}
 
-::: warning 更新提示
-由于[`f1ae2ce`](https://github.com/ReSukiSU/ReSukiSU/commit/f1ae2cebb3503236cfde52fb3caf8e69f1c083a1) 更改，该hook已更新并添加 `ksu_handle_post_execve` / `ksu_handle_post_execveat`的hook
-
-ReSukiSU 虽然可以在没有更新hook的情况下工作，但我们强烈推荐更新此新hook。
-:::
-
-
 对于此 hook，不同版本内核不一致，此处单独说明
 
 ::: code-group

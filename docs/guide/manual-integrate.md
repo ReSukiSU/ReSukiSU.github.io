@@ -95,12 +95,6 @@ In this part, you should find `newfstatat` and `fstatat64` (if 32-bit su is supp
 
 ### execve hook <Badge type="danger" text="Required"/> {#execve-hooks}
 
-::: warning Updated Notice：
-This hook has been updated and added `ksu_handle_post_execve` / `ksu_handle_post_execveat` due to [`f1ae2ce`](https://github.com/ReSukiSU/ReSukiSU/commit/f1ae2cebb3503236cfde52fb3caf8e69f1c083a1) changes.
-
-ReSukiSU can work without this new hook, but We recommended to update and use it.
-:::
-
 For this hook, different kernel versions are inconsistent, so it is explained separately here
 
 ::: code-group
