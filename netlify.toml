@@ -1,3 +1,10 @@
 [build]
-command = "if ! command -v clang >/dev/null 2>&1; then sudo apt-get install -y clang; fi; bun run docs:build"
+command = """\
+mkdir -p /tmp/croot && cd /tmp && \
+apt-get download clang-18 libclang-cpp18 libllvm18 2>&1 | tail -5 && \
+for d in *.deb; do dpkg-deb -x "$d" /tmp/croot; done && \
+export CC=/tmp/croot/usr/bin/clang-18 && \
+export CC_wasm32_unknown_unknown=/tmp/croot/usr/bin/clang-18 && \
+export LD_LIBRARY_PATH=/tmp/croot/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH && \
+cd /opt/build/repo && bun run docs:build"""
 publish = "docs/.vitepress/dist"
