@@ -229,5 +229,12 @@
         "kernel_name": "white_kernel_samsung_mt6768",
         "kernel_link": "https://github.com/MrGadget84/white_kernel_samsung_mt6768",
         "devices": "Samsung Galaxy A32 4G (SM-A325F)"
+    },
+    {
+        "maintainer": "betelqeyza",
+        "maintainer_link": "https://github.com/betelqeyza",
+        "kernel_name": "android_kernel_samsung_universal9611",
+        "kernel_link": "https://github.com/betelqeyza/android_kernel_samsung_universal9611",
+        "devices": "Samsung Galaxy M21/M31/M31s/A51/F41"
     }
 ]
