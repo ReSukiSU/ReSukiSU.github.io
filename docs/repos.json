@@ -236,5 +236,12 @@
         "kernel_name": "android_kernel_samsung_universal9611",
         "kernel_link": "https://github.com/betelqeyza/android_kernel_samsung_universal9611",
         "devices": "Samsung Galaxy M21/M31/M31s/A51/F41"
+    },
+    {
+        "maintainer": "rrrrrUDE",
+        "maintainer_link": "https://github.com/rrrrrUDE",
+        "kernel_name": "android_kernel_xiaomi_gauguin",
+        "kernel_link": "https://github.com/rrrrrUDE/android_kernel_xiaomi_gauguin",
+        "devices": "Redmi Note 9 Pro 5G"
     }
 ]
