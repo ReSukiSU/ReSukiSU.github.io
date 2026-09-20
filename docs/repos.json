@@ -243,5 +243,12 @@
         "kernel_name": "android_kernel_xiaomi_gauguin",
         "kernel_link": "https://github.com/rrrrrUDE/android_kernel_xiaomi_gauguin",
         "devices": "Redmi Note 9 Pro 5G"
+    },
+    {
+        "maintainer": "JustablockCode",
+        "maintainer_link": "https://github.com/JustablockCode",
+        "kernel_name": "Reviver-Kernel-lancelot",
+        "kernel_link": "https://github.com/JustablockCode/Reviver-Kernel-lancelot",
+        "devices": "Redmi 9 Lancelot"
     }
 ]
