@@ -250,5 +250,12 @@
         "kernel_name": "Reviver-Kernel-lancelot",
         "kernel_link": "https://github.com/JustablockCode/Reviver-Kernel-lancelot",
         "devices": "Redmi 9 Lancelot"
+    },
+    {
+        "maintainer": "liuweien339-sys",
+        "maintainer_link": "https://github.com/liuweien339-sys",
+        "kernel_name": "android_kernel_oneplus_mt6878",
+        "kernel_link": "https://github.com/liuweien339-sys/android_kernel_oneplus_mt6878",
+        "devices": "OnePlus Turbo6X"
     }
 ]
