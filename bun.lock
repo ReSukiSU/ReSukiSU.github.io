@@ -22,7 +22,7 @@
       "devDependencies": {
         "typescript": "^6.0.3",
         "vitepress-i18n": "^1.4.0",
-        "vitepress-plugin-llms": "^1.13.5",
+        "vitepress-plugin-llms": "^1.14.0",
       },
     },
   },
@@ -635,7 +635,7 @@
 
     "vitepress-plugin-codeblocks-fold": ["vitepress-plugin-codeblocks-fold@1.2.35", "", {}, "sha512-542i4x4s6WyNOAbS6/Gxcx+6V8jIMgCpFPdN1Tm1EMB5JL0o1LcaZ6VVZvYqLjx9sFyP797/AxVtLo6BRjqaTg=="],
 
-    "vitepress-plugin-llms": ["vitepress-plugin-llms@1.13.5", "", { "dependencies": { "@11ty/gray-matter": "^2.1.0", "markdown-it": "^14.1.0", "markdown-title": "^1.0.2", "mdast-util-from-markdown": "^2.0.3", "millify": "^6.1.0", "minimatch": "^10.2.6", "path-to-regexp": "^6.3.0", "picocolors": "^1.1.1", "pretty-bytes": "^7.1.1", "remark": "^15.0.1", "remark-frontmatter": "^5.0.0", "tokenx": "^1.6.0", "unist-util-remove": "^4.0.0", "unist-util-visit": "^5.1.0" } }, "sha512-CTiDkKRs0h64J5rdiICdHmXH4pM1gBu2S/MJ+OxSAm+vM72srBkHr86ZubzfMJbGJh4AMVKff4R3oCu8etI1ww=="],
+    "vitepress-plugin-llms": ["vitepress-plugin-llms@1.14.0", "", { "dependencies": { "@11ty/gray-matter": "^2.1.0", "markdown-it": "^14.1.0", "markdown-title": "^1.0.2", "mdast-util-from-markdown": "^2.0.3", "millify": "^6.1.0", "minimatch": "^10.2.6", "path-to-regexp": "^6.3.0", "picocolors": "^1.1.1", "pretty-bytes": "^7.1.1", "remark": "^15.0.1", "remark-frontmatter": "^5.0.0", "tokenx": "^1.6.0", "unist-util-remove": "^4.0.0", "unist-util-visit": "^5.1.0" } }, "sha512-Qb42p9pYoRlMRbv+Yvh3reS4GInyr+ToU3G1tEC1Euz+gyBNywXkZIQPV/AoltizaakAeuI89Bkhkd7Y0jaM/w=="],
 
     "vitepress-plugin-pagefind": ["vitepress-plugin-pagefind@0.4.25", "", { "dependencies": { "@sugarat/theme-shared": "0.1.0", "@vueuse/core": "^15.0.0", "javascript-stringify": "^2.1.0" }, "peerDependencies": { "pagefind": "^1.1.0", "vitepress": "^1.0.0-0 || ^2.0.0-0", "vue": "^3.3.0" } }, "sha512-hlKGCyVXjjtMYM7V6PcP9NVrahzskPrahi2U2zjnWewSaZFHNbjh3kZr9ThQZ+m+y8zFp9v65ooyHZX58mBhkQ=="],
 
