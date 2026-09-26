@@ -30,6 +30,6 @@
   "devDependencies": {
     "typescript": "^6.0.3",
     "vitepress-i18n": "^1.4.0",
-    "vitepress-plugin-llms": "^1.13.5"
+    "vitepress-plugin-llms": "^1.14.0"
   }
 }
