@@ -257,5 +257,12 @@
         "kernel_name": "android_kernel_oneplus_mt6878",
         "kernel_link": "https://github.com/liuweien339-sys/android_kernel_oneplus_mt6878",
         "devices": "OnePlus Turbo6X"
+    },
+    {
+        "maintainer": "https:",
+        "maintainer_link": "https://github.com/https:",
+        "kernel_name": "",
+        "kernel_link": "https://github.com/https:/",
+        "devices": "Pre-GKI 4.19 Device"
     }
 ]
