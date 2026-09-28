@@ -257,5 +257,12 @@
         "kernel_name": "android_kernel_oneplus_mt6878",
         "kernel_link": "https://github.com/liuweien339-sys/android_kernel_oneplus_mt6878",
         "devices": "OnePlus Turbo6X"
+    },
+    {
+        "maintainer": "FTS427",
+        "maintainer_link": "https://github.com/FTS427",
+        "kernel_name": "",
+        "kernel_link": "https://codeberg.org/QuantumLS-Studio/android_kernel_lenovo_amar_prc_wifi_com",
+        "devices": "Lenovo TB-X306FC_PRC (amar_prc_wifi_com)"
     }
 ]
