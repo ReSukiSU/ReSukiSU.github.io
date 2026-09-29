@@ -264,5 +264,12 @@
         "kernel_name": "android_kernel_lenovo_amar_prc_wifi_com",
         "kernel_link": "https://codeberg.org/QuantumLS-Studio/android_kernel_lenovo_amar_prc_wifi_com",
         "devices": "Lenovo TB-X306FC_PRC (amar_prc_wifi_com)"
+    },
+    {
+        "maintainer": "poqdavid",
+        "maintainer_link": "https://github.com/poqdavid",
+        "kernel_name": "android_kernel_samsung_sma155f",
+        "kernel_link": "https://github.com/poqdavid/android_kernel_samsung_sma155f",
+        "devices": "Samsung Galaxy A15 4G"
     }
 ]
