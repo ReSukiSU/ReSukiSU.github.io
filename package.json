@@ -10,7 +10,8 @@
     "docs:dev": "bun run wasm:build && vitepress dev docs",
     "docs:build": "bun run wasm:build && vitepress build docs",
     "docs:preview": "vitepress serve docs",
-    "postinstall": "cargo install wasm-pack --version 0.15.0 --locked"
+    "postinstall": "cargo install wasm-pack --version 0.15.0 --locked",
+    "build": "bun run docs:build"
   },
   "dependencies": {
     "@nolebase/markdown-it-bi-directional-links": "^2.18.2",
@@ -19,12 +20,11 @@
     "@nolebase/vitepress-plugin-git-changelog": "^2.18.2",
     "@nolebase/vitepress-plugin-highlight-targeted-heading": "^2.18.2",
     "@nolebase/vitepress-plugin-inline-link-preview": "^2.18.2",
+    "@voidzero-dev/vitepress-theme": "5.0.7",
     "cloudflare-error-page": "^0.1.0",
     "markdown-it-autospace": "^1.1.4",
-    "pagefind": "^1.5.2",
     "vitepress": "~2.0.0-alpha.20",
     "vitepress-plugin-codeblocks-fold": "^1.2.35",
-    "vitepress-plugin-pagefind": "0.4.25",
     "vue": "^3.5.43"
   },
   "devDependencies": {

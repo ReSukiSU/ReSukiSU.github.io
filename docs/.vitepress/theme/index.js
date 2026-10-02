@@ -12,6 +12,7 @@ import {
 } from "@nolebase/vitepress-plugin-enhanced-readabilities/client";
 import codeblocksFold from "vitepress-plugin-codeblocks-fold";
 import CopyOrDownloadAsMarkdownButtons from "vitepress-plugin-llms/vitepress-components/CopyOrDownloadAsMarkdownButtons.vue";
+import AsideSponsors from "./components/AsideSponsors.vue";
 import GKI_LKM_Patcher from "./components/GKI_LKM_Patcher.vue";
 import { render as render_cf_error_page } from "cloudflare-error-page";
 
@@ -95,6 +96,7 @@ export default {
     }
 
     return h(DefaultTheme.Layout, null, {
+      "sidebar-nav-after": () => h(AsideSponsors),
       "layout-top": () => [h(NolebaseHighlightTargetedHeading)],
       "nav-bar-content-after": () => h(NolebaseEnhancedReadabilitiesMenu),
       "nav-screen-content-after": () => h(NolebaseEnhancedReadabilitiesScreenMenu),

@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
 
 import llmstxt from "vitepress-plugin-llms";
@@ -8,7 +9,6 @@ import {
 } from "@nolebase/vitepress-plugin-git-changelog/vite";
 import { BiDirectionalLinks } from "@nolebase/markdown-it-bi-directional-links";
 import { InlineLinkPreviewElementTransform } from "@nolebase/vitepress-plugin-inline-link-preview/markdown-it";
-import { chineseSearchOptimize, pagefindPlugin } from "vitepress-plugin-pagefind";
 import mdAutoSpacing from "markdown-it-autospace";
 import locale from "./locale/index.mjs";
 
@@ -138,6 +138,40 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: "/favicon.svg",
+    search: {
+      provider: "local",
+      options: {
+        miniSearch: {
+          options: {
+            tokenize: (text) => Array.from(
+              new Intl.Segmenter("zh-CN", { granularity: "word" }).segment(text),
+            ).filter((part) => part.isWordLike).map((part) => part.segment),
+          },
+        },
+        locales: {
+          "zh-Hans": {
+            translations: {
+              button: { buttonText: "搜索", buttonAriaLabel: "搜索文档" },
+              modal: {
+                displayDetails: "显示详细列表",
+                resetButtonTitle: "清除搜索",
+                backButtonTitle: "关闭搜索",
+                noResultsText: "没有找到结果",
+                footer: {
+                  selectText: "选择",
+                  selectKeyAriaLabel: "回车键",
+                  navigateText: "切换",
+                  navigateUpKeyAriaLabel: "上箭头",
+                  navigateDownKeyAriaLabel: "下箭头",
+                  closeText: "关闭",
+                  closeKeyAriaLabel: "Esc",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     socialLinks: [
       { icon: "github", link: "https://github.com/ReSukiSU" },
       { icon: "telegram", link: "https://t.me/ReSukiSU" },
@@ -167,19 +201,22 @@ export default defineConfig({
   },
 
   vite: {
+    resolve: {
+      alias: {
+        "@vp-composables": fileURLToPath(new URL("../../node_modules/@voidzero-dev/vitepress-theme/src/composables/vitepress-default", import.meta.url)),
+        "@vp-support": fileURLToPath(new URL("../../node_modules/@voidzero-dev/vitepress-theme/src/support/vitepress-default", import.meta.url)),
+      },
+    },
     plugins: [
       llmstxt(),
       GitChangelog({
         repoURL: () => "https://github.com/ReSukiSU/ReSukiSU.github.io",
       }),
       GitChangelogMarkdownSection({
-        exclude: (id) => id.endsWith("index.md"),
+        exclude: (id) => id.endsWith("index.md") || id.endsWith("sponsors.md"),
         sections: {
           disableContributors: true,
         },
-      }),
-      pagefindPlugin({
-        customSearchQuery: chineseSearchOptimize,
       }),
     ],
     worker: {
@@ -187,6 +224,7 @@ export default defineConfig({
     },
     optimizeDeps: {
       exclude: [
+        "@voidzero-dev/vitepress-theme",
         "@nolebase/vitepress-plugin-enhanced-readabilities/client",
         "@nolebase/vitepress-plugin-inline-link-preview/client",
         "vitepress",
@@ -195,6 +233,7 @@ export default defineConfig({
     },
     ssr: {
       noExternal: [
+        "@voidzero-dev/vitepress-theme",
         "@nolebase/vitepress-plugin-enhanced-readabilities",
         "@nolebase/vitepress-plugin-highlight-targeted-heading",
         "@nolebase/vitepress-plugin-inline-link-preview",

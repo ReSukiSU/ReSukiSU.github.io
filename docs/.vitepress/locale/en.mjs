@@ -5,6 +5,7 @@ export default {
     nav: [
       { text: '<i class="ri-home-2-fill"></i> Home', link: "/" },
       { text: '<i class="ri-book-2-fill"></i> Guide', link: "/guide/install" },
+      { text: '<i class="ri-heart-line"></i> Sponsors', link: "/sponsors" },
       {
         text: '<i class="ri-links-line"></i> Links',
         items: [

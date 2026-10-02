@@ -5,6 +5,7 @@ export default {
     nav: [
       { text: '<i class="ri-home-2-fill"></i> 主页', link: "/zh-Hans/" },
       { text: '<i class="ri-book-2-fill"></i> 指导', link: "/zh-Hans/guide/install" },
+      { text: '<i class="ri-heart-line"></i> 赞助', link: "/zh-Hans/sponsors" },
       {
         text: '<i class="ri-links-line"></i> 常用链接',
         items: [
