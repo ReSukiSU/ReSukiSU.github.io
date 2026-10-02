@@ -4,34 +4,62 @@ import { useData } from 'vitepress'
 import { VPTeamPageTitle } from 'vitepress/theme'
 
 const { lang } = useData()
-const chinese = computed(() => lang.value === 'zh-CN')
+const sponsor = {
+  name: '喵喵机',
+  profile: 'https://github.com/originalFactor',
+  avatar: 'https://github.com/originalFactor.png',
+}
+const sponsorshipUrl = 'https://github.com/sponsors/ShiinaSaku'
+const messages = {
+  en: {
+    title: 'Our sponsors',
+    lead: 'Thank you to the people helping ReSukiSU grow.',
+    tier: 'Domain sponsor',
+    credit: 'Donated the resukisu.org domain',
+    supportTitle: 'Support ReSukiSU',
+    supportDescription: 'Enjoy the project? Become a sponsor and support continued development.',
+    action: 'Become a sponsor',
+    thanks: 'Sharing the project, reporting issues, and contributing code matter too.',
+  },
+  'zh-CN': {
+    title: '感谢支持',
+    lead: '感谢帮助 ReSukiSU 持续发展的每一位朋友。',
+    tier: '域名赞助者',
+    credit: '捐赠了 resukisu.org 域名',
+    supportTitle: '支持 ReSukiSU',
+    supportDescription: '喜欢这个项目？欢迎赞助，支持后续开发。',
+    action: '成为赞助者',
+    thanks: '分享项目、报告问题和贡献代码，同样是宝贵的支持。',
+  },
+}
+const copy = computed(() => messages[lang.value] ?? messages.en)
 </script>
 
 <template>
   <main class="sponsors-page">
     <VPTeamPageTitle>
-      <template #title>{{ chinese ? '感谢支持' : 'Our sponsors' }}</template>
-      <template #lead>{{ chinese ? '感谢帮助 ReSukiSU 持续发展的每一位朋友。' : 'Thank you to the people helping ReSukiSU grow.' }}</template>
+      <template #title>{{ copy.title }}</template>
+      <template #lead>{{ copy.lead }}</template>
     </VPTeamPageTitle>
 
     <section class="sponsor-section" aria-labelledby="domain-sponsors">
-      <h2 id="domain-sponsors" class="tier-label">{{ chinese ? '域名赞助者' : 'Domain sponsor' }}</h2>
-      <a class="sponsor-card" href="https://github.com/originalFactor" target="_blank" rel="noopener noreferrer">
-        <img src="https://github.com/originalFactor.png" alt="" width="56" height="56" />
-        <h3>喵喵机</h3>
+      <h2 id="domain-sponsors" class="tier-label">{{ copy.tier }}</h2>
+      <a class="sponsor-card" :href="sponsor.profile" target="_blank" rel="noopener noreferrer">
+        <img :src="sponsor.avatar" alt="" width="64" height="64" decoding="async" />
+        <h3>{{ sponsor.name }}</h3>
       </a>
-      <p class="donation-credit">{{ chinese ? '捐赠了 resukisu.org 域名' : 'Donated the resukisu.org domain' }}</p>
+      <p class="donation-credit">{{ copy.credit }}</p>
     </section>
 
     <section class="support" aria-labelledby="support-title">
-      <h2 id="support-title">{{ chinese ? '支持 ReSukiSU' : 'Support ReSukiSU' }}</h2>
-      <p>{{ chinese ? '喜欢这个项目？欢迎赞助，支持后续开发。' : 'Enjoy the project? Become a sponsor and support continued development.' }}</p>
-      <a class="sponsor-link" href="https://github.com/sponsors/ShiinaSaku" target="_blank" rel="noopener noreferrer">
+      <h2 id="support-title">{{ copy.supportTitle }}</h2>
+      <p>{{ copy.supportDescription }}</p>
+      <a class="sponsor-link" :href="sponsorshipUrl" target="_blank" rel="noopener noreferrer">
         <span class="vpi-heart" aria-hidden="true" />
-        {{ chinese ? '成为赞助者' : 'Become a sponsor' }}
+        {{ copy.action }}
         <span aria-hidden="true">↗</span>
       </a>
-      <p class="thanks">{{ chinese ? '分享项目、报告问题和贡献代码，同样是宝贵的支持。' : 'Sharing the project, reporting issues, and contributing code matter too.' }}</p>
+      <p class="thanks">{{ copy.thanks }}</p>
     </section>
   </main>
 </template>
@@ -80,10 +108,7 @@ const chinese = computed(() => lang.value === 'zh-CN')
   height: 64px;
   border-radius: 50%;
   object-fit: cover;
-  filter: grayscale(1);
-  transition: filter .2s;
 }
-.sponsor-card:hover img, .sponsor-card:focus-visible img { filter: none; }
 .sponsor-card h3 {
   font-size: clamp(28px, 5vw, 40px);
   font-weight: 600;
@@ -140,5 +165,8 @@ h2 {
   .tier-label { padding: 16px 20px; }
   .sponsor-card { min-height: 180px; gap: 20px; padding: 32px 20px; }
   .sponsor-card img { width: 52px; height: 52px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sponsor-card, .sponsor-link { transition: none; }
 }
 </style>

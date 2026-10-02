@@ -1,4 +1,3 @@
-import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
 
 import llmstxt from "vitepress-plugin-llms";
@@ -201,12 +200,6 @@ export default defineConfig({
   },
 
   vite: {
-    resolve: {
-      alias: {
-        "@vp-composables": fileURLToPath(new URL("../../node_modules/@voidzero-dev/vitepress-theme/src/composables/vitepress-default", import.meta.url)),
-        "@vp-support": fileURLToPath(new URL("../../node_modules/@voidzero-dev/vitepress-theme/src/support/vitepress-default", import.meta.url)),
-      },
-    },
     plugins: [
       llmstxt(),
       GitChangelog({
@@ -224,7 +217,6 @@ export default defineConfig({
     },
     optimizeDeps: {
       exclude: [
-        "@voidzero-dev/vitepress-theme",
         "@nolebase/vitepress-plugin-enhanced-readabilities/client",
         "@nolebase/vitepress-plugin-inline-link-preview/client",
         "vitepress",
@@ -233,7 +225,6 @@ export default defineConfig({
     },
     ssr: {
       noExternal: [
-        "@voidzero-dev/vitepress-theme",
         "@nolebase/vitepress-plugin-enhanced-readabilities",
         "@nolebase/vitepress-plugin-highlight-targeted-heading",
         "@nolebase/vitepress-plugin-inline-link-preview",
