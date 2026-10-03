@@ -278,5 +278,12 @@
         "kernel_name": "Kernel_xiaomi_sdm845_CAF",
         "kernel_link": "https://github.com/RanggaWbp/Kernel_xiaomi_sdm845_CAF",
         "devices": "MI 8, MIX2S, POCOPHONE F1, MI 8UD, MIX 3, MI 8 Explorer Edition"
+    },
+    {
+        "maintainer": "Yun-Hydrogen",
+        "maintainer_link": "https://github.com/Yun-Hydrogen",
+        "kernel_name": "Renoir_ReSukisu_AndroidT",
+        "kernel_link": "https://github.com/Yun-Hydrogen/Renoir_ReSukisu_AndroidT",
+        "devices": " Xiaomi 11 Lite 5G (Renoir)"
     }
 ]
